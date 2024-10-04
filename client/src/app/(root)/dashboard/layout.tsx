@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster"
 import SessionWrapper from "@/components/core/session-wrapper";
 import Sidebar from "@/components/dashboard/sidebar";
 import Header from "@/components/dashboard/header";
@@ -16,6 +17,7 @@ export default async function RootLayout({
                     {children}
                 </div>
             </main>
+            <Toaster />
         </SessionWrapper>
     );
 }
