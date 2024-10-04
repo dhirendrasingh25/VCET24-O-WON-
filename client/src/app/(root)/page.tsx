@@ -52,7 +52,7 @@ export default function Page() {
                 <div id="home" className="h-screen">
                     <Home />
                 </div>
-                
+
                 <div id="quiz" className="h-screen">
                     <div className=" sm:m-10 m-6 border-dotted border-4 rounded-lg">
                         <div className="flex items-center justify-center">
