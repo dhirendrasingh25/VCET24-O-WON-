@@ -1,16 +1,17 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Trophy, CheckCircle, XCircle, Percent, Ticket } from 'lucide-react'
+import { Trophy, CheckCircle, XCircle, Ticket, Lock } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
-// Mock data to simulate backend API response
+// Mock data to simulate backend API response for initial loading
 const mockUserData = {
-  totalTransactions: 85,
-  totalAmount: 75000,
-  streakDays: 22,
-  savingsAmount: 5000,
-  monthlyBudgetAdherence: 90,
-  investmentAmount: 10000,
+  totalTransactions: 0,
+  totalAmount: 0,
+  streakDays: 0,
+  savingsAmount: 0,
+  monthlyBudgetAdherence: 0,
+  investmentAmount: 0,
 }
 
 const achievements = [
@@ -20,8 +21,8 @@ const achievements = [
   { id: 4, name: "Frugal Fortune", description: "Save ₹10,000 in total", target: 10000, type: 'savings', score: 25 },
   { id: 5, name: "Transaction Tamer", description: "Complete 100 transactions", target: 100, type: 'transactions', score: 20 },
   { id: 6, name: "Savings Sage", description: "Save 20% of your income for 3 consecutive months", target: 3, type: 'savingsStreak', score: 30 },
-  { id: 7, name: "Budget Virtuoso", description: "Maintain 95% budget adherence for 2 months", target: 2, type: 'budgetStreak', score: 35 },
-  { id:8, name: "Expense Eliminator", description: "Reduce monthly expenses by 15%", target: 15, type: 'expenseReduction', score: 30 },
+  { id: 7, name: "Diverse Portfolio", description: "Invest in 3 different types of assets", target: 3, type: 'investmentDiversity', score: 40 },
+  { id: 8, name: "Expense Eliminator", description: "Reduce monthly expenses by 15%", target: 15, type: 'expenseReduction', score: 30 },
   { id: 9, name: "Financial Freedom Fighter", description: "Save 6 months worth of expenses", target: 6, type: 'emergencyFund', score: 50 },
 ]
 
@@ -33,19 +34,70 @@ const coupons = [
 ]
 
 const AchievementsPage = () => {
+  const { data: session, status } = useSession()
   const [userData, setUserData] = useState(mockUserData)
   const [totalScore, setTotalScore] = useState(0)
   const [completedPercentage, setCompletedPercentage] = useState(0)
 
   useEffect(() => {
-    // Simulating API call to fetch user data
-    const fetchUserData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setUserData(mockUserData)
+    if (session && session.user?.email) {
+      fetchUserData(session.user.email)
     }
+  }, [session])
 
-    fetchUserData()
-  }, [])
+  const fetchUserData = async (email: string) => {
+    console.log(email);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-summary?email_id=${email}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      console.log(data);
+      
+      if (data.success) {
+        // Assuming data.summary contains arrays of transactions
+        setUserData({
+          totalTransactions: data.summary.yearly.length, // Example mapping
+          totalAmount: calculateTotalAmount(data.summary.yearly), // Function to calculate total amount from transactions
+          streakDays: calculateStreakDays(data.summary.weekly), // Function to calculate streak days from transactions
+          savingsAmount: calculateSavings(data.summary.monthly), // Custom logic to calculate savings
+          monthlyBudgetAdherence: calculateBudgetAdherence(data.summary.monthly), // Custom logic to calculate budget adherence
+          investmentAmount: calculateInvestmentAmount(data.summary.yearly) // Custom logic to calculate investment amount
+        });
+      } else {
+        console.error("User data not found");
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+  
+  // Example helper functions:
+  const calculateTotalAmount = (transactions:any) => {
+    // Calculate the total amount from the transactions array
+    return transactions.reduce((acc:any, transaction:any) => acc + transaction.amount, 0);
+  };
+  
+  const calculateStreakDays = (transactions:any) => {
+    // Custom logic to calculate the streak of transactions
+    return transactions.length;
+  };
+  
+  const calculateSavings = (transaction:any) => {
+    // Example custom logic for savings calculation
+    return transaction.reduce((acc:any, transaction:any) => acc + transaction.savings, 0);
+  };
+  
+  const calculateBudgetAdherence = (transactions:any) => {
+    // Custom logic to calculate budget adherence percentage
+    return (transactions.filter(t => t.withinBudget).length / transactions.length) * 100;
+  };
+  
+  const calculateInvestmentAmount = (transactions:any) => {
+    // Example custom logic for calculating investment
+    return transactions.reduce((acc:any, transaction:any) => acc + (transaction.isInvestment ? transaction.amount : 0), 0);
+  };
+  
 
   useEffect(() => {
     const completed = achievements.filter(a => isAchievementCompleted(a))
@@ -57,21 +109,26 @@ const AchievementsPage = () => {
   const isAchievementCompleted = (achievement:any) => {
     switch (achievement.type) {
       case 'savings':
-        return userData.savingsAmount >= achievement.target
+        return userData?.savingsAmount >= achievement.target
       case 'budgetAdherence':
-        return userData.monthlyBudgetAdherence >= achievement.target
+        return userData?.monthlyBudgetAdherence >= achievement.target
       case 'investment':
-        return userData.investmentAmount > 0
+        return userData?.investmentAmount > 0
       case 'transactions':
-        return userData.totalTransactions >= achievement.target
-      // Add more cases for other achievement types
+        return userData?.totalTransactions >= achievement.target
+      case 'savingsStreak':
+      case 'budgetStreak':
+      case 'investmentDiversity':
+      case 'expenseReduction':
+      case 'emergencyFund':
+        return false
       default:
         return false
     }
   }
 
-  const getValidCoupons = () => {
-    return coupons.filter(coupon => totalScore >= coupon.minScore)
+  const isCouponUnlocked = (coupon:any) => {
+    return totalScore >= coupon.minScore
   }
 
   return (
@@ -87,6 +144,7 @@ const AchievementsPage = () => {
           ></div>
         </div>
         <p className='text-center'>{completedPercentage.toFixed(1)}% Completed</p>
+        <p className='text-center mt-2'>Total Score: {totalScore}</p>
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
@@ -114,22 +172,26 @@ const AchievementsPage = () => {
       </div>
 
       <div className='bg-white rounded-lg shadow-md p-6 mb-8'>
-        <h2 className='text-2xl font-semibold mb-4'>Your Coupons</h2>
-        {getValidCoupons().length > 0 ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {getValidCoupons().map((coupon) => (
-              <div key={coupon.id} className='border border-green-500 rounded-lg p-4 flex items-center'>
+        <h2 className='text-2xl font-semibold mb-4'>Available Coupons</h2>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {coupons.map((coupon) => (
+            <div key={coupon.id} className={`border rounded-lg p-4 flex items-center ${isCouponUnlocked(coupon) ? 'border-green-500' : 'border-gray-300'}`}>
+              {isCouponUnlocked(coupon) ? (
                 <Ticket className='w-8 h-8 text-green-500 mr-4' />
-                <div>
-                  <h3 className='font-semibold'>{coupon.name}</h3>
+              ) : (
+                <Lock className='w-8 h-8 text-gray-400 mr-4' />
+              )}
+              <div>
+                <h3 className='font-semibold'>{coupon.name}</h3>
+                {isCouponUnlocked(coupon) ? (
                   <p className='text-sm text-gray-600'>Code: {coupon.code}</p>
-                </div>
+                ) : (
+                  <p className='text-sm text-gray-600'>Unlock at {coupon.minScore} points</p>
+                )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className='text-gray-600'>Complete more achievements to unlock coupons!</p>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
