@@ -12,6 +12,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+
+
 const quizData = {
     quiz: [
         {
@@ -131,6 +133,9 @@ export default function FinancialQuiz() {
 
     if (quizCompleted) {
         return (
+            <div className="flex justify-center items-center pt-20">
+
+            
             <Card className="w-full max-w-[95%] sm:max-w-3xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-xl sm:text-2xl text-center">
@@ -152,13 +157,15 @@ export default function FinancialQuiz() {
                     </Button>
                 </CardFooter>
             </Card>
+            </div>
         );
     }
 
     const currentQuizQuestion = quizData.quiz[currentQuestion];
 
     return (
-        <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
+        <div className="flex justify-center items-center pt-20">
+             <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
             <CardHeader>
                 <CardTitle className="text-lg sm:text-xl text-center">
                     Question {currentQuestion + 1} of {quizData.quiz.length}
@@ -203,5 +210,8 @@ export default function FinancialQuiz() {
                 </Button>
             </CardFooter>
         </Card>
+
+        </div>
+       
     );
 }
