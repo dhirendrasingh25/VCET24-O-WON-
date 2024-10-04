@@ -31,3 +31,32 @@ export async function getHomeQuizResponse(data: string) {
         throw error;
     }
 }
+
+
+export async function finMarket() {
+    try {
+      // Sending request to the backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/news`, {
+        method: "GET",
+      });
+  
+      // Check if the response status is OK
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      // Parse the response as JSON once
+      const data = await response.json();
+      console.log("Original data:", data);
+  
+      // Limit the data to the first 6 objects
+      const limitedData = data.slice(0, 6);
+      console.log("Limited data:", limitedData);
+  
+      return limitedData;
+    } catch (error) {
+      console.error("Error fetching market news:", error);
+      throw error;
+    }
+  }
+  

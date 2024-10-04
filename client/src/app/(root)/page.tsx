@@ -66,14 +66,15 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                <div className="h-screen">
-                    <Market />
-                </div>
+                
                 <div id="about-us" className="h-full">
                     <AboutUs />
                 </div>
                 <div id="testimonial" className="h-full">
                     <Testimonial />
+                </div>
+                <div className="h-full">
+                    <Market />
                 </div>
             </main>
             <Footer />
