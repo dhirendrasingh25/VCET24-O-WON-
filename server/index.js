@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 4001;
 
 const startServer = async () => {
     try {
-        await dbConnect(); // Ensures DB connection happens before starting the server
+        await dbConnect();
 
         app.listen(PORT, () => {
             console.log((`Server is running on port ${PORT}`));

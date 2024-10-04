@@ -15,10 +15,8 @@ router.post("/add-transaction", async (req, res) => {
       category,
     });
 
-    // Save to the database
     await newTransaction.save();
 
-    // Return a success response
     res
       .status(201)
       .json({
