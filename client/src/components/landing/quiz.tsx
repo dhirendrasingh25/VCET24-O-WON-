@@ -112,37 +112,43 @@ export default function FinancialQuiz() {
     const submitQuiz = async (output: string) => {
         console.log(output);
         try {
-          const res = await getHomeQuizResponse(output);
-          console.log("User data fetched:", res);
+            const res = await getHomeQuizResponse(output);
+            console.log("User data fetched:", res);
         } catch (error) {
-          console.error("Failed to submit quiz:", error);
+            console.error("Failed to submit quiz:", error);
         }
-      };
+    };
 
     if (quizCompleted) {
         return (
             <div className="flex justify-center items-center pt-20">
-        <Card className="w-full max-w-[95%] sm:max-w-3xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-xl sm:text-2xl text-center">
-              Quiz Completed!
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-sm sm:text-base">
-              Thank you for completing the financial quiz. Here are your responses:
-            </p>
-            <ScrollArea className="h-[200px] sm:h-[300px] w-full rounded-md border p-2 sm:p-4">
-              <pre className="text-xs sm:text-sm">{jsonOutput}</pre>
-            </ScrollArea>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <Button onClick={resetQuiz} className="w-full sm:w-auto">
-              Take Quiz Again
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+                <Card className="w-full max-w-[95%] sm:max-w-3xl mx-auto">
+                    <CardHeader>
+                        <CardTitle className="text-xl sm:text-2xl text-center">
+                            Quiz Completed!
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="mb-4 text-sm sm:text-base">
+                            Thank you for completing the financial quiz. Here
+                            are your responses:
+                        </p>
+                        <ScrollArea className="h-[200px] sm:h-[300px] w-full rounded-md border p-2 sm:p-4">
+                            <pre className="text-xs sm:text-sm">
+                                {jsonOutput}
+                            </pre>
+                        </ScrollArea>
+                    </CardContent>
+                    <CardFooter className="flex justify-center">
+                        <Button
+                            onClick={resetQuiz}
+                            className="w-full sm:w-auto"
+                        >
+                            Take Quiz Again
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
         );
     }
 
@@ -153,7 +159,7 @@ export default function FinancialQuiz() {
             <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-lg sm:text-xl text-center">
-                        Question {currentQuestion + 1} of {quizData.quiz.length}
+                        Lets have a Quiz ❤️
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

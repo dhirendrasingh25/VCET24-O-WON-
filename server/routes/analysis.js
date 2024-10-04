@@ -65,14 +65,18 @@ router.post("/", async (req, res, next) => {
       questions
     )} and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(
       responses
-    )}. Make the user feel that our finance website is very good and encourage them to create an account. give numerical data as i would need to give some statistics. The output should be just in json no other word should be written outside the json like those backticks.Dont write the word json`;
+    )}. Make the user feel that our finance website is very good and encourage them to create an account. give numerical data as i would need to give some statistics. The output should be just in json no other word should be written outside the json like those backticks.Dont write the word json.each having name desc and score`;
 
     const result = await model.generateContent(prompt);
 
+    const cleanedResponse = result.response.text().replace(/`/g, "").trim();
+    const jsonResponse = JSON.parse(cleanedResponse);
+
     // Parse the result response correctly
     // const jsonResponse = JSON.parse(result.response.text());
+    res.status(200).json(jsonResponse);
 
-    res.send(result.response.text()); // Send the response as proper JSON
+    // res.send(result.response.text()); // Send the response as proper JSON
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

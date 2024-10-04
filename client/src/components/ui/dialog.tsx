@@ -29,8 +29,9 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
-  blur?: boolean;
+interface DialogContentProps
+    extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+    blur?: boolean;
 }
 
 const DialogContent = React.forwardRef<
@@ -38,7 +39,7 @@ const DialogContent = React.forwardRef<
     DialogContentProps
 >(({ className, children, blur = false, ...props }, ref) => (
     <DialogPortal>
-        <DialogOverlay className={cn(blur && "backdrop-blur-sm")}/>
+        <DialogOverlay className={cn(blur && "backdrop-blur-sm")} />
         <DialogPrimitive.Content
             ref={ref}
             className={cn(
