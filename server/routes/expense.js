@@ -1,5 +1,5 @@
 import express from 'express';
-import Transaction from '../models/transactionSchema.js';
+import User from '../models/userSchema.js';
 import mongoose from 'mongoose';
 
 const router = express.Router();
@@ -7,24 +7,31 @@ const router = express.Router();
 // Function to calculate expenses based on email and date range
 async function calculateExpenses(email_id, startDate, endDate) {
     try {
-        console.log(email_id)
-        const totalExpenses = await Transaction.aggregate([
-            {
-                $match: {
-                    email_id: email_id,
-                    date: { $gte: startDate, $lte: endDate }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    totalAmount: { $sum: "$amount" }
-                }
+        console.log(`Calculating expenses for ${email_id} from ${startDate} to ${endDate}`);
+        
+        const user = await User.findOne({ email_id: email_id }).populate({
+            path: 'transactions',
+            match: {
+                date: { $gte: startDate, $lte: endDate }
             }
-        ]);
-        console.log(totalExpenses)
-        return totalExpenses.length ? totalExpenses[0].totalAmount : 0;
+        });
+
+        console.log(`Found user: ${user ? 'Yes' : 'No'}`);
+        
+        if (!user) {
+            console.log('No user found with the given email_id');
+            return 0;
+        }
+
+        console.log(`Found ${user.transactions.length} matching transactions`);
+
+        const totalExpenses = user.transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+        
+        console.log('Total expenses:', totalExpenses);
+        
+        return totalExpenses;
     } catch (error) {
+        console.error('Error in calculateExpenses:', error);
         throw error;
     }
 }

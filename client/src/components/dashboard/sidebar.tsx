@@ -1,5 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { IoMdTrophy } from "react-icons/io";
 
 import Link from "next/link";
 import {
@@ -65,6 +66,11 @@ export default function Sidebar() {
                     href="/dashboard/my-account"
                     icon={CircleUserRound}
                     label="My Account"
+                />
+                 <SidebarLink
+                    href="/dashboard/achievements"
+                    icon={IoMdTrophy}
+                    label="View Achievements"
                 />
             </nav>
         </aside>
