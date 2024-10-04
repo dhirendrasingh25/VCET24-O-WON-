@@ -3,5 +3,5 @@ export default function Page() {
         <div>
             <h1>Payment Transfer</h1>
         </div>
-    )
+    );
 }

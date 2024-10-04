@@ -131,77 +131,86 @@ export default function FinancialQuiz() {
 
     if (quizCompleted) {
         return (
-            <Card className="w-full max-w-[95%] sm:max-w-3xl mx-auto">
-                <CardHeader>
-                    <CardTitle className="text-xl sm:text-2xl text-center">
-                        Quiz Completed!
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="mb-4 text-sm sm:text-base">
-                        Thank you for completing the financial quiz. Here are
-                        your responses:
-                    </p>
-                    <ScrollArea className="h-[200px] sm:h-[300px] w-full rounded-md border p-2 sm:p-4">
-                        <pre className="text-xs sm:text-sm">{jsonOutput}</pre>
-                    </ScrollArea>
-                </CardContent>
-                <CardFooter className="flex justify-center">
-                    <Button onClick={resetQuiz} className="w-full sm:w-auto">
-                        Take Quiz Again
-                    </Button>
-                </CardFooter>
-            </Card>
+            <div className="flex justify-center items-center pt-20">
+                <Card className="w-full max-w-[95%] sm:max-w-3xl mx-auto">
+                    <CardHeader>
+                        <CardTitle className="text-xl sm:text-2xl text-center">
+                            Quiz Completed!
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="mb-4 text-sm sm:text-base">
+                            Thank you for completing the financial quiz. Here
+                            are your responses:
+                        </p>
+                        <ScrollArea className="h-[200px] sm:h-[300px] w-full rounded-md border p-2 sm:p-4">
+                            <pre className="text-xs sm:text-sm">
+                                {jsonOutput}
+                            </pre>
+                        </ScrollArea>
+                    </CardContent>
+                    <CardFooter className="flex justify-center">
+                        <Button
+                            onClick={resetQuiz}
+                            className="w-full sm:w-auto"
+                        >
+                            Take Quiz Again
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
         );
     }
 
     const currentQuizQuestion = quizData.quiz[currentQuestion];
 
     return (
-        <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle className="text-lg sm:text-xl text-center">
-                    Question {currentQuestion + 1} of {quizData.quiz.length}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="mb-4 text-sm sm:text-base">
-                    {currentQuizQuestion.question}
-                </p>
-                <RadioGroup
-                    onValueChange={(value) => setSelectedAnswer(value)}
-                    className="space-y-2"
-                >
-                    {currentQuizQuestion.options.map((option, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center space-x-2 rounded-lg border p-2 sm:p-3 hover:bg-accent"
-                        >
-                            <RadioGroupItem
-                                value={option}
-                                id={`option-${index}`}
-                            />
-                            <Label
-                                htmlFor={`option-${index}`}
-                                className="flex-grow text-sm sm:text-base cursor-pointer"
+        <div className="flex justify-center items-center pt-20">
+            <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
+                <CardHeader>
+                    <CardTitle className="text-lg sm:text-xl text-center">
+                        Question {currentQuestion + 1} of {quizData.quiz.length}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="mb-4 text-sm sm:text-base">
+                        {currentQuizQuestion.question}
+                    </p>
+                    <RadioGroup
+                        onValueChange={(value) => setSelectedAnswer(value)}
+                        className="space-y-2"
+                    >
+                        {currentQuizQuestion.options.map((option, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center space-x-2 rounded-lg border p-2 sm:p-3 hover:bg-accent"
                             >
-                                {option}
-                            </Label>
-                        </div>
-                    ))}
-                </RadioGroup>
-            </CardContent>
-            <CardFooter className="flex justify-center">
-                <Button
-                    onClick={handleAnswer}
-                    disabled={selectedAnswer === null}
-                    className="w-full sm:w-auto"
-                >
-                    {currentQuestion === quizData.quiz.length - 1
-                        ? "Finish"
-                        : "Next"}
-                </Button>
-            </CardFooter>
-        </Card>
+                                <RadioGroupItem
+                                    value={option}
+                                    id={`option-${index}`}
+                                />
+                                <Label
+                                    htmlFor={`option-${index}`}
+                                    className="flex-grow text-sm sm:text-base cursor-pointer"
+                                >
+                                    {option}
+                                </Label>
+                            </div>
+                        ))}
+                    </RadioGroup>
+                </CardContent>
+                <CardFooter className="flex justify-center">
+                    <Button
+                        onClick={handleAnswer}
+                        disabled={selectedAnswer === null}
+                        className="w-full sm:w-auto"
+                    >
+                        {currentQuestion === quizData.quiz.length - 1
+                            ? "Finish"
+                            : "Next"}
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }

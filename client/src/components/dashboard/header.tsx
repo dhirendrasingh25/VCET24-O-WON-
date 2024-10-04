@@ -1,5 +1,5 @@
 "use client";
-import { Fragment } from 'react';
+import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
@@ -99,7 +99,9 @@ export default function Header() {
                     {title.map((link, index) => (
                         <Fragment key={index}>
                             <BreadcrumbItem key={index}>
-                                <BreadcrumbPage className='capitalize'>{link}</BreadcrumbPage>
+                                <BreadcrumbPage className="capitalize">
+                                    {link}
+                                </BreadcrumbPage>
                             </BreadcrumbItem>
 
                             {index < title.length - 1 && (
@@ -130,7 +132,11 @@ export default function Header() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>Logout</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => signOut({ callbackUrl: "/" })}
+                        >
+                            Logout
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

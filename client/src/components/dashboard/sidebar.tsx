@@ -33,7 +33,9 @@ export default function Sidebar() {
                                 <span className="sr-only">Acme Inc</span>
                             </Link>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="z-20 relative">Bachat Pro</TooltipContent>
+                        <TooltipContent side="right" className="z-20 relative">
+                            Bachat Pro
+                        </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
 

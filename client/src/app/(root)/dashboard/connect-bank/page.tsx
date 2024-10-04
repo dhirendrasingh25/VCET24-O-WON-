@@ -3,5 +3,5 @@ export default function Page() {
         <div>
             <h1>Connect Bank</h1>
         </div>
-    )
+    );
 }
