@@ -30,4 +30,8 @@ app.use("/auth", authRoute)
 app.use('/api', transactionRoutes);
 app.use('/quiz',quizRoutes)
 
+app.get('/', (req, res) => {    
+    res.send('Hello World');
+})
+
 export default app;
