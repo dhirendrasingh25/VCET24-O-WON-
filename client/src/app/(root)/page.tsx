@@ -31,7 +31,7 @@ const words = [
 export default function Page() {
     useEffect(() => {
         window.embeddedChatbotConfig = {
-            chatbotId: "MTKA03YhzzyhMwYjURhdf",
+            chatbotId: process.env.NEXT_PUBLIC_CHATBOT_ID as string,
             domain: "www.chatbase.co",
         };
 
@@ -52,6 +52,7 @@ export default function Page() {
                 <div id="home" className="h-screen">
                     <Home />
                 </div>
+                
                 <div id="quiz" className="h-screen">
                     <div className=" sm:m-10 m-6 border-dotted border-4 rounded-lg">
                         <div className="flex items-center justify-center">

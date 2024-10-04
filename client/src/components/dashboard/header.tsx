@@ -34,8 +34,6 @@ export default function Header() {
     const { data: session } = useSession();
 
     const pathname = usePathname();
-
-    // I want the array of Pathname, like by spliting by / and remove the dashboard
     const title = pathname.split("/").slice(1);
 
     return (
