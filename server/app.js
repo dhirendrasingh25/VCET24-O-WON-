@@ -6,9 +6,8 @@ import cookieParser from 'cookie-parser';
 import InvestmentRoute from './routes/investments.js';
 import OcrRoute from './routes/ocr.js';
 import transactionRoutes from './routes/transactions.js';
-import quizRoutes from './routes/quiz.js';
+import profileRoutes from './routes/profile.js';
 import authRoute from './routes/auth.js';
-import expenseRoute from './routes/expense.js'
 import analysisRoute from './routes/analysis.js'
 const app = express();
 
@@ -29,8 +28,7 @@ app.use("/analysis", analysisRoute);
 
 
 app.use('/api', transactionRoutes);
-app.use('/quiz',quizRoutes)
-app.use('/expense',expenseRoute)
+app.use('/profile/complete',profileRoutes)
 
 app.get('/', (req, res) => {    
     res.send('Hello World');

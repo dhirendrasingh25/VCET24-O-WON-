@@ -1,18 +1,19 @@
 import mongoose from 'mongoose';
 
-const quizSchema = new mongoose.Schema({
+const profileSchema = new mongoose.Schema({
+    
     age: {
         type: Number,
         required: true,
     },
-    ailments: {
-        type: String,
+    occupation:{
+        type: Number,
         required: true,
     },
-    lifestyle: {
-        type: String,
-        required: true,
-    },
+    ailments: [
+      {  name: String,
+        amount:Number
+    }],
     dependents: {
         type: Number,
         required: true,
@@ -25,7 +26,7 @@ const quizSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    expenses: [
+    mandatoryExpenses: [
         {
             description: String,
             amount: Number
@@ -45,10 +46,19 @@ const quizSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    loans : {
+        type: Number,
+        required: true,
+    },
+    emi:[{
+        emi:String,
+        amount:Number
+    }]
+
 }, {
     timestamps: true
 });
 
-const Quiz = mongoose.model('Quiz', quizSchema);
+const Profile = mongoose.model('Profile', profileSchema);
 
-export default Quiz;
+export default Profile;

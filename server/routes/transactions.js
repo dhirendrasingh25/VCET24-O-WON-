@@ -1,20 +1,19 @@
 import express from "express";
 import Transaction from "../models/transactionSchema.js";
-import User from "../models/userSchema.js";
-import { v4 as uuidv4 } from 'uuid';
+import mongoose from "mongoose";
 
 const router = express.Router();
 
+
+  
 // POST add a new transaction
 router.post("/add-transaction", async (req, res) => {
   try {
-    const { email_id, amount, date, category } = req.body;
-    const id = uuidv4();
+    const { description,amount, date, category } = req.body;
 
-    // Create a new transaction associated with the user
+    // Create a new transaction
     const newTransaction = new Transaction({
-        
-      email_id, 
+        description,
       amount,
       date,
       category,
@@ -22,14 +21,14 @@ router.post("/add-transaction", async (req, res) => {
 
     await newTransaction.save();
 
-    // Send response
-    res.status(201).json({
-      success: true,
-      message: "Transaction added successfully",
-      transaction: newTransaction,
-    });
+    res
+      .status(201)
+      .json({success:true,
+        message: "Transaction added successfully",
+        transaction: newTransaction,
+      });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error adding transaction", error });
+    res.status(500).json({ success:false,message: "Error adding transaction", error });
   }
 });
 
