@@ -26,11 +26,6 @@ export async function getHomeQuizResponse(data: string) {
         // Try to parse the response as JSON
 
         console.log(JSON.parse(await response.text()));
-<<<<<<< HEAD
-    } catch (error) {
-        console.error("Error in fetching quiz response:", error);
-        throw error;
-=======
     } catch (error) {
         console.error("Error in fetching quiz response:", error);
         throw error;
@@ -62,6 +57,5 @@ export async function finMarket() {
     } catch (error) {
       console.error("Error fetching market news:", error);
       throw error;
->>>>>>> d0492c9de4301bcbc75301529977e597d7202d8a
     }
 }

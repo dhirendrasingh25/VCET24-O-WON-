@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-
 // import { signIn } from "next-auth/react";
 import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
