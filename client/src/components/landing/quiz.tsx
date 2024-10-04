@@ -15,76 +15,55 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 const quizData = {
     quiz: [
         {
-            question: "What is your current age group?",
+            question: "Do you currently track your monthly income and expenses?",
             type: "multiple_choice",
-            options: ["Under 25", "25-35", "36-45", "46-55", "Above 55"],
+            options: ["Yes, regularly", "Sometimes", "No, not at all"],
         },
         {
-            question:
-                "Do you have any dependents (e.g., children, elderly parents)?",
-            type: "multiple_choice",
-            options: ["Yes", "No"],
-        },
-        {
-            question: "What is your primary financial goal?",
+            question: "How do you typically save money?",
             type: "multiple_choice",
             options: [
-                "Retirement planning",
-                "Child's education",
-                "Buying a home",
-                "Emergency savings",
-                "Wealth accumulation",
+                "I have a dedicated savings account",
+                "I save cash or set it aside informally",
+                "I don't save regularly",
             ],
         },
         {
-            question: "How would you describe your current health status?",
-            type: "multiple_choice",
-            options: ["Excellent", "Good", "Fair", "Poor"],
-        },
-        {
-            question:
-                "Do you foresee any significant expenses in the next 5 years?",
-            type: "multiple_choice",
-            options: ["Yes (e.g., medical emergencies, buying a house)", "No"],
-        },
-        {
-            question: "What is your risk tolerance when it comes to investing?",
+            question: "What do you do when you have unexpected expenses?",
             type: "multiple_choice",
             options: [
-                "Conservative (low risk, stable returns)",
-                "Moderate (balanced risk and reward)",
-                "Aggressive (high risk, higher potential returns)",
+                "Use savings or an emergency fund",
+                "Use a credit card or take out a loan",
+                "I struggle to cover them",
             ],
         },
         {
-            question:
-                "How long do you plan to keep your investment before you need to access it?",
+            question: "Do you have a monthly budget plan?",
+            type: "multiple_choice",
+            options: ["Yes", "No", "I’m planning to start one"],
+        },
+        {
+            question: "How do you manage debt, if you have any?",
             type: "multiple_choice",
             options: [
-                "Less than 1 year",
-                "1-3 years",
-                "3-5 years",
-                "More than 5 years",
+                "I make regular payments and keep track",
+                "I pay when I can but it’s hard to manage",
+                "I don’t have any debt",
             ],
         },
         {
-            question: "Do you have any current investments or savings?",
-            type: "multiple_choice",
-            options: ["Yes", "No"],
-        },
-        {
-            question:
-                "How often would you like to review or adjust your investment plan?",
+            question: "What is your primary financial goal right now?",
             type: "multiple_choice",
             options: [
-                "Monthly",
-                "Quarterly",
-                "Annually",
-                "Only when necessary",
+                "Building savings",
+                "Paying off debt",
+                "Managing daily expenses",
+                "Investing for the future",
             ],
         },
     ],
 };
+
 
 interface QuizResponse {
     question: string;

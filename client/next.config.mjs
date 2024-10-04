@@ -9,9 +9,17 @@ const nextConfig = {
             },
             {
                 protocol: "https",
-                hostname: "lh3.googleusercontent.com"
-            }
+                hostname: "lh3.googleusercontent.com",
+            },
         ],
+    },
+    async rewrites() {
+        return [
+            {
+                source: "/:path*",
+                destination: "http://localhost:4001/:path*",
+            },
+        ];
     },
 };
 

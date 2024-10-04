@@ -1,21 +1,24 @@
 "use client";
 
 import { Button } from "../ui/button";
-import bachatProLogo from "../../public/bachat.svg"
-import Image from "next/image";
+import { PiPiggyBankFill } from "react-icons/pi";
+// import Image from "next/image";
 
 import { signIn } from "next-auth/react";
 
 const Navbar = () => {
     return (
-        <div className="px-10 py-4 sticky top-0 flex  flex-row items-center  justify-between">
-            <div className="mx-2 sm:mx-4">
-                <Image src={bachatProLogo} alt="BachatPro Logo" className="h-full w-full" />
+        <div className="px-10 border-b py-4 sticky top-0 flex  flex-row items-center  justify-between">
+            <div className="mx-2 sm:mx-4 flex flex-row justify-center items-center space-x-2  text-3xl  ">
+                {/* <Image src={bachatProLogo} alt="BachatPro Logo" className="h-full w-full" /> */}
+                <div className="text-blue-500"><PiPiggyBankFill /></div>
+                <div className=" bg-gradient-to-r from-indigo-400 via-violet-600 to-cyan-400 bg-clip-text text-transparent font-semibold ">
+                    BachatPro</div>
             </div>
             <div className="sm:flex flex-row w-full justify-end hidden space-x-6  mr-10">
                 {["Home", "Take a Quiz", "Testimonials", "About Us"].map(
                     (item, idx) => (
-                        <div key={idx}>{item}</div>
+                        <div className="font-semibold " key={idx}>{item}</div>
                     ),
                 )}
             </div>
@@ -26,7 +29,7 @@ const Navbar = () => {
                             callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
                         })
                     }
-                    className="px-6"
+                    className="px-6 font-medium"
                 >
                     Login
                 </Button>
