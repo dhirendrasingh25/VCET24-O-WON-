@@ -1,19 +1,18 @@
 import mongoose from 'mongoose';
 
 const profileSchema = new mongoose.Schema({
-    
     age: {
         type: Number,
         required: true,
     },
-    occupation:{
-        type: Number,
+    occupation: {
+        type: String,
         required: true,
     },
-    ailments: [
-      {  name: String,
-        amount:Number
-    }],
+    ailments: {
+        type: Number,
+        required: true, 
+    },
     dependents: {
         type: Number,
         required: true,
@@ -26,12 +25,11 @@ const profileSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    mandatoryExpenses: [
-        {
-            description: String,
-            amount: Number
-        }
-    ],
+    mandatoryExpenses: {
+            type: Number,
+            required: true,
+    },
+    
     currentInvestments: [
         {
             type: String,
@@ -42,19 +40,16 @@ const profileSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    review: {
-        type: String,
-        required: true,
-    },
-    loans : {
+    loans: {
         type: Number,
         required: true,
     },
-    emi:[{
-        emi:String,
-        amount:Number
-    }]
-
+    emi:
+        {
+                type: Number,
+                required: true, 
+        }
+    
 }, {
     timestamps: true
 });
