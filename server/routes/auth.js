@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/userSchema.js'
+import Quiz from '../models/quizSchema.js';
 
 
 const router = express.Router();
