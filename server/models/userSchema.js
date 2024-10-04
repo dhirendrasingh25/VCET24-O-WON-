@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import transactionSchema from './transactionSchema.js'
-import quizSchema from './quizSchema.js'
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -15,8 +13,14 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  transactions: transactionSchema,
-  quiz: quizSchema,
+  transactions: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Transaction"
+  },
+  quiz: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Quiz"
+  },
 });
 
 const User = mongoose.model("User", userSchema);
