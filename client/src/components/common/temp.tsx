@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession, signIn, signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation';
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Temp() {
     const { data: session } = useSession();
@@ -9,8 +9,8 @@ export default function Temp() {
 
     console.log(session);
 
-    if(session) {
-        router.push('/dashboard');
+    if (session) {
+        router.push("/dashboard");
 
         return null;
 
@@ -25,7 +25,11 @@ export default function Temp() {
     return (
         <>
             <p>Please sign in</p>
-            <button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>Sign in</button>
+            <button
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            >
+                Sign in
+            </button>
         </>
-    )
+    );
 }
