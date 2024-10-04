@@ -63,7 +63,7 @@ router.post("/", (req, res, next) => {
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
     async function run() {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const prompt = `Go through this json file of questionaire ${question} and generate some 4-5 fields and give score to the user based on the responses: ${responses}. It should make the user feel that our finance website is very good and he should create an account on it. `;
+      const prompt = `Go through this JSON file of questionnaire: ${JSON.stringify(question)} and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(responses)}. Make the user feel that our finance website is very good and encourage them to create an account. give numerical data as i would need to give some statistics. give only json form no other text`;
       const result = await model.generateContent(prompt);
       res.send(result.response.text());
     }
