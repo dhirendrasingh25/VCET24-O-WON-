@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// schema
 const transactionSchema = new mongoose.Schema({
     amount: {
         type: Number,
@@ -16,7 +15,7 @@ const transactionSchema = new mongoose.Schema({
         enum: ['Food', 'Transport', 'Entertainment', 'Shopping', 'Other'],  // Example categories
     }
 }, {
-    timestamps: true // This adds createdAt and updatedAt fields
+    timestamps: true
 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
