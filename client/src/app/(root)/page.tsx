@@ -2,15 +2,16 @@
 
 import { useEffect } from "react";
 
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import Quiz from "@/components/landing/quiz";
 import Home from "@/components/landing/home";
 import Testimonial from "@/components/landing/testimonials";
 import AboutUs from "@/components/landing/about-us";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
+import JoinUsButton from "@/components/landing/joinUsbutton";
 
 const words = [
     {
@@ -52,23 +53,15 @@ export default function Page() {
                 <div id="home" className="h-screen">
                     <Home />
                 </div>
-                
-                <div id="quiz" className="h-screen">
-                    <div className=" sm:m-10 m-6 border-dotted border-4 rounded-lg">
+
+                <div id="quiz" className="h-full">
+                    <div className=" sm:m-10 m-6 border-dotted border-4 rounded-2xl bg-zinc-100">
                         <div className="flex items-center justify-center">
                             <TypewriterEffectSmooth words={words} />
                         </div>
                         <Quiz />
-                        <div className="flex items-center justify-center py-6">
-                            <Button
-                                onClick={() =>
-                                    signIn("google", {
-                                        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
-                                    })
-                                }
-                            >
-                                Join Us Today !
-                            </Button>
+                        <div className="flex justify-center items-center p-10">
+                            <JoinUsButton />
                         </div>
                     </div>
                 </div>
