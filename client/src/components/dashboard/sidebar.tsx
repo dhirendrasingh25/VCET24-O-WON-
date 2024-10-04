@@ -12,10 +12,11 @@ import {
 import {
     Home,
     Landmark,
-    Receipt,
+    CircleUserRound,
     Package2,
     BadgeIndianRupee,
     CircleDollarSign,
+    MessageCircle
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -46,9 +47,9 @@ export default function Sidebar() {
                     label="My Banks"
                 />
                 <SidebarLink
-                    href="/dashboard/transaction-history"
-                    icon={Receipt}
-                    label="Transaction History"
+                    href="/dashboard/global-chat"
+                    icon={MessageCircle}
+                    label="Global Chat"
                 />
                 <SidebarLink
                     href="/dashboard/payment-transfer"
@@ -59,6 +60,11 @@ export default function Sidebar() {
                     href="/dashboard/connect-bank"
                     icon={Landmark}
                     label="Connect Bank"
+                />
+                <SidebarLink
+                    href="/dashboard/my-account"
+                    icon={CircleUserRound}
+                    label="My Account"
                 />
             </nav>
         </aside>
@@ -74,8 +80,6 @@ interface SidebarLinkProps {
 function SidebarLink({ href, icon: Icon, label }: SidebarLinkProps) {
     const pathname = usePathname();
     const isActive = pathname === href;
-
-    console.log(pathname);
 
     return (
         <TooltipProvider delayDuration={1}>
