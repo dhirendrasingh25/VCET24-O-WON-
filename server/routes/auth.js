@@ -4,6 +4,38 @@ import User from '../models/userSchema.js'
 
 const router = express.Router();
 
+router.post('/received', async (req, res) => {
+    try {
+        const { email_id, formData } = req.body;
+
+        if (!email_id || !formData) {
+            return res.status(400).json({ message: 'Email ID  and formData is required' });
+        }
+
+        const user = await User.findOne({ email_id });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User with the provided email ID not found' });
+        }
+
+        const newQuiz = new Quiz({
+            ...formData,
+        });
+
+        const savedQuiz = await newQuiz.save();
+
+        user.quiz = savedQuiz._id;
+        user.complete_profile = true;
+
+        await user.save();
+
+        res.json({ sucess: true, message: 'Profile updated successfully', user, savedQuiz });
+    } catch (error) {
+        res.status(500).json({success:false, message: error.message });
+    }
+});
+
+
 router.post('/', async (req, res) => {
     try {
         const { name, email_id, image } = req.body;
@@ -23,20 +55,25 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/check', async (req, res) => {
-    const { email_id } = req.query;
-    if (!email_id) {
-        return res.status(400).json({ message: "Email is required" });
-    }
     try {
-        const user = await userSchema.findOne({ email_id: email_id });
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        const {email_id, name, image} = req.query;
+        let user = await User.findOne({ email_id: email_id });
+        if(!user){
+            user = await User.create({
+                name, email_id, image
+            })
+            await user.save();
         }
-        res.status(200).json({ complete_profile: user.complete_profile });
+        
+        res.status(200).json({ 
+            success: user ? true : false, 
+            user: user 
+        });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 });
+
 
 export default router;
