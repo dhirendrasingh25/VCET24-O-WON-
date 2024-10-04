@@ -86,30 +86,93 @@ router.get("/get-transactions", async (req, res) => {
     try {
       const { email_id } = req.query;
   
-      if(!email_id) {
+      if (!email_id) {
         return res.status(404).json({ success: false, message: "Email not found." });
       }
-      
+  
       // Find the user by email and populate the transactions
-      const user = await User.findOne({ email_id }).populate('transactions').exec();
+      const user = await User.findOne({ email_id }).populate("transactions").exec();
   
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found." });
       }
   
-      // Aggregate transactions by week for the specific user
+      // Calculate the date 7 days ago from today
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  
+      // Aggregate transactions by day for the last 7 days
       const weeklyTransactions = await Transaction.aggregate([
         {
           $match: {
-            _id: { $in: user.transactions.map(t => mongoose.Types.ObjectId(t._id)) } // Match user's transactions
+            _id: { $in: user.transactions.map((t) => mongoose.Types.ObjectId(t._id)) },
+            date: { $gte: sevenDaysAgo } // Match transactions from the last 7 days
           }
         },
         {
           $group: {
-            _id: {
-              year: { $year: "$date" },
-              week: { $week: "$date" }
-            },
+            _id: { day: { $dayOfMonth: "$date" }, month: { $month: "$date" }, year: { $year: "$date" } },
+            totalAmount: { $sum: "$amount" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
+        }
+      ]);
+  
+      // Format the result for easy plotting in a bar graph
+      const formattedData = weeklyTransactions.map((item) => ({
+        day: `Year ${item._id.year}, Month ${item._id.month}, Day ${item._id.day}`,
+        totalAmount: item.totalAmount,
+        count: item.count
+      }));
+  
+      res.status(200).json({
+        success: true,
+        message: "Weekly transactions aggregated by day successfully",
+        data: formattedData
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error retrieving weekly transactions",
+        error
+      });
+    }
+  });
+  
+
+  router.get("/get-transactions-monthly", async (req, res) => {
+    try {
+      const { email_id } = req.query;
+  
+      if (!email_id) {
+        return res.status(404).json({ success: false, message: "Email not found." });
+      }
+  
+      // Find the user by email and populate the transactions
+      const user = await User.findOne({ email_id }).populate("transactions").exec();
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      // Calculate the date 4 weeks (28 days) ago from today
+      const fourWeeksAgo = new Date();
+      fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+  
+      // Aggregate transactions by week for the last 4 weeks
+      const monthlyTransactions = await Transaction.aggregate([
+        {
+          $match: {
+            _id: { $in: user.transactions.map((t) => mongoose.Types.ObjectId(t._id)) },
+            date: { $gte: fourWeeksAgo } // Match transactions from the last 4 weeks
+          }
+        },
+        {
+          $group: {
+            _id: { week: { $week: "$date" }, year: { $year: "$date" } },
             totalAmount: { $sum: "$amount" },
             count: { $sum: 1 }
           }
@@ -120,7 +183,7 @@ router.get("/get-transactions", async (req, res) => {
       ]);
   
       // Format the result for easy plotting in a bar graph
-      const formattedData = weeklyTransactions.map(item => ({
+      const formattedData = monthlyTransactions.map((item) => ({
         week: `Year ${item._id.year}, Week ${item._id.week}`,
         totalAmount: item.totalAmount,
         count: item.count
@@ -128,74 +191,18 @@ router.get("/get-transactions", async (req, res) => {
   
       res.status(200).json({
         success: true,
-        message: "Weekly transactions aggregated successfully",
-        data: formattedData
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error retrieving weekly transactions",
-        error,
-      });
-    }
-  });
-  
-
-  router.get("/get-transactions-monthly", async (req, res) => {
-    try {
-      const { email_id } = req.query;
-  
-      if(!email_id) {
-        return res.status(404).json({ success: false, message: "Email not found." });
-      }
-      const user = await User.findOne({ email_id }).populate('transactions').exec();
-  
-      if (!user) {
-        return res.status(404).json({ success: false, message: "User not found." });
-      }
-  
-      // Aggregate transactions by month for the specific user
-      const monthlyTransactions = await Transaction.aggregate([
-        {
-          $match: {
-            _id: { $in: user.transactions.map(t => mongoose.Types.ObjectId(t._id)) } // Match user's transactions
-          }
-        },
-        {
-          $group: {
-            _id: {
-              year: { $year: "$date" },
-              month: { $month: "$date" }
-            },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.month": 1 }
-        }
-      ]);
-  
-      // Format the result for easy plotting in a bar graph
-      const formattedData = monthlyTransactions.map(item => ({
-        month: `Year ${item._id.year}, Month ${item._id.month}`,
-        totalAmount: item.totalAmount,
-        count: item.count
-      }));
-  
-      res.status(200).json({
-        success: true,
-        message: "Monthly transactions aggregated successfully",
+        message: "Monthly transactions aggregated by week successfully",
         data: formattedData
       });
     } catch (error) {
       res.status(500).json({
         success: false,
         message: "Error retrieving monthly transactions",
-        error,
+        error
       });
     }
   });
+  
   
 
 
