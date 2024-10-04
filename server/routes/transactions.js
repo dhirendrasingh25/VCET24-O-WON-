@@ -23,12 +23,12 @@ router.post("/add-transaction", async (req, res) => {
 
     res
       .status(201)
-      .json({
+      .json({success:true,
         message: "Transaction added successfully",
         transaction: newTransaction,
       });
   } catch (error) {
-    res.status(500).json({ message: "Error adding transaction", error });
+    res.status(500).json({ success:false,message: "Error adding transaction", error });
   }
 });
 

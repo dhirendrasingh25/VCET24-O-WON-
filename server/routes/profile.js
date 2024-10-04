@@ -10,11 +10,11 @@ router.get('/profile/:id', async (req, res) => {
     try {
         const profileData = await Profile.findById(req.params.id);  // Using req.params.id to query the database
         if (!profileData) {
-            return res.status(404).json({ message: 'Profile data not found' });
+            return res.status(404).json({success:false, message: 'Profile data not found' });
         }
         res.json(profileData);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({success:false, message: err.message });
     }
 });
 
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 
         res.json({ sucess: true, message: 'Profile updated successfully', user, newProfileData });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ success:false,message: err.message });
     }
 });
 

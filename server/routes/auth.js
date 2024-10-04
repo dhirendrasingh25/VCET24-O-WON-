@@ -9,13 +9,13 @@ router.post('/received', async (req, res) => {
         const { email_id, formData } = req.body;
 
         if (!email_id || !formData) {
-            return res.status(400).json({ message: 'Email ID  and formData is required' });
+            return res.status(400).json({ success:false,message: 'Email ID  and formData is required' });
         }
 
         const user = await User.findOne({ email_id });
 
         if (!user) {
-            return res.status(404).json({ message: 'User with the provided email ID not found' });
+            return res.status(404).json({ success:false,message: 'User with the provided email ID not found' });
         }
 
         const newProfile = new Profile({

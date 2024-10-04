@@ -69,7 +69,7 @@ router.post("/", (req, res, next) => {
     }
     run();
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ success:false ,error: err.message });
   }
 });
 
