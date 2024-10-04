@@ -29,11 +29,11 @@ router.get("/get-transactions", async (req, res) => {
     }
   });
 
-  router.get("/get-transactions-summary", async (req, res) => {
+  router.get("/get-transaction-summary", async (req, res) => {
     try {
-      const { email_id } = req.query;  // Get email_id from URL params
+      const { email_id } = req.query; // Get email_id from query parameters
   
-      // Find the user by email and populate the transactions
+      // Find the user by email and populate transactions
       const user = await User.findOne({ email_id }).populate('transactions').exec();
   
       if (!user) {
@@ -41,36 +41,77 @@ router.get("/get-transactions", async (req, res) => {
       }
   
       const transactions = user.transactions || [];
-      const currentDate = new Date();
   
-      // Initialize summary objects
-      const summary = {
-        weekly: [],
-        monthly: [],
-        yearly: []
-      };
+      // Calculate the total transaction amount
+      const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
   
-      // Iterate through transactions and categorize them
-      transactions.forEach(transaction => {
-        const transactionDate = new Date(transaction.date);  // Ensure transaction date is a Date object
+      // Find the maximum transaction amount
+      const maxAmount = transactions.reduce((max, transaction) => (transaction.amount > max ? transaction.amount : max), 0);
   
-        if (isWithinLastDays(transactionDate, 7)) {
-          summary.weekly.push(transaction);
-        }
-        if (isWithinLastDays(transactionDate, 30)) {
-          summary.monthly.push(transaction);
-        }
-        if (isWithinLastDays(transactionDate, 365)) {
-          summary.yearly.push(transaction);
-        }
-      });
+      // Number of transactions
+      const transactionCount = transactions.length;
   
+      // Default value for savings is 0
+      const totalSavings = user.savings || 0;
+  
+      // Return summary details
       res.status(200).json({
         success: true,
-        summary
+        message: "Transaction summary retrieved successfully",
+        data: {
+          transactionCount,
+          maxAmount,
+          totalAmount,
+          totalSavings
+        }
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: "Error retrieving transactions summary", error });
+      res.status(500).json({ success: false, message: "Error retrieving transaction summary", error });
+    }
+  });
+  
+  // POST: Add a new transaction with savings field in User model
+  router.post("/add-transaction", async (req, res) => {
+    try {
+      const { email_id, description, amount, date, category, savings } = req.body;
+  
+      // Find the user by email
+      const user = await User.findOne({ email_id });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      // Create a new transaction
+      const newTransaction = new Transaction({
+        description,
+        amount,
+        date,
+        category,
+      });
+  
+      // Save the transaction
+      await newTransaction.save();
+  
+      // Add the transaction to the user's transactions array
+      user.transactions.push(newTransaction);
+  
+      // Update user's savings (optional, if provided in the request body)
+      if (savings !== undefined) {
+        user.savings = savings;
+      }
+  
+      // Save the updated user
+      await user.save();
+  
+      // Respond with success and the created transaction
+      res.status(201).json({
+        success: true,
+        message: "Transaction added successfully",
+        transaction: newTransaction,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Error adding transaction", error });
     }
   });
   
