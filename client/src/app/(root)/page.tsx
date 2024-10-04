@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "@/components/landingComponents/Navbar";
-import Footer from "@/components/landingComponents/Footer";
+import Navbar from "@/components/landing-components/navbar";
+import Footer from "@/components/landing-components/footer";
 import { Button } from "@/components/ui/button";
-import Quiz from "@/components/landingComponents/Quiz";
+import Quiz from "@/components/landing-components/quiz";
 
 export default function Page() {
     return (
