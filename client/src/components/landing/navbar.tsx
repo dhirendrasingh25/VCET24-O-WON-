@@ -3,7 +3,7 @@
 import { Button } from "../ui/button";
 import { PiPiggyBankFill } from "react-icons/pi";
 // import Image from "next/image";
-
+import Link from 'next/link';
 import { signIn } from "next-auth/react";
 
 const Navbar = () => {
@@ -19,10 +19,18 @@ const Navbar = () => {
                 </div>
             </div>
             <div className="sm:flex flex-row w-full justify-end hidden space-x-6  mr-10">
-                {["Home", "Take a Quiz", "Testimonials", "About Us"].map(
+                {[
+                    { value: "Home", link: "#home" },
+                    { value: "Market News", link: "#market" },
+                    { value: "Take a Quiz", link: "#quiz" },
+                    { value: "Testimonials", link: "#testimonials" },
+                    { value: "About Us", link: "#about" }
+                ].map(
                     (item, idx) => (
-                        <div className="font-semibold " key={idx}>
-                            {item}
+                        <div key={idx} className="font-semibold">
+                            <Link href={item.link}>
+                                {item.value}
+                            </Link>
                         </div>
                     ),
                 )}

@@ -12,6 +12,7 @@ import Testimonial from "@/components/landing/testimonials";
 import AboutUs from "@/components/landing/about-us";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import JoinUsButton from "@/components/landing/joinUsbutton";
+import Market from "@/components/landing/market";
 
 const words = [
     {
@@ -71,6 +72,9 @@ export default function Page() {
                 </div>
                 <div id="testimonial" className="h-full">
                     <Testimonial />
+                </div>
+                <div className="h-full">
+                    <Market />
                 </div>
             </main>
             <Footer />

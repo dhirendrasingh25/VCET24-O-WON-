@@ -9,6 +9,14 @@ const nextConfig = {
             },
             {
                 protocol: "https",
+                hostname: "static2.finnhub.io",
+            },
+            {
+                protocol: "https",
+                hostname: "image.cnbcfm.com",
+            },
+            {
+                protocol: "https",
                 hostname: "lh3.googleusercontent.com",
             },
         ],

@@ -159,7 +159,7 @@ export default function FinancialQuiz() {
             <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-lg sm:text-xl text-center">
-                        Question {currentQuestion + 1} of {quizData.quiz.length}
+                        Lets have a Quiz ❤️
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

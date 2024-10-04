@@ -66,13 +66,15 @@ router.post("/", async (req, res) => {
       // Explicitly ask for JSON and guide the AI
       const prompt = `
         Go through this JSON file of questionnaire: ${JSON.stringify(question)} 
-        and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(responses)}.
+        and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(
+          responses
+        )}.
         Provide only valid JSON. Do not include any other text or explanations.`;
 
       const result = await model.generateContent(prompt);
 
       // Clean the response by removing backticks and any unwanted characters
-      const cleanedResponse = result.response.text().replace(/`/g, '').trim();
+      const cleanedResponse = result.response.text().replace(/`/g, "").trim();
 
       // Extract the JSON response and send it
       try {
