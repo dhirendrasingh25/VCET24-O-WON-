@@ -65,11 +65,12 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                <div id="testimonial" className="h-full">
-                    <Testimonial />
-                </div>
+                
                 <div id="about-us" className="h-full">
                     <AboutUs />
+                </div>
+                <div id="testimonial" className="h-full">
+                    <Testimonial />
                 </div>
             </main>
             <Footer />

@@ -1,92 +1,60 @@
-"use client";
-import Image from "next/image";
-import React from "react";
-import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
+import React from 'react'
+import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 
-export default function Testimonial() {
-    const cards = data.map((card, index) => (
-        <Card key={card.src} card={card} index={index} />
-    ));
+const testimonialsD = [
+    {
+      quote:
+        "Budget Pro helped me plan my finances effectively without any hassle. I was able to save more than I expected, and their guidance was incredibly insightful. Highly recommended!",
+      name: "Rahul Sharma",
+      title: "Small Business Owner, Delhi",
+    },
+    {
+      quote:
+        "As a freelancer, managing my income was always a challenge. Budget Pro's user-friendly tools made it easy for me to track my expenses and save more efficiently. A game changer for me!",
+      name: "Neha Iyer",
+      title: "Freelance Graphic Designer, Bengaluru",
+    },
+    {
+      quote:
+        "I never thought budgeting could be this easy! Budget Pro’s platform is intuitive and provides all the right tools to keep my finances on track. It's perfect for anyone looking to manage their money better.",
+      name: "Anil Mehta",
+      title: "IT Professional, Mumbai",
+    },
+    {
+      quote:
+        "Thanks to Budget Pro, I was able to plan my expenses and save enough for my dream vacation. Their expert tips and personalized approach made all the difference.",
+      name: "Pooja Patel",
+      title: "Marketing Executive, Ahmedabad",
+    },
+    {
+      quote:
+        "I always struggled with my monthly budget, but Budget Pro helped me take control of my finances. Their service is reliable, efficient, and perfect for people with busy lifestyles.",
+      name: "Ravi Prakash",
+      title: "Chartered Accountant, Chennai",
+    },
+  ];
+  
 
-    return (
-        <div className="w-full h-full py-20">
-            <h2 className="max-w-7xl text-center pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-                Testimonials
-            </h2>
-            <Carousel items={cards} />
-        </div>
-    );
+const Testimonials = () => {
+  return (
+    <>
+    <div>
+        <h2 className="max-w-7xl text-center pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+            Words from our users
+        </h2>
+    </div>
+    <div className="h-[30rem] rounded-md flex flex-col antialiased  dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
+      <InfiniteMovingCards
+        items={testimonialsD}
+        direction="right"
+        speed="slow"
+      />
+    </div>
+    </>
+  )
 }
 
-const DummyContent = () => {
-    return (
-        <>
-            {[...new Array(3).fill(1)].map((_, index) => {
-                return (
-                    <div
-                        key={"dummy-content" + index}
-                        className="bg-[#F5F5F7] dark:bg-neutral-800 p-8 md:p-14 rounded-3xl mb-4"
-                    >
-                        <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
-                            <span className="font-bold text-neutral-700 dark:text-neutral-200">
-                                The first rule of Apple club is that you boast
-                                about Apple club.
-                            </span>{" "}
-                            Keep a journal, quickly jot down a grocery list, and
-                            take amazing class notes. Want to convert those
-                            notes to text? No problem. Langotiya jeetu ka mara
-                            hua yaar is ready to capture every thought.
-                        </p>
-                        <Image
-                            src="https://assets.aceternity.com/macbook.png"
-                            alt="Macbook mockup from Aceternity UI"
-                            height="500"
-                            width="500"
-                            className="md:w-1/2 md:h-1/2 h-full w-full mx-auto object-contain"
-                        />
-                    </div>
-                );
-            })}
-        </>
-    );
-};
+export default Testimonials
 
-const data = [
-    {
-        category: "Artificial Intelligence",
-        title: "You can do more with AI.",
-        src: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=3556&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
-    {
-        category: "Productivity",
-        title: "Enhance your productivity.",
-        src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
-    {
-        category: "Product",
-        title: "Launching the new Apple Vision Pro.",
-        src: "https://images.unsplash.com/photo-1713869791518-a770879e60dc?q=80&w=2333&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
 
-    {
-        category: "Product",
-        title: "Maps for your iPhone 15 Pro Max.",
-        src: "https://images.unsplash.com/photo-1599202860130-f600f4948364?q=80&w=2515&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
-    {
-        category: "iOS",
-        title: "Photography just got better.",
-        src: "https://images.unsplash.com/photo-1602081957921-9137a5d6eaee?q=80&w=2793&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
-    {
-        category: "Hiring",
-        title: "Hiring for a Staff Software Engineer",
-        src: "https://images.unsplash.com/photo-1511984804822-e16ba72f5848?q=80&w=2048&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        content: <DummyContent />,
-    },
-];
+
