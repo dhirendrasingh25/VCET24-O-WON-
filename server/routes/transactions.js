@@ -31,7 +31,8 @@ router.get("/get-transactions", async (req, res) => {
 
   router.get("/get-transaction-summary", async (req, res) => {
     try {
-      const { email_id } = req.query; // Get email_id from query parameters
+      const { email_id } = req.query; 
+
   
       // Find the user by email and populate transactions
       const user = await User.findOne({ email_id }).populate('transactions').exec();
