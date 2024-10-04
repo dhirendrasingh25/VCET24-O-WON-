@@ -2,7 +2,7 @@
 // (data:string) {
 //     const response = await fetch(`/api/v1/user`, {
 //       method: "GET",
-//       credentials: "include", 
+//       credentials: "include",
 //     });
 //     // console.log(response);
 //     const user = await response.json();

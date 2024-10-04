@@ -15,7 +15,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 const quizData = {
     quiz: [
         {
-            question: "Do you currently track your monthly income and expenses?",
+            question:
+                "Do you currently track your monthly income and expenses?",
             type: "multiple_choice",
             options: ["Yes, regularly", "Sometimes", "No, not at all"],
         },
@@ -63,7 +64,6 @@ const quizData = {
         },
     ],
 };
-
 
 interface QuizResponse {
     question: string;

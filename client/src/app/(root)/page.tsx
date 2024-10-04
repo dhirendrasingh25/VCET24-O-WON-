@@ -13,8 +13,6 @@ import AboutUs from "@/components/landing/about-us";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import JoinUsButton from "@/components/landing/joinUsbutton";
 
-
-
 const words = [
     {
         text: "Nivesh",
@@ -55,7 +53,7 @@ export default function Page() {
                 <div id="home" className="h-screen">
                     <Home />
                 </div>
-                
+
                 <div id="quiz" className="h-full">
                     <div className=" sm:m-10 m-6 border-dotted border-4 rounded-2xl bg-zinc-100">
                         <div className="flex items-center justify-center">
@@ -63,8 +61,7 @@ export default function Page() {
                         </div>
                         <Quiz />
                         <div className="flex justify-center items-center p-10">
-                           
-                            <JoinUsButton/>
+                            <JoinUsButton />
                         </div>
                     </div>
                 </div>
