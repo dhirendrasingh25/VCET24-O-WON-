@@ -24,12 +24,18 @@ router.post('/', async (req, res) => {
 
 router.get('/check', async (req, res) => {
     try {
-        const {email_id} = req.query.email_id;
-        const user = await User.findOne({ email_id: email_id });
-
+        const {email_id, name, image} = req.query;
+        let user = await User.findOne({ email_id: email_id });
+        if(!user){
+            user = await User.create({
+                name, email_id, image
+            })
+            await user.save();
+        }
+        
         res.status(200).json({ 
             success: user ? true : false, 
-            complete_profile: user?.complete_profile 
+            user: user 
         });
     } catch (error) {
         console.error('Error fetching user:', error);

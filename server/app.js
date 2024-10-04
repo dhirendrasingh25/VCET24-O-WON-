@@ -8,7 +8,7 @@ import OcrRoute from './routes/ocr.js';
 import transactionRoutes from './routes/transactions.js';
 import quizRoutes from './routes/quiz.js';
 import authRoute from './routes/auth.js';
-
+import analysisRoute from './routes/analysis.js'
 const app = express();
 
 const corsOptions = {};
@@ -24,7 +24,7 @@ app.use(morgan('dev'));
 app.use("/plan", InvestmentRoute);
 app.use("/ocr", OcrRoute);
 app.use("/auth", authRoute)
-
+app.use("/analysis", analysisRoute);
 
 
 app.use('/api', transactionRoutes);
