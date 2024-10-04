@@ -7,6 +7,7 @@ const router = express.Router();
 // Function to calculate expenses based on email and date range
 async function calculateExpenses(email_id, startDate, endDate) {
     try {
+        console.log(email_id)
         const totalExpenses = await Transaction.aggregate([
             {
                 $match: {
@@ -21,44 +22,63 @@ async function calculateExpenses(email_id, startDate, endDate) {
                 }
             }
         ]);
-
+        console.log(totalExpenses)
         return totalExpenses.length ? totalExpenses[0].totalAmount : 0;
     } catch (error) {
         throw error;
     }
 }
 
-// Helper function to get start date
+// Helper function to get start date for different periods
 function getStartDate(period) {
     const now = new Date();
-    switch (period) {
+    now.setHours(0, 0, 0, 0); // Set to beginning of the day
+    const startDate = new Date(now);
+    
+    switch(period) {
         case 'weekly':
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+            startDate.setDate(now.getDate() - 7);
+            break;
         case 'monthly':
-            return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            startDate.setMonth(now.getMonth() - 1);
+            break;
         case 'yearly':
-            return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+            startDate.setFullYear(now.getFullYear() - 1);
+            break;
         default:
-            throw new Error(`Invalid period: ${period}`);
+            throw new Error('Invalid period');
     }
+    
+    return startDate;
 }
 
-// Generic expenses route
-router.get('/weekly/:email_id', async (req, res) => {
+// Function to format date to yyyy-mm-dd
+function formatDate(date) {
+    return date.toISOString().split('T')[0];
+}
+
+// Generic expense route for weekly, monthly, and yearly calculations
+router.get('/:period/:email_id', async (req, res) => {
     try {
-        const {  email_id } = req.params;
-        
-        // if (!['weekly', 'monthly', 'yearly'].includes(period)) {
-        //     return res.status(400).json({ error: `Invalid period: ${period}. Must be 'weekly', 'monthly', or 'yearly'.` });
-        // }
+        const { email_id, period } = req.params;
 
-        const startDate = getStartDate('weekly');
+        if (!['weekly', 'monthly', 'yearly'].includes(period)) {
+            return res.status(400).json({ error: `Invalid period: ${period}. Must be 'weekly', 'monthly', or 'yearly'.` });
+        }
+
+        const startDate = getStartDate(period);
         const endDate = new Date();
+        endDate.setHours(23, 59, 59, 999); // Set to end of the day
 
-        console.log(`Calculating weekly expenses for ${email_id} from ${startDate} to ${endDate}`);
+        console.log(`Calculating ${period} expenses for ${email_id} from ${formatDate(startDate)} to ${formatDate(endDate)}`);
 
         const totalExpenses = await calculateExpenses(email_id, startDate, endDate);
-        res.status(200).json({ success: true, [`Weekly Expenses`]: totalExpenses });
+        res.status(200).json({ 
+            success: true, 
+            [`${period}Expenses`]: totalExpenses,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate)
+        });
     } catch (error) {
         console.error(`Error calculating expenses: ${error.message}`);
         res.status(500).json({ error: error.message });

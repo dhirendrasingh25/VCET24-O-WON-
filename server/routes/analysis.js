@@ -5,9 +5,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const router = express.Router();
 
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
   try {
-    const questions = [
+    const question = [
       {
         question: "Do you currently track your monthly income and expenses?",
         type: "multiple_choice",
@@ -60,21 +60,33 @@ router.post("/", async (req, res, next) => {
     const { responses } = req.body;
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Go through this JSON file of questionnaire: ${JSON.stringify(
-      questions
-    )} and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(
-      responses
-    )}. Make the user feel that our finance website is very good and encourage them to create an account. give numerical data as i would need to give some statistics. The output should be just in json no other word should be written outside the json like those backticks.Dont write the word json`;
+    async function run() {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const result = await model.generateContent(prompt);
+      // Explicitly ask for JSON and guide the AI
+      const prompt = `
+        Go through this JSON file of questionnaire: ${JSON.stringify(question)} 
+        and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(responses)}.
+        Provide only valid JSON. Do not include any other text or explanations.`;
 
-    // Parse the result response correctly
-    // const jsonResponse = JSON.parse(result.response.text());
+      const result = await model.generateContent(prompt);
 
-    res.send(result.response.text()); // Send the response as proper JSON
+      // Clean the response by removing backticks and any unwanted characters
+      const cleanedResponse = result.response.text().replace(/`/g, '').trim();
+
+      // Extract the JSON response and send it
+      try {
+        const jsonResponse = JSON.parse(cleanedResponse);
+        res.send(jsonResponse);
+      } catch (error) {
+        // Handle if the AI response is not valid JSON
+        res.status(500).send({ error: "Failed to parse response as JSON" });
+      }
+    }
+
+    await run();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).send({ error: err.message });
   }
 });
 
