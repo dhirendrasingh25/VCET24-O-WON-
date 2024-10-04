@@ -34,6 +34,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { File, ListFilter } from "lucide-react";
+import { rupeeSymbol } from "@/lib/utils";
 
 export default function Dashboard() {
     const { data: session, status } = useSession();
@@ -65,20 +66,25 @@ export default function Dashboard() {
                         x-chunk="dashboard-05-chunk-0"
                     >
                         <CardHeader className="pb-3">
-                            <CardTitle>Your Orders</CardTitle>
+                            <CardTitle>Connect Your Bank</CardTitle>
                             <CardDescription className="text-balance max-w-lg leading-relaxed">
-                                Introducing Our Dynamic Orders Dashboard for
-                                Seamless Management and Insightful Analysis.
+                                Seamlessly connect your bank account for quick
+                                and easy transaction management
                             </CardDescription>
                         </CardHeader>
                         <CardFooter>
-                            <Button>Create New Order</Button>
+                            <Button className="bg-custom-blue hover:bg-blue-600 transition-all">
+                                Connect Bank Account
+                            </Button>
                         </CardFooter>
                     </Card>
+
                     <Card x-chunk="dashboard-05-chunk-1">
                         <CardHeader className="pb-2">
                             <CardDescription>This Week</CardDescription>
-                            <CardTitle className="text-4xl">$1,329</CardTitle>
+                            <CardTitle className="text-4xl">
+                                {rupeeSymbol}1,329
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-xs text-muted-foreground">
@@ -86,13 +92,19 @@ export default function Dashboard() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Progress value={25} aria-label="25% increase" />
+                            <Progress
+                                value={25}
+                                aria-label="25% increase"
+                                color="bg-custom-blue"
+                            />
                         </CardFooter>
                     </Card>
                     <Card x-chunk="dashboard-05-chunk-2">
                         <CardHeader className="pb-2">
                             <CardDescription>This Month</CardDescription>
-                            <CardTitle className="text-4xl">$5,329</CardTitle>
+                            <CardTitle className="text-4xl">
+                                {rupeeSymbol}5,329
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-xs text-muted-foreground">
@@ -100,10 +112,15 @@ export default function Dashboard() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Progress value={12} aria-label="12% increase" />
+                            <Progress
+                                value={12}
+                                aria-label="12% increase"
+                                color="bg-custom-blue"
+                            />
                         </CardFooter>
                     </Card>
                 </div>
+
                 <Tabs defaultValue="week">
                     <div className="flex items-center">
                         <TabsList>
