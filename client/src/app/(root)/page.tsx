@@ -1,8 +1,11 @@
-import React from "react";
-import Navbar from "@/components/landing-components/navbar";
-import Footer from "@/components/landing-components/footer";
+"use client";
+
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import Quiz from "@/components/landing-components/quiz";
+
+import Navbar from "@/components/landing/navbar";
+import Footer from "@/components/landing/footer";
+import Quiz from "@/components/landing/quiz";
 
 export default function Page() {
     return (
@@ -15,7 +18,15 @@ export default function Page() {
                 <div id="quiz" className="h-screen">
                     <Quiz />
                     <div className="flex items-center justify-center py-6">
-                        <Button>Join Us Today !</Button>
+                        <Button
+                            onClick={() =>
+                                signIn("google", {
+                                    callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
+                                })
+                            }
+                        >
+                            Join Us Today !
+                        </Button>
                     </div>
                 </div>
                 <div id="testimonial" className="h-screen">

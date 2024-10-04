@@ -13,6 +13,7 @@ const config: Config = {
             colors: {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
+                "custom-blue": "#2AABEE",
             },
             borderRadius: {
                 lg: "var(--radius)",

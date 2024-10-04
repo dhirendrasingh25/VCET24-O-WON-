@@ -1,5 +1,7 @@
-import React from "react";
-import { Button } from "../ui/button";
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 const Navbar = () => {
     return (
@@ -13,7 +15,16 @@ const Navbar = () => {
                 )}
             </div>
             <div>
-                <Button className="px-6">Login</Button>
+                <Button
+                    onClick={() =>
+                        signIn("google", {
+                            callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
+                        })
+                    }
+                    className="px-6"
+                >
+                    Login
+                </Button>
             </div>
         </div>
     );
