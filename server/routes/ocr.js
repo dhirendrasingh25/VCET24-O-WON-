@@ -5,24 +5,18 @@ import multer from "multer";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from 'url';
 import FormData from "form-data";
 
 const router = express.Router();
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "./uploads");
-    },
-    filename: (req, file, cb) => {
-      cb(
-        null,
-        file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-      );
-    },
-  });
-const uploads = multer({
-  dest: "uploads",
-  storage: storage,
-});
+
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Set up multer for in-memory storage
+const storage = multer.memoryStorage();
+const uploads = multer({ storage: storage });
 
 const threshold = 5;
 
@@ -65,24 +59,53 @@ function extract(data) {
   return res;
 }
 
+// Route to upload the receipt file
 router.post("/", uploads.single("recipt"), async (req, res) => {
   try {
-    const pathToFile = "uploads/recipt.jpeg";
-    await fs.promises.writeFile("uploads/recipt.jpeg", req.file.buffer);
-    const data = process(pathToFile);
-    res.send("uploaded");
+    const filePath = path.join(__dirname, "uploads", req.file.originalname);
+
+    // Ensure the 'uploads' directory exists
+    if (!fs.existsSync(path.join(__dirname, "uploads"))) {
+      fs.mkdirSync(path.join(__dirname, "uploads"));
+    }
+
+    // Write the file buffer to the 'uploads' directory
+    await fs.promises.writeFile(filePath, req.file.buffer);
+
+    res.send({ message: "File uploaded successfully", filePath: filePath });
   } catch (err) {
-    res.send(err.message);
+    res.status(500).send({ error: err.message });
   }
 });
 
-router.post("/bill", (req, res, next) => {
+// Function to get the latest file in the uploads directory
+const getLatestFile = (dir) => {
+  const files = fs.readdirSync(dir)
+    .map(file => ({
+      name: file,
+      time: fs.statSync(path.join(dir, file)).mtime.getTime()
+    }))
+    .sort((a, b) => b.time - a.time); // Sort by modified time in descending order
+  return files.length ? files[0].name : null; // Return the latest file name
+};
+
+// Route to send the latest uploaded file for OCR processing
+router.get("/bill", (req, res, next) => {
   try {
     const url = "https://yolo12138-paddle-ocr-api.hf.space/ocr?lang=ch";
-    const filePath = path.join(__dirname, "uploads", "recipt1.png");
+    const uploadsDir = path.join(__dirname, "uploads");
+
+    // Get the latest file in the uploads directory
+    const latestFile = getLatestFile(uploadsDir);
+    if (!latestFile) {
+      return res.status(404).send({ error: "No files found in uploads directory" });
+    }
+
+    const filePath = path.join(uploadsDir, latestFile);
+
     const formData = new FormData();
     formData.append("file", fs.createReadStream(filePath), {
-      filename: "recipt1.png",
+      filename: latestFile,
       contentType: "image/png",
     });
 
@@ -106,10 +129,12 @@ router.post("/bill", (req, res, next) => {
           data.push([item.txt, [x, y]]);
         });
 
-        console.log("Result:", extract(data));
+        const extractedData = extract(data);
+        res.send({ extractedData });
       })
       .catch((error) => {
         console.error("Error:", error);
+        res.status(500).send({ error: error.message });
       });
   } catch (err) {
     res.status(500).send({ error: err.message });
