@@ -65,7 +65,7 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="about-us" className="h-full">
                     <AboutUs />
                 </div>

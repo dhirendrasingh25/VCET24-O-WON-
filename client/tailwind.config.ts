@@ -12,7 +12,9 @@ function addVariablesForColors({
     addBase,
     theme,
 }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     addBase: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     theme: any;
 }) {
     const allColors = flattenColorPalette(theme("colors"));
@@ -42,8 +44,7 @@ const config: Config = {
             },
             animation: {
                 aurora: "aurora 60s linear infinite",
-                scroll:
-          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+                scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
             },
             keyframes: {
                 aurora: {
@@ -56,9 +57,9 @@ const config: Config = {
                 },
                 scroll: {
                     to: {
-                      transform: "translate(calc(-50% - 0.5rem))",
+                        transform: "translate(calc(-50% - 0.5rem))",
                     },
-                  },
+                },
             },
         },
     },

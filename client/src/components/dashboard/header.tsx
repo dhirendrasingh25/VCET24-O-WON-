@@ -10,7 +10,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator
+    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
     Breadcrumb,
@@ -23,12 +23,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
     Home,
-    LineChart,
-    Package,
+    Landmark,
+    CircleUserRound,
     Package2,
-    PanelLeft,
-    ShoppingCart,
-    Users2,
+    BadgeIndianRupee,
+    CircleDollarSign,
+    MessageCircle,
+    PanelLeft
 } from "lucide-react";
 
 export default function Header() {
@@ -53,46 +54,18 @@ export default function Header() {
                             className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                         >
                             <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                            <span className="sr-only">Acme Inc</span>
+                            <span className="sr-only">Bachat Pro</span>
                         </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                        >
-                            <Home className="h-5 w-5" />
-                            Dashboard
-                        </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-foreground"
-                        >
-                            <ShoppingCart className="h-5 w-5" />
-                            Orders
-                        </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                        >
-                            <Package className="h-5 w-5" />
-                            Products
-                        </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                        >
-                            <Users2 className="h-5 w-5" />
-                            Customers
-                        </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                        >
-                            <LineChart className="h-5 w-5" />
-                            Settings
-                        </Link>
+                        <SheetNavLink href="/dashboard" icon={Home} label="Home" />
+                        <SheetNavLink href="/dashboard/my-banks" icon={CircleDollarSign} label="My Banks" />
+                        <SheetNavLink href="/dashboard/global-chat" icon={MessageCircle} label="Global Chat" />
+                        <SheetNavLink href="/dashboard/payment-transfer" icon={BadgeIndianRupee} label="Payment Transfer" />
+                        <SheetNavLink href="/dashboard/connect-bank" icon={Landmark} label="Connect Bank" />
+                        <SheetNavLink href="/dashboard/my-account" icon={CircleUserRound} label="My Account" />
                     </nav>
                 </SheetContent>
             </Sheet>
+
             <Breadcrumb className="hidden md:flex">
                 <BreadcrumbList>
                     {title.map((link, index) => (
@@ -145,5 +118,30 @@ export default function Header() {
                 </DropdownMenu>
             </div>
         </header>
+    );
+}
+
+interface SheetNavLinkProps {
+    href: string;
+    icon: React.ElementType;
+    label: string;
+}
+
+function SheetNavLink({ href, icon: Icon, label }: SheetNavLinkProps) {
+    const pathname = usePathname();
+    const isActive = pathname === href;
+
+    return (
+        <Link
+            href={href}
+            className={`flex items-center gap-4 px-2.5 py-2 text-lg transition-colors ${
+                isActive
+                    ? "text-custom-blue hover:text-blue-600"
+                    : "text-black hover:text-blue-600"
+            }`}
+        >
+            <Icon className="h-5 w-5 stoke-2 font-bold hover:text-blue-600 transition-all" />
+            {label}
+        </Link>
     );
 }

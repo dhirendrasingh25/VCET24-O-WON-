@@ -12,11 +12,11 @@ import {
 import {
     Home,
     Landmark,
-    Receipt,
+    CircleUserRound,
     Package2,
     BadgeIndianRupee,
     CircleDollarSign,
-    CircleUserRound
+    MessageCircle
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -47,9 +47,9 @@ export default function Sidebar() {
                     label="My Banks"
                 />
                 <SidebarLink
-                    href="/dashboard/transaction-history"
-                    icon={Receipt}
-                    label="Transaction History"
+                    href="/dashboard/global-chat"
+                    icon={MessageCircle}
+                    label="Global Chat"
                 />
                 <SidebarLink
                     href="/dashboard/payment-transfer"

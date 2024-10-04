@@ -18,23 +18,25 @@ import {
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-type Expense = {
-    description: string;
+type Investment = {
+    investType: string;
     amount: number;
 };
 
 type FormData = {
     age: number;
-    ailments: string;
-    lifestyle: string;
+    occupation: string;
+    ailments: number;
     dependents: number;
     dependantDescription: string;
     goal: string;
-    expenses: Expense[];
-    currentInvestments: string[];
+    mandatoryExpenses: number;
+    currentInvestments: Investment[];
     duration: string;
-    review: string;
+    loans: number;
+    emi: number;
 };
 
 export default function Component() {
@@ -44,15 +46,16 @@ export default function Component() {
 
     const [formData, setFormData] = useState<FormData>({
         age: 18,
-        ailments: "",
-        lifestyle: "",
+        occupation: "",
+        ailments: 0,
         dependents: 0,
         dependantDescription: "",
         goal: "",
-        expenses: [{ description: "", amount: 0 }],
-        currentInvestments: [""],
+        mandatoryExpenses: 0,
+        currentInvestments: [],
         duration: "",
-        review: "",
+        loans: 0,
+        emi: 0,
     });
 
     const handleInputChange = (
@@ -73,43 +76,14 @@ export default function Component() {
         setFormData((prev) => ({ ...prev, duration: value }));
     };
 
-    const handleExpenseChange = (
-        index: number,
-        field: "description" | "amount",
-        value: string,
-    ) => {
-        setFormData((prev) => {
-            const newExpenses = [...prev.expenses];
-            if (field === "amount") {
-                newExpenses[index] = {
-                    ...newExpenses[index],
-                    [field]: parseFloat(value) || 0,
-                };
-            } else {
-                newExpenses[index] = { ...newExpenses[index], [field]: value };
-            }
-            return { ...prev, expenses: newExpenses };
-        });
-    };
-
-    const addExpense = () => {
-        setFormData((prev) => ({
-            ...prev,
-            expenses: [...prev.expenses, { description: "", amount: 0 }],
-        }));
-    };
-
-    const removeExpense = (index: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            expenses: prev.expenses.filter((_, i) => i !== index),
-        }));
-    };
-
-    const handleInvestmentChange = (index: number, value: string) => {
+    const handleInvestmentChange = (index: number, field: keyof Investment, value: string) => {
         setFormData((prev) => {
             const newInvestments = [...prev.currentInvestments];
-            newInvestments[index] = value;
+            if (field === 'amount') {
+                newInvestments[index] = { ...newInvestments[index], [field]: parseFloat(value) || 0 };
+            } else {
+                newInvestments[index] = { ...newInvestments[index], [field]: value };
+            }
             return { ...prev, currentInvestments: newInvestments };
         });
     };
@@ -117,16 +91,14 @@ export default function Component() {
     const addInvestment = () => {
         setFormData((prev) => ({
             ...prev,
-            currentInvestments: [...prev.currentInvestments, ""],
+            currentInvestments: [...prev.currentInvestments, { investType: "", amount: 0 }],
         }));
     };
 
     const removeInvestment = (index: number) => {
         setFormData((prev) => ({
             ...prev,
-            currentInvestments: prev.currentInvestments.filter(
-                (_, i) => i !== index,
-            ),
+            currentInvestments: prev.currentInvestments.filter((_, i) => i !== index),
         }));
     };
 
@@ -136,7 +108,7 @@ export default function Component() {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/received`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile/complete`,
                 {
                     email_id: session?.user?.email,
                     formData,
@@ -162,7 +134,7 @@ export default function Component() {
     if (isLoading) {
         return (
             <section className="flex justify-center items-center h-screen">
-                <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-[#2AABEE] rounded-full"></div>
                 <span className="ml-4 text-lg">Loading</span>
             </section>
         );
@@ -172,206 +144,215 @@ export default function Component() {
         <Dialog open={true}>
             <DialogTitle>Complete your profile</DialogTitle>
             <DialogContent
-                className="max-w-3xl max-h-[90vh]"
+                className="max-w-4xl max-h-[90vh] mx-4 sm:mx-0"
                 blur={true}
                 closeButton={false}
             >
-                <ScrollArea className="max-h-[70vh] px-2">
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div>
-                            <Label htmlFor="age">Age</Label>
-                            <Input
-                                id="age"
-                                name="age"
-                                type="number"
-                                value={formData.age}
-                                onChange={handleNumberInputChange}
-                                min={18}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="ailments">
-                                Ailments (For example, Diabetes)
-                            </Label>
-                            <Input
-                                id="ailments"
-                                name="ailments"
-                                value={formData.ailments}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="lifestyle">
-                                Lifestyle (Explain how much money you spend on
-                                yourself)
-                            </Label>
-                            <Input
-                                id="lifestyle"
-                                name="lifestyle"
-                                value={formData.lifestyle}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="dependents">
-                                Number of Dependents (People who are dependent
-                                on you)
-                            </Label>
-                            <Input
-                                id="dependents"
-                                name="dependents"
-                                type="number"
-                                value={formData.dependents}
-                                onChange={handleNumberInputChange}
-                                min={0}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="dependantDescription">
-                                Dependant Description (Optional)
-                            </Label>
-                            <Textarea
-                                id="dependantDescription"
-                                name="dependantDescription"
-                                value={formData.dependantDescription}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="goal">Goal</Label>
-                            <Input
-                                id="goal"
-                                name="goal"
-                                value={formData.goal}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label>Expenses</Label>
-                            {formData.expenses.map((expense, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-center space-x-2 mt-2"
-                                >
+                <ScrollArea className="max-h-[80vh] px-2">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Personal Information</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 p-4">
+                                <div>
+                                    <Label htmlFor="age">Age</Label>
                                     <Input
-                                        placeholder="Amount"
-                                        value={expense.description}
-                                        onChange={(e) =>
-                                            handleExpenseChange(
-                                                index,
-                                                "description",
-                                                e.target.value,
-                                            )
-                                        }
+                                        id="age"
+                                        name="age"
+                                        type="text"
+                                        value={formData.age}
+                                        onChange={handleNumberInputChange}
+                                        min={18}
                                         required
                                     />
+                                </div>
+                                <div>
+                                    <Label htmlFor="occupation">Occupation</Label>
                                     <Input
-                                        type="number"
-                                        placeholder="Amount"
-                                        value={expense.amount}
-                                        onChange={(e) =>
-                                            handleExpenseChange(
-                                                index,
-                                                "amount",
-                                                e.target.value,
-                                            )
-                                        }
+                                        id="occupation"
+                                        name="occupation"
+                                        type="text"
+                                        value={formData.occupation}
+                                        onChange={handleInputChange}
                                         required
                                     />
+                                </div>
+                                <div>
+                                    <Label htmlFor="ailments">Annual Health Expenses (INR)</Label>
+                                    <Input
+                                        id="ailments"
+                                        name="ailments"
+                                        type="text"
+                                        value={formData.ailments}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="dependents">Number of Dependents</Label>
+                                    <Input
+                                        id="dependents"
+                                        name="dependents"
+                                        type="text"
+                                        value={formData.dependents}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="dependantDescription">Dependant Description (Optional)</Label>
+                                    <Textarea
+                                        id="dependantDescription"
+                                        name="dependantDescription"
+                                        value={formData.dependantDescription}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 2 children, 1 elderly parent"
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Financial Information</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 p-4">
+                                <div>
+                                    <Label htmlFor="mandatoryExpenses">Monthly Mandatory Expenses (INR)</Label>
+                                    <Input
+                                        id="mandatoryExpenses"
+                                        name="mandatoryExpenses"
+                                        type="text"
+                                        value={formData.mandatoryExpenses}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Current Investments</Label>
+                                    {formData.currentInvestments.map(
+                                        (investment, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center space-x-2 mt-2"
+                                            >
+                                                <Input
+                                                    placeholder="Investment type"
+                                                    value={investment.investType}
+                                                    onChange={(e) =>
+                                                        handleInvestmentChange(
+                                                            index,
+                                                            'investType',
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    required
+                                                />
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Amount (INR)"
+                                                    value={investment.amount}
+                                                    onChange={(e) =>
+                                                        handleInvestmentChange(
+                                                            index,
+                                                            'amount',
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    required
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    onClick={() => removeInvestment(index)}
+                                                    className="bg-[#2AABEE] hover:bg-[#2AABEE]/90"
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        ),
+                                    )}
                                     <Button
                                         type="button"
-                                        variant="destructive"
-                                        onClick={() => removeExpense(index)}
+                                        onClick={addInvestment}
+                                        className="mt-2 bg-[#2AABEE] hover:bg-[#2AABEE]/90 ml-2"
                                     >
-                                        Remove
+                                        Add Investment
                                     </Button>
                                 </div>
-                            ))}
-                            <Button
-                                type="button"
-                                onClick={addExpense}
-                                className="mt-2"
-                            >
-                                Add Expense
-                            </Button>
-                        </div>
-                        <div>
-                            <Label>Current Investments</Label>
-                            {formData.currentInvestments.map(
-                                (investment, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center space-x-2 mt-2"
+                                <div>
+                                    <Label htmlFor="loans">Total Outstanding Loans (INR)</Label>
+                                    <Input
+                                        id="loans"
+                                        name="loans"
+                                        type="text"
+                                        value={formData.loans}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="emi">Total Monthly EMI (INR)</Label>
+                                    <Input
+                                        id="emi"
+                                        name="emi"
+                                        type="text"
+                                        value={formData.emi}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Financial Goals</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 p-4">
+                                <div>
+                                    <Label htmlFor="goal">Financial Goal</Label>
+                                    <Input
+                                        id="goal"
+                                        name="goal"
+                                        value={formData.goal}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., Retirement savings, Child's education"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="duration">Investment Duration</Label>
+                                    <Select
+                                        onValueChange={handleSelectChange}
+                                        value={formData.duration}
                                     >
-                                        <Input
-                                            placeholder="Investment"
-                                            value={investment}
-                                            onChange={(e) =>
-                                                handleInvestmentChange(
-                                                    index,
-                                                    e.target.value,
-                                                )
-                                            }
-                                            required
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            onClick={() =>
-                                                removeInvestment(index)
-                                            }
-                                        >
-                                            Remove
-                                        </Button>
-                                    </div>
-                                ),
-                            )}
-                            <Button
-                                type="button"
-                                onClick={addInvestment}
-                                className="mt-2"
-                            >
-                                Add Investment
-                            </Button>
-                        </div>
-                        <div>
-                            <Label htmlFor="duration">Duration</Label>
-                            <Select
-                                onValueChange={handleSelectChange}
-                                value={formData.duration}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select duration" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="short">
-                                        Short term
-                                    </SelectItem>
-                                    <SelectItem value="medium">
-                                        Medium term
-                                    </SelectItem>
-                                    <SelectItem value="long">
-                                        Long term
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label htmlFor="review">Review</Label>
-                            <Textarea
-                                id="review"
-                                name="review"
-                                value={formData.review}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <Button type="submit">Submit</Button>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select duration" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="short">
+                                                Short term (0-3 years)
+                                            </SelectItem>
+                                            <SelectItem value="medium">
+                                                Medium term (3-7 years)
+                                            </SelectItem>
+                                            <SelectItem value="long">
+                                                Long term (7+ years)
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Button type="submit" className="w-full bg-[#2AABEE] hover:bg-[#2AABEE]/90">Save Profile</Button>
                     </form>
                 </ScrollArea>
             </DialogContent>
