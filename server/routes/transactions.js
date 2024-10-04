@@ -84,193 +84,143 @@ router.get("/get-transactions", async (req, res) => {
 
   router.get("/get-transactions-weekly", async (req, res) => {
     try {
-      // Aggregate transactions by week
-      const weeklyTransactions = await Transaction.aggregate([
-        {
-          $group: {
-            _id: {
-              year: { $year: "$date" },
-              week: { $week: "$date" }
-            },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.week": 1 }
-        }
-      ]);
+      const { email_id } = req.query;
   
-      // Format the result for easy plotting in bar graph
-      const formattedData = weeklyTransactions.map(item => ({
-        week: `Year ${item._id.year}, Week ${item._id.week}`,
-        totalAmount: item.totalAmount,
-        count: item.count
-      }));
-  
-      res.status(200).json({
-        success: true,
-        message: "Weekly transactions aggregated successfully",
-        data: formattedData
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error retrieving weekly transactions",
-        error,
-      });
-    }
-  });
-
-  router.get("/get-transactions-monthly", async (req, res) => {
-    try {
-      // Aggregate transactions by month
-      const monthlyTransactions = await Transaction.aggregate([
-        {
-          $group: {
-            _id: {
-              year: { $year: "$date" },
-              month: { $month: "$date" }
-            },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.month": 1 }
-        }
-      ]);
-  
-      // Format the result for easy plotting in bar graph
-      const formattedData = monthlyTransactions.map(item => ({
-        month: `Year ${item._id.year}, Month ${item._id.month}`,
-        totalAmount: item.totalAmount,
-        count: item.count
-      }));
-  
-      res.status(200).json({
-        success: true,
-        message: "Monthly transactions aggregated successfully",
-        data: formattedData
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error retrieving monthly transactions",
-        error,
-      });
-    }
-  });
-
-  router.get("/get-transactions-weekly", async (req, res) => {
-    try {
-      // Aggregate transactions by week
-      const weeklyTransactions = await Transaction.aggregate([
-        {
-          $group: {
-            _id: {
-              year: { $year: "$date" },
-              week: { $week: "$date" }
-            },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.week": 1 }
-        }
-      ]);
-  
-      // Format the result for easy plotting in bar graph
-      const formattedData = weeklyTransactions.map(item => ({
-        week: `Year ${item._id.year}, Week ${item._id.week}`,
-        totalAmount: item.totalAmount,
-        count: item.count
-      }));
-  
-      res.status(200).json({
-        success: true,
-        message: "Weekly transactions aggregated successfully",
-        data: formattedData
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error retrieving weekly transactions",
-        error,
-      });
-    }
-  });
-
-  router.get("/get-transactions-monthly", async (req, res) => {
-    try {
-      // Aggregate transactions by month
-      const monthlyTransactions = await Transaction.aggregate([
-        {
-          $group: {
-            _id: {
-              year: { $year: "$date" },
-              month: { $month: "$date" }
-            },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.month": 1 }
-        }
-      ]);
-  
-      // Format the result for easy plotting in bar graph
-      const formattedData = monthlyTransactions.map(item => ({
-        month: `Year ${item._id.year}, Month ${item._id.month}`,
-        totalAmount: item.totalAmount,
-        count: item.count
-      }));
-  
-      res.status(200).json({
-        success: true,
-        message: "Monthly transactions aggregated successfully",
-        data: formattedData
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error retrieving monthly transactions",
-        error,
-      });
-    }
-  });
-
-  router.post("/add-transaction", async (req, res) => {
-    try {
-      const { email_id, description, amount, date, category } = req.body;
-  
-      // Find the user by email_id
-      const user = await User.findOne({ email_id });
+      if(!email_id) {
+        return res.status(404).json({ success: false, message: "Email not found." });
+      }
+      
+      // Find the user by email and populate the transactions
+      const user = await User.findOne({ email_id }).populate('transactions').exec();
   
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found." });
       }
   
-      // Create a new transaction
+      // Aggregate transactions by week for the specific user
+      const weeklyTransactions = await Transaction.aggregate([
+        {
+          $match: {
+            _id: { $in: user.transactions.map(t => mongoose.Types.ObjectId(t._id)) } // Match user's transactions
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$date" },
+              week: { $week: "$date" }
+            },
+            totalAmount: { $sum: "$amount" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { "_id.year": 1, "_id.week": 1 }
+        }
+      ]);
+  
+      // Format the result for easy plotting in a bar graph
+      const formattedData = weeklyTransactions.map(item => ({
+        week: `Year ${item._id.year}, Week ${item._id.week}`,
+        totalAmount: item.totalAmount,
+        count: item.count
+      }));
+  
+      res.status(200).json({
+        success: true,
+        message: "Weekly transactions aggregated successfully",
+        data: formattedData
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error retrieving weekly transactions",
+        error,
+      });
+    }
+  });
+  
+
+  router.get("/get-transactions-monthly", async (req, res) => {
+    try {
+      const { email_id } = req.query;
+  
+      if(!email_id) {
+        return res.status(404).json({ success: false, message: "Email not found." });
+      }
+      const user = await User.findOne({ email_id }).populate('transactions').exec();
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      // Aggregate transactions by month for the specific user
+      const monthlyTransactions = await Transaction.aggregate([
+        {
+          $match: {
+            _id: { $in: user.transactions.map(t => mongoose.Types.ObjectId(t._id)) } // Match user's transactions
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$date" },
+              month: { $month: "$date" }
+            },
+            totalAmount: { $sum: "$amount" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { "_id.year": 1, "_id.month": 1 }
+        }
+      ]);
+  
+      // Format the result for easy plotting in a bar graph
+      const formattedData = monthlyTransactions.map(item => ({
+        month: `Year ${item._id.year}, Month ${item._id.month}`,
+        totalAmount: item.totalAmount,
+        count: item.count
+      }));
+  
+      res.status(200).json({
+        success: true,
+        message: "Monthly transactions aggregated successfully",
+        data: formattedData
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error retrieving monthly transactions",
+        error,
+      });
+    }
+  });
+  
+
+
+  router.post("/add-transaction", async (req, res) => {
+    try {
+      const { email_id, description, amount, date, category } = req.body;
+
+      const user = await User.findOne({ email_id });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+
       const newTransaction = new Transaction({
         description,
         amount,
         date,
         category,
       });
-  
-      // Save the transaction
+
       await newTransaction.save();
-  
-      // Add the transaction to the user's transactions array
+
       user.transactions.push(newTransaction);
-  
-      // Save the updated user
+
       await user.save();
-  
-      // Respond with success and the created transaction
       res.status(201).json({
         success: true,
         message: "Transaction added successfully",
@@ -278,6 +228,34 @@ router.get("/get-transactions", async (req, res) => {
       });
     } catch (error) {
       res.status(500).json({ success: false, message: "Error adding transaction", error });
+    }
+  });
+  router.get("/get-transaction-summary", async (req, res) => {
+    try {
+      const { email_id } = req.query;  
+      const user = await User.findOne({ email_id }).populate('transactions').exec();
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      const transactions = user.transactions || [];
+      if (transactions.length === 0) {
+        return res.status(404).json({ success: false, message: "No transactions found for this user." });
+      }
+      const numberOfTransactions = transactions.length;
+      const totalTransactionAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+      const maxTransactionAmount = Math.max(...transactions.map(transaction => transaction.amount));
+  
+      // Respond with the calculated summary
+      res.status(200).json({
+        success: true,
+        numberOfTransactions,
+        totalTransactionAmount,
+        maxTransactionAmount
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Error retrieving transaction summary", error });
     }
   });
 
