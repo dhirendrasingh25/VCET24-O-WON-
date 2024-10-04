@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Transaction"
   },
-  quiz: {
+  profile: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Quiz"
+    ref: "Profile"
   },
 });
 

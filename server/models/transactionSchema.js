@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
 const transactionSchema = new mongoose.Schema({
-    id: String,
-    email_id: {
-        type: String, 
+    description:{
+        type: String,
         required: true
     },
     amount: {
@@ -16,9 +15,9 @@ const transactionSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true,
-        enum: ['Food', 'Transport', 'Entertainment', 'Shopping', 'Other'],
+        required: true
     }
+   
 }, {
     timestamps: true
 });
