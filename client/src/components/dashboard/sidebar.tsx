@@ -16,6 +16,7 @@ import {
     Package2,
     BadgeIndianRupee,
     CircleDollarSign,
+    CircleUserRound
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -60,6 +61,11 @@ export default function Sidebar() {
                     icon={Landmark}
                     label="Connect Bank"
                 />
+                <SidebarLink
+                    href="/dashboard/my-account"
+                    icon={CircleUserRound}
+                    label="My Account"
+                />
             </nav>
         </aside>
     );
@@ -74,8 +80,6 @@ interface SidebarLinkProps {
 function SidebarLink({ href, icon: Icon, label }: SidebarLinkProps) {
     const pathname = usePathname();
     const isActive = pathname === href;
-
-    console.log(pathname);
 
     return (
         <TooltipProvider delayDuration={1}>

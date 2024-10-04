@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -42,15 +43,49 @@ export default function Dashboard() {
     const router = useRouter();
 
     useEffect(() => {
+        async function checkProfile() {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check`,
+                    {
+                        params: {
+                            email_id: session?.user?.email,
+                            image: session?.user?.image,
+                            name: session?.user?.name,
+                        },
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    },
+                );
+
+                const data = response.data;
+
+                if (data.user.complete_profile === false) {
+                    router.push("/dashboard/complete-profile");
+                }
+            } catch (error) {
+                console.log(`Error checking profile: ${error}`);
+            }
+        }
+        checkProfile();
+    }, [router, session]);
+
+    useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/");
-        } else if (status !== "loading") {
+        } else if (status === "authenticated") {
             setIsLoading(false);
         }
     }, [status, router]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <section className="flex justify-center items-center h-screen">
+                <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                <span className="ml-4 text-lg">Loading</span>
+            </section>
+        );
     }
 
     if (!session) {

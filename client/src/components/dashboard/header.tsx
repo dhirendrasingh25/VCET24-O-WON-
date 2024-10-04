@@ -10,6 +10,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
+    DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import {
     Breadcrumb,
@@ -130,7 +131,12 @@ export default function Header() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                            <Link href="/dashboard/profile">My Account</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem
+                            className="bg-red-500 font-bold text-white focus:bg-red-600 focus:text-white"
                             onClick={() => signOut({ callbackUrl: "/" })}
                         >
                             Logout

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -11,39 +12,22 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user }) {
             try {
-                const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/check`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            email_id: user.email,
-                        }),
+                await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check`, {
+                    params: {
+                        email_id: user.email,
+                        image: user.image,
+                        name: user.name
                     },
-                );
-
-                const data = await response.json();
-                console.log(`API response: `, data);
-
-                // If user boolean in response is false, redirect to complete profile
-                if (data.complete_profile === false) {
-                    // Here you return a URL to redirect the user to
-                    return "/dashboard/complete-profile";
-                }
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
 
                 return true;
             } catch (error) {
                 console.log(`Error posting user data: ${error}`);
-                return false;
+                return true;
             }
-        },
-
-        // Handle redirection after login
-        async redirect({ url, baseUrl }) {
-            // Redirect to the given URL, or use baseUrl as fallback
-            return url.startsWith(baseUrl) ? url : baseUrl;
         },
     },
 };

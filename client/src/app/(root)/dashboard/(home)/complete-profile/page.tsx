@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Select,
     SelectContent,
@@ -13,14 +16,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 type Expense = {
     description: string;
@@ -41,7 +38,10 @@ type FormData = {
 };
 
 export default function Component() {
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: session, status } = useSession();
     const router = useRouter();
+
     const [formData, setFormData] = useState<FormData>({
         age: 18,
         ailments: "",
@@ -130,15 +130,52 @@ export default function Component() {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log(formData);
-        router.push("/dashboard");
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/received`,
+                {
+                    email_id: session?.user?.email,
+                    formData,
+                },
+            );
+
+            if (response.status === 200) {
+                router.push("/dashboard");
+            }
+        } catch (error) {
+            console.error("Failed to submit the form:", error);
+        }
     };
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/");
+        } else if (status === "authenticated") {
+            setIsLoading(false);
+        }
+    }, [status, router]);
+
+    if (isLoading) {
+        return (
+            <section className="flex justify-center items-center h-screen">
+                <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                <span className="ml-4 text-lg">Loading</span>
+            </section>
+        );
+    }
 
     return (
         <Dialog open={true}>
-            <DialogContent className="max-w-3xl max-h-[90vh]" blur={true} closeButton={false}>
+            <DialogTitle>Complete your profile</DialogTitle>
+            <DialogContent
+                className="max-w-3xl max-h-[90vh]"
+                blur={true}
+                closeButton={false}
+            >
                 <ScrollArea className="max-h-[70vh] px-2">
                     <form onSubmit={handleSubmit} className="space-y-8">
                         <div>
@@ -154,7 +191,9 @@ export default function Component() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="ailments">Ailments</Label>
+                            <Label htmlFor="ailments">
+                                Ailments (For example, Diabetes)
+                            </Label>
                             <Input
                                 id="ailments"
                                 name="ailments"
@@ -164,7 +203,10 @@ export default function Component() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="lifestyle">Lifestyle</Label>
+                            <Label htmlFor="lifestyle">
+                                Lifestyle (Explain how much money you spend on
+                                yourself)
+                            </Label>
                             <Input
                                 id="lifestyle"
                                 name="lifestyle"
@@ -175,7 +217,8 @@ export default function Component() {
                         </div>
                         <div>
                             <Label htmlFor="dependents">
-                                Number of Dependents
+                                Number of Dependents (People who are dependent
+                                on you)
                             </Label>
                             <Input
                                 id="dependents"
@@ -216,7 +259,7 @@ export default function Component() {
                                     className="flex items-center space-x-2 mt-2"
                                 >
                                     <Input
-                                        placeholder="Description"
+                                        placeholder="Amount"
                                         value={expense.description}
                                         onChange={(e) =>
                                             handleExpenseChange(
