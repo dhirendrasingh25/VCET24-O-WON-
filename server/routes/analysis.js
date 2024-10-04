@@ -66,28 +66,36 @@ router.post("/", async (req, res) => {
       // Explicitly ask for JSON and guide the AI
       const prompt = `
         Go through this JSON file of questionnaire: ${JSON.stringify(question)} 
-        and generate 4-5 fields and give a score to the user based on the responses: ${JSON.stringify(
+        and generate 4-5 name fields and give a score to the user based on the responses: ${JSON.stringify(
           responses
-        )}.
-        Provide only valid JSON. Do not include any other text or explanations.`;
-
+        )}. eg:{name:"something", score:'number'}
+        Provide only valid JSON. Do not include any other text or explanations like backticks or json. eg:{name:"something", score:'number'}`;
+      
       const result = await model.generateContent(prompt);
 
-      // Clean the response by removing backticks and any unwanted characters
-      const cleanedResponse = result.response.text().replace(/`/g, "").trim();
-
+      // Clean the response by trimming whitespace
+      const cleanedResponse = result.response.text().trim();
+        console.log(cleanedResponse)
       // Extract the JSON response and send it
       try {
-        const jsonResponse = JSON.parse(cleanedResponse);
-        res.send(jsonResponse);
+        // Check if the cleaned response is a valid JSON format
+        // const jsonResponse = JSON.parse(cleanedResponse);
+        
+        // Validate the structure of the jsonResponse
+        // if (!jsonResponse.fields || !Array.isArray(jsonResponse.fields) || !jsonResponse.totalScore) {
+        //   throw new Error("Invalid response structure.");
+        // }
+
+        res.send(cleanedResponse);
       } catch (error) {
-        // Handle if the AI response is not valid JSON
+        console.error(`Error parsing JSON response: ${error.message}`);
         res.status(500).send({ error: "Failed to parse response as JSON" });
       }
     }
 
     await run();
   } catch (err) {
+    console.error(`Error in AI generation: ${err.message}`);
     res.status(500).send({ error: err.message });
   }
 });
