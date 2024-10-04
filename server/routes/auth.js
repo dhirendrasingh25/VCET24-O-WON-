@@ -1,6 +1,5 @@
 import express from 'express';
 import User from '../models/userSchema.js'
-import Quiz from '../models/quizSchema.js';
 
 
 const router = express.Router();
@@ -10,27 +9,27 @@ router.post('/received', async (req, res) => {
         const { email_id, formData } = req.body;
 
         if (!email_id || !formData) {
-            return res.status(400).json({ message: 'Email ID  and formData is required' });
+            return res.status(400).json({ success:false,message: 'Email ID  and formData is required' });
         }
 
         const user = await User.findOne({ email_id });
 
         if (!user) {
-            return res.status(404).json({ message: 'User with the provided email ID not found' });
+            return res.status(404).json({ success:false,message: 'User with the provided email ID not found' });
         }
 
-        const newQuiz = new Quiz({
+        const newProfile = new Profile({
             ...formData,
         });
 
-        const savedQuiz = await newQuiz.save();
+        const savedProfile = await newProfile.save();
 
-        user.quiz = savedQuiz._id;
+        user.profile = savedProfile._id;
         user.complete_profile = true;
 
         await user.save();
 
-        res.json({ sucess: true, message: 'Profile updated successfully', user, savedQuiz });
+        res.json({ sucess: true, message: 'Profile updated successfully', user, savedProfile });
     } catch (error) {
         res.status(500).json({success:false, message: error.message });
     }
@@ -43,15 +42,15 @@ router.post('/', async (req, res) => {
 
         const existing = await User.findOne({email_id});
         if (existing) {
-            return res.status(400).json({success: false, message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists' });
         }
         const newUser = new User({
             name, email_id, image
         });
         await newUser.save();
-        res.status(201).json({success:true, message:'User profile created' });
+        res.status(201).json({ message:'User profile created' });
     } catch (error) {
-        res.status(500).json({success:false, message: 'Error adding transaction', error });
+        res.status(500).json({ message: 'Error adding transaction', error });
     }
 });
 
