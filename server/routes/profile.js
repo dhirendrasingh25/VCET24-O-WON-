@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
         const newProfileData = await profileData.save();
 
-        user.profile = savedProfile._id;
+        user.profile = newProfileData._id;
         user.complete_profile = true;
 
         await user.save();
