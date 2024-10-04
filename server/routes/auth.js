@@ -4,6 +4,38 @@ import User from '../models/userSchema.js'
 
 const router = express.Router();
 
+router.post('/received', async (req, res) => {
+    try {
+        const { email_id, formData } = req.body;
+
+        if (!email_id || !formData) {
+            return res.status(400).json({ message: 'Email ID  and formData is required' });
+        }
+
+        const user = await User.findOne({ email_id });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User with the provided email ID not found' });
+        }
+
+        const newQuiz = new Quiz({
+            ...formData,
+        });
+
+        const savedQuiz = await newQuiz.save();
+
+        user.quiz = savedQuiz._id;
+        user.complete_profile = true;
+
+        await user.save();
+
+        res.json({ sucess: true, message: 'Profile updated successfully', user, savedQuiz });
+    } catch (error) {
+        res.status(500).json({success:false, message: error.message });
+    }
+});
+
+
 router.post('/', async (req, res) => {
     try {
         const { name, email_id, image } = req.body;
