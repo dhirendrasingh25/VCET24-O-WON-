@@ -112,8 +112,8 @@ export default function FinancialQuiz() {
     const submitQuiz = async (output: string) => {
         console.log(output);
         try {
-          const user = await getHomeQuizResponse(output);
-          console.log("User data fetched:", user);
+          const res = await getHomeQuizResponse(output);
+          console.log("User data fetched:", res);
         } catch (error) {
           console.error("Failed to submit quiz:", error);
         }
