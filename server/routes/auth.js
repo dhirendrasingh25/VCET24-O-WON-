@@ -22,4 +22,21 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/check', async (req, res) => {
+    const { email_id } = req.query;
+    if (!email_id) {
+        return res.status(400).json({ message: "Email is required" });
+    }
+    try {
+        const user = await userSchema.findOne({ email_id: email_id });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ complete_profile: user.complete_profile });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
 export default router;
