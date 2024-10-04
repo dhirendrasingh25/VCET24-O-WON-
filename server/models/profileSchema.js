@@ -32,10 +32,17 @@ const profileSchema = new mongoose.Schema({
     
     currentInvestments: [
         {
-            type: String,
-            required: true,
+            "invest-type": {
+                type: String,
+                required: true
+            },
+            amount: {
+                type: Number,
+                required: true
+            }
         }
-    ],
+    ]
+    ,
     duration: {
         type: String,
         required: true,
