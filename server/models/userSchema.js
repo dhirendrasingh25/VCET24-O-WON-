@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import transactionSchema from './transactionSchema'
-import quizSchema from './quizSchema'
+import transactionSchema from './transactionSchema.js'
+import quizSchema from './quizSchema.js'
 const userSchema = new mongoose.Schema({
     name:{
         type:String,
