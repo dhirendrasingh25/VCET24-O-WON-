@@ -13,10 +13,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  transactions: {
+  transactions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Transaction"
-  },
+  }],
   profile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile"
