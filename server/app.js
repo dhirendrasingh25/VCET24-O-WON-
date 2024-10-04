@@ -5,7 +5,8 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import InvestmentRoute from './routes/investments.js';
 import OcrRoute from './routes/ocr.js';
-import transactionRoutes from './routes/transactions.js'; // Correct the path as needed
+import transactionRoutes from './routes/transactions.js'; 
+import quizRoutes from './routes/quiz.js';
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.get('/', (req, res) => {
 
 // Transaction routes
 app.use('/api', transactionRoutes);
+app.use('/quiz',quizRoutes)
 
 export default app;
