@@ -57,7 +57,12 @@ export async function finMarket() {
 
         return limitedData;
     } catch (error) {
+<<<<<<< HEAD
+      console.error("Error fetching market news:", error);
+      throw error;
+=======
         console.error("Error fetching market news:", error);
         throw error;
+>>>>>>> 8ed662a0163188a12d0a1062b04558c6dac43e4a
     }
 }
