@@ -7,9 +7,9 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 import { Button } from "@/components/ui/button";
 import Quiz from "@/components/landing/quiz";
-import Home from "@/components/landing/Home";
-import Testimonial from "@/components/landing/Testimonial";
-import AboutUs from "@/components/landing/AboutUs";
+import Home from "@/components/landing/home";
+import Testimonial from "@/components/landing/testimonials";
+import AboutUs from "@/components/landing/about-us";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 
 const words = [
