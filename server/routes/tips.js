@@ -46,7 +46,7 @@ async function fetchLatestMarketNews() {
 async function generateInvestmentTips() {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-  const prompt = "Give me best and top only 1 investment plan for todays date in json form. having name and desc and no other key.just the json having one plan nothing else.also no backtick and json should be written. if there is not data then just give an empty json";
+  const prompt = "Give me best and top only 1 investment plan for todays date in json form. having name and desc and no other key.just the json having one plan nothing else.also no backtick and json should be written. ";
 
   const result = await model.generateContent(prompt);
   return result.response.text();  // This will return the JSON string
