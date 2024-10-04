@@ -3,7 +3,7 @@
 import { Button } from "../ui/button";
 import { PiPiggyBankFill } from "react-icons/pi";
 // import Image from "next/image";
-import Link from 'next/link';
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 const Navbar = () => {
@@ -24,16 +24,12 @@ const Navbar = () => {
                     { value: "Market News", link: "#market" },
                     { value: "Take a Quiz", link: "#quiz" },
                     { value: "Testimonials", link: "#testimonials" },
-                    { value: "About Us", link: "#about" }
-                ].map(
-                    (item, idx) => (
-                        <div key={idx} className="font-semibold">
-                            <Link href={item.link}>
-                                {item.value}
-                            </Link>
-                        </div>
-                    ),
-                )}
+                    { value: "About Us", link: "#about" },
+                ].map((item, idx) => (
+                    <div key={idx} className="font-semibold">
+                        <Link href={item.link}>{item.value}</Link>
+                    </div>
+                ))}
             </div>
             <div>
                 <Button

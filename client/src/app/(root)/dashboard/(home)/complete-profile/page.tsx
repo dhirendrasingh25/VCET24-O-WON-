@@ -76,13 +76,23 @@ export default function Component() {
         setFormData((prev) => ({ ...prev, duration: value }));
     };
 
-    const handleInvestmentChange = (index: number, field: keyof Investment, value: string) => {
+    const handleInvestmentChange = (
+        index: number,
+        field: keyof Investment,
+        value: string,
+    ) => {
         setFormData((prev) => {
             const newInvestments = [...prev.currentInvestments];
-            if (field === 'amount') {
-                newInvestments[index] = { ...newInvestments[index], [field]: parseFloat(value) || 0 };
+            if (field === "amount") {
+                newInvestments[index] = {
+                    ...newInvestments[index],
+                    [field]: parseFloat(value) || 0,
+                };
             } else {
-                newInvestments[index] = { ...newInvestments[index], [field]: value };
+                newInvestments[index] = {
+                    ...newInvestments[index],
+                    [field]: value,
+                };
             }
             return { ...prev, currentInvestments: newInvestments };
         });
@@ -91,14 +101,19 @@ export default function Component() {
     const addInvestment = () => {
         setFormData((prev) => ({
             ...prev,
-            currentInvestments: [...prev.currentInvestments, { investType: "", amount: 0 }],
+            currentInvestments: [
+                ...prev.currentInvestments,
+                { investType: "", amount: 0 },
+            ],
         }));
     };
 
     const removeInvestment = (index: number) => {
         setFormData((prev) => ({
             ...prev,
-            currentInvestments: prev.currentInvestments.filter((_, i) => i !== index),
+            currentInvestments: prev.currentInvestments.filter(
+                (_, i) => i !== index,
+            ),
         }));
     };
 
@@ -168,7 +183,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="occupation">Occupation</Label>
+                                    <Label htmlFor="occupation">
+                                        Occupation
+                                    </Label>
                                     <Input
                                         id="occupation"
                                         name="occupation"
@@ -179,7 +196,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="ailments">Annual Health Expenses (INR)</Label>
+                                    <Label htmlFor="ailments">
+                                        Annual Health Expenses (INR)
+                                    </Label>
                                     <Input
                                         id="ailments"
                                         name="ailments"
@@ -191,7 +210,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="dependents">Number of Dependents</Label>
+                                    <Label htmlFor="dependents">
+                                        Number of Dependents
+                                    </Label>
                                     <Input
                                         id="dependents"
                                         name="dependents"
@@ -203,7 +224,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="dependantDescription">Dependant Description (Optional)</Label>
+                                    <Label htmlFor="dependantDescription">
+                                        Dependant Description (Optional)
+                                    </Label>
                                     <Textarea
                                         id="dependantDescription"
                                         name="dependantDescription"
@@ -221,7 +244,9 @@ export default function Component() {
                             </CardHeader>
                             <CardContent className="space-y-3 p-4">
                                 <div>
-                                    <Label htmlFor="mandatoryExpenses">Monthly Mandatory Expenses (INR)</Label>
+                                    <Label htmlFor="mandatoryExpenses">
+                                        Monthly Mandatory Expenses (INR)
+                                    </Label>
                                     <Input
                                         id="mandatoryExpenses"
                                         name="mandatoryExpenses"
@@ -242,11 +267,13 @@ export default function Component() {
                                             >
                                                 <Input
                                                     placeholder="Investment type"
-                                                    value={investment.investType}
+                                                    value={
+                                                        investment.investType
+                                                    }
                                                     onChange={(e) =>
                                                         handleInvestmentChange(
                                                             index,
-                                                            'investType',
+                                                            "investType",
                                                             e.target.value,
                                                         )
                                                     }
@@ -259,7 +286,7 @@ export default function Component() {
                                                     onChange={(e) =>
                                                         handleInvestmentChange(
                                                             index,
-                                                            'amount',
+                                                            "amount",
                                                             e.target.value,
                                                         )
                                                     }
@@ -268,7 +295,9 @@ export default function Component() {
                                                 <Button
                                                     type="button"
                                                     variant="destructive"
-                                                    onClick={() => removeInvestment(index)}
+                                                    onClick={() =>
+                                                        removeInvestment(index)
+                                                    }
                                                     className="bg-[#2AABEE] hover:bg-[#2AABEE]/90"
                                                 >
                                                     Remove
@@ -285,7 +314,9 @@ export default function Component() {
                                     </Button>
                                 </div>
                                 <div>
-                                    <Label htmlFor="loans">Total Outstanding Loans (INR)</Label>
+                                    <Label htmlFor="loans">
+                                        Total Outstanding Loans (INR)
+                                    </Label>
                                     <Input
                                         id="loans"
                                         name="loans"
@@ -297,7 +328,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="emi">Total Monthly EMI (INR)</Label>
+                                    <Label htmlFor="emi">
+                                        Total Monthly EMI (INR)
+                                    </Label>
                                     <Input
                                         id="emi"
                                         name="emi"
@@ -328,7 +361,9 @@ export default function Component() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="duration">Investment Duration</Label>
+                                    <Label htmlFor="duration">
+                                        Investment Duration
+                                    </Label>
                                     <Select
                                         onValueChange={handleSelectChange}
                                         value={formData.duration}
@@ -352,7 +387,12 @@ export default function Component() {
                             </CardContent>
                         </Card>
 
-                        <Button type="submit" className="w-full bg-[#2AABEE] hover:bg-[#2AABEE]/90">Save Profile</Button>
+                        <Button
+                            type="submit"
+                            className="w-full bg-[#2AABEE] hover:bg-[#2AABEE]/90"
+                        >
+                            Save Profile
+                        </Button>
                     </form>
                 </ScrollArea>
             </DialogContent>

@@ -15,6 +15,8 @@ router.post("/", async (req, res) => {
       dependents,
       dependantDescription,
       goal,
+      monthly_income
+      ,
       mandatoryExpenses,
       currentInvestments,
       duration,
@@ -43,7 +45,7 @@ router.post("/", async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `User age is ${age}, occupation: ${occupation}, ailments: ${ailments}, dependents: ${dependents} (${dependantDescription}), goal: ${goal}, mandatory expenses: ${mandatoryExpenses}, current investments: ${JSON.stringify(currentInvestments)}, expected investment duration: ${duration}, loans: ${loans}, and EMI: ${emi}. Please provide a list of recommended investment plans in the following JSON format: { "investmentPlans": [ { "planName": "string", "description": "string", "allocation": { "Equity Funds": number, "Debt Funds": number }, "recommendedFunds": [ { "fundName": "string", "fundType": "string" } ], "monthlyInvestment": number } ] }. The output must be strictly JSON, with no additional text, backticks, or explanations outside the JSON structure.`;
+    const prompt = `User age is ${age}, occupation: ${occupation}, ailments: ${ailments}, dependents: ${dependents} (${dependantDescription}), goal: ${goal},monthly income: ${monthly_income} ,mandatory expenses: ${mandatoryExpenses}, current investments: ${JSON.stringify(currentInvestments)}, expected investment duration: ${duration}, loans: ${loans}, and EMI: ${emi}. Please provide a list of recommended investment plans in the following JSON format: { "investmentPlans": [ { "planName": "string", "description": "string", "allocation": { "Equity Funds": number, "Debt Funds": number }, "recommendedFunds": [ { "fundName": "string", "fundType": "string" } ], "monthlyInvestment": number } ] }. The output must be strictly JSON, with no additional text, backticks, or explanations outside the JSON structure.`;
 
 
 

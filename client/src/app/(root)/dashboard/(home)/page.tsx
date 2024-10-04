@@ -4,31 +4,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     Card,
-    CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 // import { Progress } from "@/components/ui/progress";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { File } from "lucide-react";
 import { rupeeSymbol } from "@/lib/utils";
 import { ITransaction, MarketNews, Tips } from "@/types";
+import DashboardTable from "@/components/dashboard/table";
+import Report from "@/components/dashboard/report";
 
 type IDailyTips = {
     tips: Tips[];
@@ -39,7 +28,11 @@ export default function Dashboard() {
     const { data: session, status } = useSession();
     const [isLoading, setIsLoading] = useState(true);
 
-    const [transactions, setTransactions] = useState<ITransaction[]>([]);
+    // transactions
+    const [weekly, setWeekly] = useState<ITransaction[]>([]);
+    const [monthly, setMonthly] = useState<ITransaction[]>([]);
+    const [yearly, setYearly] = useState<ITransaction[]>([]);
+
     const [weeklyExpense, setWeeklyExpense] = useState<number>(0);
     const [monthlyExpense, setMonthlyExpense] = useState<number>(0);
     const [tips, setTips] = useState<IDailyTips>({ tips: [], news: [] });
@@ -89,15 +82,40 @@ export default function Dashboard() {
         async function callApiCalls() {
             const urls = [
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tips-news`,
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions?email_id=${session?.user?.email}`,
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense?email_id=${session?.user?.email}&period=weekly`,
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense?email_id=/${session?.user?.email}&period=monthly`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-all-transactions-summary?email_id=${session?.user?.email}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/weekly/${session?.user?.email}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/monthly/${session?.user?.email}`,
             ];
 
-            // await Promise.all(urls.map(url => axios.get(url)))
-            const response = await Promise.all(urls.map(url => axios.get(url)));
+            try {
+                const [
+                    tipsNewsResponse,
+                    transactionsResponse,
+                    weeklyExpenseResponse,
+                    monthlyExpenseResponse,
+                ] = await Promise.all(urls.map((url) => axios.get(url)));
 
-            console.log(response);
+                console.log(tipsNewsResponse.data);
+                setTips({
+                    tips: tipsNewsResponse.data.investmentTips.plans,
+                    news: tipsNewsResponse.data.marketNews,
+                });
+
+                setWeeklyExpense(weeklyExpenseResponse.data.weeklyExpenses);
+                setMonthlyExpense(monthlyExpenseResponse.data.monthlyExpenses);
+
+                setWeekly(transactionsResponse.data.summary.weekly);
+                setMonthly(transactionsResponse.data.summary.monthly);
+                setYearly(transactionsResponse.data.summary.yearly);
+            } catch (error) {
+                console.log(error);
+                setTips({ tips: [], news: [] });
+                setWeeklyExpense(0);
+                setMonthlyExpense(0);
+                setWeekly([]);
+                setMonthly([]);
+                setYearly([]);
+            }
         }
 
         callApiCalls();
@@ -142,7 +160,8 @@ export default function Dashboard() {
                         <CardHeader className="pb-2">
                             <CardDescription>This Week</CardDescription>
                             <CardTitle className="text-4xl">
-                                {rupeeSymbol}1,329
+                                {rupeeSymbol}
+                                {weeklyExpense.toLocaleString()}
                             </CardTitle>
                         </CardHeader>
                         {/* <CardContent>
@@ -162,98 +181,26 @@ export default function Dashboard() {
                         <CardHeader className="pb-2">
                             <CardDescription>This Month</CardDescription>
                             <CardTitle className="text-4xl">
-                                {rupeeSymbol}5,329
+                                {rupeeSymbol}
+                                {monthlyExpense.toLocaleString()}
                             </CardTitle>
                         </CardHeader>
-                        {/* <CardContent>
-                            <div className="text-xs text-muted-foreground">
-                                +10% from last month
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Progress
-                                value={12}
-                                aria-label="12% increase"
-                                color="bg-custom-blue"
-                            />
-                        </CardFooter> */}
                     </Card>
                 </div>
+                
+                <div className="flex flex-row gap-4">
 
-                <div className="grid lg:grid-cols-3">
-                    <Tabs defaultValue="week" className="lg:col-span-2">
-                        <div className="flex items-center">
-                            <TabsList>
-                                <TabsTrigger value="week">Week</TabsTrigger>
-                                <TabsTrigger value="month">Month</TabsTrigger>
-                                <TabsTrigger value="year">Year</TabsTrigger>
-                            </TabsList>
-                            <div className="ml-auto flex items-center gap-2">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-7 gap-1 text-sm"
-                                >
-                                    <File className="h-3.5 w-3.5" />
-                                    <span className="sr-only sm:not-sr-only">
-                                        Generate Report
-                                    </span>
-                                </Button>
-                            </div>
-                        </div>
+                </div>
 
-                        <TabsContent value="week">
-                            <Card>
-                                <CardHeader className="px-7">
-                                    <CardTitle>Transactions</CardTitle>
-                                    <CardDescription>
-                                        Recent transactions from your bank.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="hidden sm:table-cell">
-                                                    Category
-                                                </TableHead>
-                                                <TableHead className="hidden sm:table-cell">
-                                                    Description
-                                                </TableHead>
-                                                <TableHead className="hidden md:table-cell">
-                                                    Date
-                                                </TableHead>
-                                                <TableHead className="hidden sm:table-cell">
-                                                    Amount
-                                                </TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell className="hidden sm:table-cell">
-                                                    <Badge
-                                                        className="text-xs"
-                                                        variant="secondary"
-                                                    >
-                                                        Fulfilled
-                                                    </Badge>
-                                                </TableCell>
-                                                <TableCell className="hidden sm:table-cell">
-                                                    Sale
-                                                </TableCell>
-                                                <TableCell className="hidden md:table-cell">
-                                                    2023-06-23
-                                                </TableCell>
-                                                <TableCell className="hidden md:table-cell">
-                                                    {rupeeSymbol}250.00
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-                    </Tabs>
+                <div className="grid lg:grid-cols-3 gap-4">
+                    <DashboardTable
+                        weekly={weekly}
+                        monthly={monthly}
+                        yearly={yearly}
+                        session={session}
+                    />
+
+                    <Report session={session} />
                 </div>
             </div>
         </main>

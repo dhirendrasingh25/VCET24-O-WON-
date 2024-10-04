@@ -47,6 +47,11 @@ const profileSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    monthly_income: {
+        type: Number,
+        require: true
+    }
+    ,
     loans: {
         type: Number,
         required: true,

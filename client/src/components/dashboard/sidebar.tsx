@@ -17,7 +17,7 @@ import {
     Package2,
     BadgeIndianRupee,
     CircleDollarSign,
-    MessageCircle
+    MessageCircle,
 } from "lucide-react";
 
 export default function Sidebar() {
