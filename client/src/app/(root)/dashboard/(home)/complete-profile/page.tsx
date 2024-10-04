@@ -1,185 +1,337 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Define the form schema using Zod
-const formSchema = z.object({
-    age: z.number().min(18, "Age must be at least 18"),
-    ailments: z.string().min(1, "Ailments is required"),
-    lifestyle: z.string().min(1, "Lifestyle is required"),
-    dependents: z.number().min(0, "Dependents must be 0 or more"),
-    dependantDescription: z.string().optional(),
-    goal: z.string().min(1, "Goal is required"),
-    expenses: z.array(
-        z.object({
-            description: z.string().min(1, "Description is required"),
-            amount: z.number().min(0, "Amount must be 0 or more"),
-        }),
-    ),
-    currentInvestments: z.array(z.string().min(1, "Investment is required")),
-    duration: z.string().min(1, "Duration is required"),
-    review: z.string().min(1, "Review is required"),
-});
+type Expense = {
+    description: string;
+    amount: number;
+};
 
-export default function FormPage() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(formSchema),
+type FormData = {
+    age: number;
+    ailments: string;
+    lifestyle: string;
+    dependents: number;
+    dependantDescription: string;
+    goal: string;
+    expenses: Expense[];
+    currentInvestments: string[];
+    duration: string;
+    review: string;
+};
+
+export default function Component() {
+    const router = useRouter();
+    const [formData, setFormData] = useState<FormData>({
+        age: 18,
+        ailments: "",
+        lifestyle: "",
+        dependents: 0,
+        dependantDescription: "",
+        goal: "",
+        expenses: [{ description: "", amount: 0 }],
+        currentInvestments: [""],
+        duration: "",
+        review: "",
     });
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleNumberInputChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
+    };
+
+    const handleSelectChange = (value: string) => {
+        setFormData((prev) => ({ ...prev, duration: value }));
+    };
+
+    const handleExpenseChange = (
+        index: number,
+        field: "description" | "amount",
+        value: string,
+    ) => {
+        setFormData((prev) => {
+            const newExpenses = [...prev.expenses];
+            if (field === "amount") {
+                newExpenses[index] = {
+                    ...newExpenses[index],
+                    [field]: parseFloat(value) || 0,
+                };
+            } else {
+                newExpenses[index] = { ...newExpenses[index], [field]: value };
+            }
+            return { ...prev, expenses: newExpenses };
+        });
+    };
+
+    const addExpense = () => {
+        setFormData((prev) => ({
+            ...prev,
+            expenses: [...prev.expenses, { description: "", amount: 0 }],
+        }));
+    };
+
+    const removeExpense = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            expenses: prev.expenses.filter((_, i) => i !== index),
+        }));
+    };
+
+    const handleInvestmentChange = (index: number, value: string) => {
+        setFormData((prev) => {
+            const newInvestments = [...prev.currentInvestments];
+            newInvestments[index] = value;
+            return { ...prev, currentInvestments: newInvestments };
+        });
+    };
+
+    const addInvestment = () => {
+        setFormData((prev) => ({
+            ...prev,
+            currentInvestments: [...prev.currentInvestments, ""],
+        }));
+    };
+
+    const removeInvestment = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            currentInvestments: prev.currentInvestments.filter(
+                (_, i) => i !== index,
+            ),
+        }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log(formData);
+        router.push("/dashboard");
     };
 
     return (
-        <main>
-            <Dialog open={true}>
-                <DialogTrigger asChild>
-                    <Button>Open Form</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Fill out the form</DialogTitle>
-                        <DialogDescription>
-                            Please fill out the details below to proceed.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="space-y-4"
-                    >
-                        {/* Age */}
+        <Dialog open={true}>
+            <DialogContent className="max-w-3xl max-h-[90vh]" blur={true} closeButton={false}>
+                <ScrollArea className="max-h-[70vh] px-2">
+                    <form onSubmit={handleSubmit} className="space-y-8">
                         <div>
                             <Label htmlFor="age">Age</Label>
-                            <Input type="number" {...register("age")} />
-                            {errors.age && <p>{errors.age.message}</p>}
+                            <Input
+                                id="age"
+                                name="age"
+                                type="number"
+                                value={formData.age}
+                                onChange={handleNumberInputChange}
+                                min={18}
+                                required
+                            />
                         </div>
-
-                        {/* Ailments */}
                         <div>
                             <Label htmlFor="ailments">Ailments</Label>
-                            <Input type="text" {...register("ailments")} />
-                            {errors.ailments && (
-                                <p>{errors.ailments.message}</p>
-                            )}
+                            <Input
+                                id="ailments"
+                                name="ailments"
+                                value={formData.ailments}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
-
-                        {/* Lifestyle */}
                         <div>
                             <Label htmlFor="lifestyle">Lifestyle</Label>
-                            <Input type="text" {...register("lifestyle")} />
-                            {errors.lifestyle && (
-                                <p>{errors.lifestyle.message}</p>
-                            )}
+                            <Input
+                                id="lifestyle"
+                                name="lifestyle"
+                                value={formData.lifestyle}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
-
-                        {/* Dependents */}
                         <div>
-                            <Label htmlFor="dependents">Dependents</Label>
-                            <Input type="number" {...register("dependents")} />
-                            {errors.dependents && (
-                                <p>{errors.dependents.message}</p>
-                            )}
+                            <Label htmlFor="dependents">
+                                Number of Dependents
+                            </Label>
+                            <Input
+                                id="dependents"
+                                name="dependents"
+                                type="number"
+                                value={formData.dependents}
+                                onChange={handleNumberInputChange}
+                                min={0}
+                                required
+                            />
                         </div>
-
-                        {/* Dependant Description */}
                         <div>
                             <Label htmlFor="dependantDescription">
-                                Dependant Description
+                                Dependant Description (Optional)
                             </Label>
-                            <Input
-                                type="text"
-                                {...register("dependantDescription")}
+                            <Textarea
+                                id="dependantDescription"
+                                name="dependantDescription"
+                                value={formData.dependantDescription}
+                                onChange={handleInputChange}
                             />
-                            {errors.dependantDescription && (
-                                <p>{errors.dependantDescription.message}</p>
-                            )}
                         </div>
-
-                        {/* Goal */}
                         <div>
                             <Label htmlFor="goal">Goal</Label>
-                            <Input type="text" {...register("goal")} />
-                            {errors.goal && <p>{errors.goal.message}</p>}
-                        </div>
-
-                        {/* Expenses */}
-                        <div>
-                            <Label htmlFor="expenses">Expenses</Label>
-                            <div>
-                                <Input
-                                    type="text"
-                                    placeholder="Description"
-                                    {...register("expenses.0.description")}
-                                />
-                                {errors.expenses?.[0]?.description && (
-                                    <p>
-                                        {errors.expenses[0].description.message}
-                                    </p>
-                                )}
-                                <Input
-                                    type="number"
-                                    placeholder="Amount"
-                                    {...register("expenses.0.amount")}
-                                />
-                                {errors.expenses?.[0]?.amount && (
-                                    <p>{errors.expenses[0].amount.message}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Current Investments */}
-                        <div>
-                            <Label htmlFor="currentInvestments">
-                                Current Investments
-                            </Label>
                             <Input
-                                type="text"
-                                {...register("currentInvestments.0")}
+                                id="goal"
+                                name="goal"
+                                value={formData.goal}
+                                onChange={handleInputChange}
+                                required
                             />
-                            {errors.currentInvestments?.[0] && (
-                                <p>{errors.currentInvestments[0]?.message}</p>
-                            )}
                         </div>
-
-                        {/* Duration */}
+                        <div>
+                            <Label>Expenses</Label>
+                            {formData.expenses.map((expense, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center space-x-2 mt-2"
+                                >
+                                    <Input
+                                        placeholder="Description"
+                                        value={expense.description}
+                                        onChange={(e) =>
+                                            handleExpenseChange(
+                                                index,
+                                                "description",
+                                                e.target.value,
+                                            )
+                                        }
+                                        required
+                                    />
+                                    <Input
+                                        type="number"
+                                        placeholder="Amount"
+                                        value={expense.amount}
+                                        onChange={(e) =>
+                                            handleExpenseChange(
+                                                index,
+                                                "amount",
+                                                e.target.value,
+                                            )
+                                        }
+                                        required
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        onClick={() => removeExpense(index)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                onClick={addExpense}
+                                className="mt-2"
+                            >
+                                Add Expense
+                            </Button>
+                        </div>
+                        <div>
+                            <Label>Current Investments</Label>
+                            {formData.currentInvestments.map(
+                                (investment, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center space-x-2 mt-2"
+                                    >
+                                        <Input
+                                            placeholder="Investment"
+                                            value={investment}
+                                            onChange={(e) =>
+                                                handleInvestmentChange(
+                                                    index,
+                                                    e.target.value,
+                                                )
+                                            }
+                                            required
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            onClick={() =>
+                                                removeInvestment(index)
+                                            }
+                                        >
+                                            Remove
+                                        </Button>
+                                    </div>
+                                ),
+                            )}
+                            <Button
+                                type="button"
+                                onClick={addInvestment}
+                                className="mt-2"
+                            >
+                                Add Investment
+                            </Button>
+                        </div>
                         <div>
                             <Label htmlFor="duration">Duration</Label>
-                            <Input type="text" {...register("duration")} />
-                            {errors.duration && (
-                                <p>{errors.duration.message}</p>
-                            )}
+                            <Select
+                                onValueChange={handleSelectChange}
+                                value={formData.duration}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select duration" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="short">
+                                        Short term
+                                    </SelectItem>
+                                    <SelectItem value="medium">
+                                        Medium term
+                                    </SelectItem>
+                                    <SelectItem value="long">
+                                        Long term
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
-
-                        {/* Review */}
                         <div>
                             <Label htmlFor="review">Review</Label>
-                            <Input type="text" {...register("review")} />
-                            {errors.review && <p>{errors.review.message}</p>}
+                            <Textarea
+                                id="review"
+                                name="review"
+                                value={formData.review}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
-
-                        {/* Submit Button */}
-                        <Button type="submit" className="mt-4">
-                            Submit
-                        </Button>
+                        <Button type="submit">Submit</Button>
                     </form>
-                </DialogContent>
-            </Dialog>
-        </main>
+                </ScrollArea>
+            </DialogContent>
+        </Dialog>
     );
 }
