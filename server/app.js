@@ -8,7 +8,8 @@ import OcrRoute from './routes/ocr.js';
 import transactionRoutes from './routes/transactions.js';
 import profileRoutes from './routes/profile.js';
 import authRoute from './routes/auth.js';
-import analysisRoute from './routes/analysis.js'
+import analysisRoute from './routes/analysis.js';
+import news from'./routes/news.js';
 const app = express();
 
 const corsOptions = {};
@@ -28,7 +29,8 @@ app.use("/analysis", analysisRoute);
 
 
 app.use('/api', transactionRoutes);
-app.use('/profile/complete',profileRoutes)
+app.use('/profile/complete',profileRoutes);
+app.use('/news',news);
 
 app.get('/', (req, res) => {    
     res.send('Hello World');
