@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import tailwindAnimate from 'tailwindcss-animate'
+import tailwindAnimate from "tailwindcss-animate";
 
 const config: Config = {
     darkMode: ["class"],
@@ -9,17 +9,17 @@ const config: Config = {
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
-    	extend: {
-    		colors: {
-    			background: 'var(--background)',
-    			foreground: 'var(--foreground)'
-    		},
-    		borderRadius: {
-    			lg: 'var(--radius)',
-    			md: 'calc(var(--radius) - 2px)',
-    			sm: 'calc(var(--radius) - 4px)'
-    		}
-    	}
+        extend: {
+            colors: {
+                background: "var(--background)",
+                foreground: "var(--foreground)",
+            },
+            borderRadius: {
+                lg: "var(--radius)",
+                md: "calc(var(--radius) - 2px)",
+                sm: "calc(var(--radius) - 4px)",
+            },
+        },
     },
     plugins: [tailwindAnimate],
 };

@@ -1,11 +1,10 @@
-import React from 'react'
+import React from "react";
+import Temp from "@/components/common/temp";
 
-const page = () => {
-  return (
-    <div>
-        
-    </div>
-  )
+export default function Page() {
+    return (
+        <div>
+            <Temp /> 
+        </div>
+    )
 }
-
-export default page
