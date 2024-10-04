@@ -4,26 +4,23 @@ import React, { useEffect, useState } from 'react'
 import { Trophy, CheckCircle, XCircle, Ticket, Lock } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
-// Mock data to simulate backend API response for initial loading
 const mockUserData = {
   totalTransactions: 0,
   totalAmount: 0,
-  streakDays: 0,
   savingsAmount: 0,
-  monthlyBudgetAdherence: 0,
-  investmentAmount: 0,
+  maxAmountAmountTransaction: 0,
 }
 
 const achievements = [
-  { id: 1, name: "Savings Starter", description: "Save your first ₹1,000", target: 1000, type: 'savings', score: 10 },
-  { id: 2, name: "Budget Master", description: "Stick to your monthly budget for 30 days", target: 30, type: 'budgetAdherence', score: 20 },
-  { id: 3, name: "Investment Initiator", description: "Make your first investment", target: 1, type: 'investment', score: 15 },
-  { id: 4, name: "Frugal Fortune", description: "Save ₹10,000 in total", target: 10000, type: 'savings', score: 25 },
-  { id: 5, name: "Transaction Tamer", description: "Complete 100 transactions", target: 100, type: 'transactions', score: 20 },
-  { id: 6, name: "Savings Sage", description: "Save 20% of your income for 3 consecutive months", target: 3, type: 'savingsStreak', score: 30 },
-  { id: 7, name: "Diverse Portfolio", description: "Invest in 3 different types of assets", target: 3, type: 'investmentDiversity', score: 40 },
-  { id: 8, name: "Expense Eliminator", description: "Reduce monthly expenses by 15%", target: 15, type: 'expenseReduction', score: 30 },
-  { id: 9, name: "Financial Freedom Fighter", description: "Save 6 months worth of expenses", target: 6, type: 'emergencyFund', score: 50 },
+  { id: 1, name: "Savings Starter", description: "Save your first ₹1,000", target: 100, type: 'savings', score: 10 },
+  { id: 2, name: "Frugal Fortune", description: "Save ₹10,000 in total", target: 10000, type: 'savings', score: 25 },
+  { id: 3, name: "Transaction Tamer", description: "Complete 100 transactions", target: 100, type: 'transactions', score: 20 },
+  { id: 4, name: "Big Spender", description: "Make a single transaction of ₹10,000 or more", target: 10000, type: 'maxTransaction', score: 15 },
+  { id: 5, name: "Money Mover", description: "Reach ₹100,000 in total transactions", target: 100000, type: 'totalAmount', score: 30 },
+  { id: 6, name: "Big Spender", description: "Make a single transaction of ₹10,000 or more", target: 10000, type: 'maxTransaction', score: 15 },
+  { id: 7, name: "Mega Purchase", description: "Make a single transaction of ₹50,000 or more", target: 50000, type: 'maxTransaction', score: 30 },
+  { id: 8, name: "Money Mover", description: "Reach ₹100,000 in total transactions", target: 100000, type: 'totalAmount', score: 30 },
+  { id: 9, name: "Financial Flux", description: "Reach ₹500,000 in total transactions", target: 500000, type: 'totalAmount', score: 50 },
 ]
 
 const coupons = [
@@ -48,21 +45,18 @@ const AchievementsPage = () => {
   const fetchUserData = async (email: string) => {
     console.log(email);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-summary?email_id=${email}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transaction-summary?email_id=${email}`, {
         method: "GET",
       });
       const data = await res.json();
-      console.log(data);
+      console.log(data.data);
       
       if (data.success) {
-        // Assuming data.summary contains arrays of transactions
         setUserData({
-          totalTransactions: data.summary.yearly.length, // Example mapping
-          totalAmount: calculateTotalAmount(data.summary.yearly), // Function to calculate total amount from transactions
-          streakDays: calculateStreakDays(data.summary.weekly), // Function to calculate streak days from transactions
-          savingsAmount: calculateSavings(data.summary.monthly), // Custom logic to calculate savings
-          monthlyBudgetAdherence: calculateBudgetAdherence(data.summary.monthly), // Custom logic to calculate budget adherence
-          investmentAmount: calculateInvestmentAmount(data.summary.yearly) // Custom logic to calculate investment amount
+          totalTransactions: data.data.transactionCount,
+          totalAmount: data.data.totalAmount,
+          savingsAmount: data.data.totalSavings,
+          maxAmountAmountTransaction: data.data.maxAmount
         });
       } else {
         console.error("User data not found");
@@ -71,33 +65,6 @@ const AchievementsPage = () => {
       console.error('Error fetching user data:', error);
     }
   };
-  
-  // Example helper functions:
-  const calculateTotalAmount = (transactions:any) => {
-    // Calculate the total amount from the transactions array
-    return transactions.reduce((acc:any, transaction:any) => acc + transaction.amount, 0);
-  };
-  
-  const calculateStreakDays = (transactions:any) => {
-    // Custom logic to calculate the streak of transactions
-    return transactions.length;
-  };
-  
-  const calculateSavings = (transaction:any) => {
-    // Example custom logic for savings calculation
-    return transaction.reduce((acc:any, transaction:any) => acc + transaction.savings, 0);
-  };
-  
-  const calculateBudgetAdherence = (transactions:any) => {
-    // Custom logic to calculate budget adherence percentage
-    return (transactions.filter(t => t.withinBudget).length / transactions.length) * 100;
-  };
-  
-  const calculateInvestmentAmount = (transactions:any) => {
-    // Example custom logic for calculating investment
-    return transactions.reduce((acc:any, transaction:any) => acc + (transaction.isInvestment ? transaction.amount : 0), 0);
-  };
-  
 
   useEffect(() => {
     const completed = achievements.filter(a => isAchievementCompleted(a))
@@ -106,28 +73,22 @@ const AchievementsPage = () => {
     setCompletedPercentage((completed.length / achievements.length) * 100)
   }, [userData])
 
-  const isAchievementCompleted = (achievement:any) => {
+  const isAchievementCompleted = (achievement: any) => {
     switch (achievement.type) {
       case 'savings':
-        return userData?.savingsAmount >= achievement.target
-      case 'budgetAdherence':
-        return userData?.monthlyBudgetAdherence >= achievement.target
-      case 'investment':
-        return userData?.investmentAmount > 0
+        return userData.savingsAmount >= achievement.target
       case 'transactions':
-        return userData?.totalTransactions >= achievement.target
-      case 'savingsStreak':
-      case 'budgetStreak':
-      case 'investmentDiversity':
-      case 'expenseReduction':
-      case 'emergencyFund':
-        return false
+        return userData.totalTransactions >= achievement.target
+      case 'maxTransaction':
+        return userData.maxAmountAmountTransaction >= achievement.target
+      case 'totalAmount':
+        return userData.totalAmount >= achievement.target
       default:
         return false
     }
   }
 
-  const isCouponUnlocked = (coupon:any) => {
+  const isCouponUnlocked = (coupon: any) => {
     return totalScore >= coupon.minScore
   }
 
