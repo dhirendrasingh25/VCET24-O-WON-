@@ -15,7 +15,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import {
     Table,
     TableBody,
@@ -28,13 +28,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { File } from "lucide-react";
 import { rupeeSymbol } from "@/lib/utils";
+import { ITransaction, MarketNews, Tips } from "@/types";
+
+type IDailyTips = {
+    tips: Tips[];
+    news: MarketNews[];
+};
 
 export default function Dashboard() {
     const { data: session, status } = useSession();
     const [isLoading, setIsLoading] = useState(true);
+
+    const [transactions, setTransactions] = useState<ITransaction[]>([]);
+    const [weeklyExpense, setWeeklyExpense] = useState<number>(0);
+    const [monthlyExpense, setMonthlyExpense] = useState<number>(0);
+    const [tips, setTips] = useState<IDailyTips>({ tips: [], news: [] });
     const router = useRouter();
 
     useEffect(() => {
+        if (!session) return;
         async function checkProfile() {
             try {
                 const response = await axios.get(
@@ -70,6 +82,26 @@ export default function Dashboard() {
             setIsLoading(false);
         }
     }, [status, router]);
+
+    useEffect(() => {
+        if (!session) return;
+
+        async function callApiCalls() {
+            const urls = [
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tips-news`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions?email_id=${session?.user?.email}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense?email_id=${session?.user?.email}&period=weekly`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense?email_id=/${session?.user?.email}&period=monthly`,
+            ];
+
+            // await Promise.all(urls.map(url => axios.get(url)))
+            const response = await Promise.all(urls.map(url => axios.get(url)));
+
+            console.log(response);
+        }
+
+        callApiCalls();
+    }, [session]);
 
     if (isLoading) {
         return (
@@ -113,7 +145,7 @@ export default function Dashboard() {
                                 {rupeeSymbol}1,329
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        {/* <CardContent>
                             <div className="text-xs text-muted-foreground">
                                 +25% from last week
                             </div>
@@ -124,7 +156,7 @@ export default function Dashboard() {
                                 aria-label="25% increase"
                                 color="bg-custom-blue"
                             />
-                        </CardFooter>
+                        </CardFooter> */}
                     </Card>
                     <Card x-chunk="dashboard-05-chunk-2">
                         <CardHeader className="pb-2">
@@ -133,7 +165,7 @@ export default function Dashboard() {
                                 {rupeeSymbol}5,329
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        {/* <CardContent>
                             <div className="text-xs text-muted-foreground">
                                 +10% from last month
                             </div>
@@ -144,7 +176,7 @@ export default function Dashboard() {
                                 aria-label="12% increase"
                                 color="bg-custom-blue"
                             />
-                        </CardFooter>
+                        </CardFooter> */}
                     </Card>
                 </div>
 
@@ -164,7 +196,7 @@ export default function Dashboard() {
                                 >
                                     <File className="h-3.5 w-3.5" />
                                     <span className="sr-only sm:not-sr-only">
-                                        Export
+                                        Generate Report
                                     </span>
                                 </Button>
                             </div>
@@ -199,7 +231,7 @@ export default function Dashboard() {
                                         <TableBody>
                                             <TableRow>
                                                 <TableCell className="hidden sm:table-cell">
-                                                <Badge
+                                                    <Badge
                                                         className="text-xs"
                                                         variant="secondary"
                                                     >
