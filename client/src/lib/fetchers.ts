@@ -15,7 +15,7 @@ export async function getHomeQuizResponse(data: string) {
 
         // Check if the response status is OK
         // console.log(response.json);
-        const datas = await response.json;
+        // const datas = await response.json;
         // console.log(datas);
         // console.log(JSON.stringify(datas));
         //   console.log(JSON.parse(await response.text()));
