@@ -5,7 +5,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 const quizData = {
@@ -108,13 +107,7 @@ export default function FinancialQuiz() {
     }
   };
 
-  const resetQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswer(null);
-    setResponses([]);
-    setQuizCompleted(false);
-    setTotalScore(0);
-  };
+
 
   const submitQuiz = async (output: string) => {
     console.log(output);
@@ -189,7 +182,7 @@ export default function FinancialQuiz() {
       <Card className="w-full max-w-[95%] sm:max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl text-center">
-            Let's have a Financial Health Quiz ❤️
+            Lets have a Financial Health Quiz ❤️
           </CardTitle>
         </CardHeader>
         <CardContent>

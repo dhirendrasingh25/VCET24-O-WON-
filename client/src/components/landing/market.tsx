@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Clock, ExternalLink, Newspaper } from "lucide-react";
+import { Clock, ExternalLink } from "lucide-react";
 import { finMarket } from "@/lib/fetchers";
 import Image from "next/image";
 

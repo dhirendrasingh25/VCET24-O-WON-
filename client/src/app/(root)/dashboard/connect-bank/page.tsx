@@ -14,7 +14,7 @@ function PlaidAuth({ publicToken }: { publicToken: string }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        let accessTokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/exchange_public_token`, { public_token: publicToken })
+        const accessTokenResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/exchange_public_token`, { public_token: publicToken })
         const authResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, { access_token: accessTokenResponse.data.accessToken })
         setAccount(authResponse.data.numbers.ach[0])
       } catch (error) {
