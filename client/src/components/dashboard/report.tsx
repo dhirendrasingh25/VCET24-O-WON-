@@ -112,15 +112,15 @@ export default function Report({ session }: ReportProps) {
                             {monthData && monthData.length > 0 ? (
                                 <LineChart data={monthData}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="#82ca9d"
-                                    strokeWidth={3}
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="value"
+                                        stroke="#82ca9d"
+                                        strokeWidth={3}
                                     />
                                 </LineChart>
                             ) : (

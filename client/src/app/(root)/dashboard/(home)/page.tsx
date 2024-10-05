@@ -219,7 +219,10 @@ export default function Dashboard() {
                                 <div className="flex flex-1 gap-4">
                                     <div className="w-1/3 relative">
                                         <Image
-                                            src={tipsAndNews.news.image || PlaceholderImage}
+                                            src={
+                                                tipsAndNews.news.image ||
+                                                PlaceholderImage
+                                            }
                                             alt={tipsAndNews.news.headline}
                                             width={100}
                                             height={50}

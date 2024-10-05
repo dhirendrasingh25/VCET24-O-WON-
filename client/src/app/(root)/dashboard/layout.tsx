@@ -8,7 +8,6 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     return (
         <SessionWrapper>
             <main className="flex min-h-screen w-full flex-col bg-white/40">

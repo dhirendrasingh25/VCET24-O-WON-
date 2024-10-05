@@ -15,7 +15,7 @@ import {
     Landmark,
     CircleUserRound,
     Package2,
-    BadgeIndianRupee,
+    // BadgeIndianRupee,
     CircleDollarSign,
     MessageCircle,
 } from "lucide-react";
@@ -52,11 +52,11 @@ export default function Sidebar() {
                     icon={MessageCircle}
                     label="Global Chat"
                 />
-                <SidebarLink
+                {/* <SidebarLink
                     href="/dashboard/payment-transfer"
                     icon={BadgeIndianRupee}
                     label="Payment Transfer"
-                />
+                /> */}
                 <SidebarLink
                     href="/dashboard/connect-bank"
                     icon={Landmark}

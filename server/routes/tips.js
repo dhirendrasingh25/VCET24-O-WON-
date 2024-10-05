@@ -4,6 +4,9 @@ import finnhub from "finnhub";
 
 // Initialize the Express router
 const router = express.Router();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Initialize Finnhub API
 const api_key = finnhub.ApiClient.instance.authentications["api_key"];
@@ -11,7 +14,7 @@ api_key.apiKey = "crvn3s9r01qkji45mnf0crvn3s9r01qkji45mnfg";
 const finnhubClient = new finnhub.DefaultApi();
 
 // Initialize Google Generative AI
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY); // Set the API key in your environment variables
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY,); // Set the API key in your environment variables
 
 // Function to fetch the latest market news from Finnhub
 async function fetchLatestMarketNews() {
@@ -28,7 +31,7 @@ async function fetchLatestMarketNews() {
                     category: latestArticle.category,
                     datetime: new Date(
                         latestArticle.datetime * 1000,
-                    ).toISOString(), // Convert to readable date format
+                    ).toISOString(),
                     headline: latestArticle.headline,
                     id: latestArticle.id,
                     image: latestArticle.image,
@@ -38,7 +41,7 @@ async function fetchLatestMarketNews() {
                 };
                 resolve(formattedArticle);
             } else {
-                resolve(null); // If no articles are found, return null
+                resolve(null);
             }
         });
     });

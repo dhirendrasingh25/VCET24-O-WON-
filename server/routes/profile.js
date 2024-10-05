@@ -81,28 +81,39 @@ router.get("/get-user", async (req, res, next) => {
     }
 });
 
-
 router.get("/budget", async (req, res, next) => {
     try {
         const { email_id } = req.query;
 
-        const userProfile = await User.findOne({ email_id }).populate("profile");
+        const userProfile = await User.findOne({ email_id }).populate(
+            "profile",
+        );
 
         if (!userProfile) {
-            return res.status(404).json({ success: false, message: "User profile not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User profile not found" });
         }
 
         const profile = userProfile.profile;
 
         if (!profile) {
-            return res.status(404).json({ success: false, message: "Profile data not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "Profile data not found" });
         }
 
         // Ensure all required fields are present
         const { monthlyIncome, mandatoryExpenses, emi } = profile;
 
-        if (monthlyIncome === undefined || mandatoryExpenses === undefined || emi === undefined) {
-            return res.status(400).json({ success: false, message: "Profile data incomplete" });
+        if (
+            monthlyIncome === undefined ||
+            mandatoryExpenses === undefined ||
+            emi === undefined
+        ) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Profile data incomplete" });
         }
 
         // Convert values to numbers to avoid NaN issues
@@ -116,7 +127,8 @@ router.get("/budget", async (req, res, next) => {
         if (disposableIncome <= 0) {
             return res.status(200).json({
                 success: true,
-                message: "Your expenses exceed your income. Consider reducing debts or expenses.",
+                message:
+                    "Your expenses exceed your income. Consider reducing debts or expenses.",
                 disposableIncome: disposableIncome,
                 budgetSuggestion: null,
             });
@@ -124,9 +136,9 @@ router.get("/budget", async (req, res, next) => {
 
         // Suggest budget allocation
         const budgetSuggestion = {
-            savings: (disposableIncome * 0.30).toFixed(2), 
-            investments: (disposableIncome * 0.20).toFixed(2), 
-            leisure: (disposableIncome * 0.50).toFixed(2),
+            savings: (disposableIncome * 0.3).toFixed(2),
+            investments: (disposableIncome * 0.2).toFixed(2),
+            leisure: (disposableIncome * 0.5).toFixed(2),
         };
 
         return res.status(200).json({
@@ -140,30 +152,39 @@ router.get("/budget", async (req, res, next) => {
     }
 });
 
-
-
-
 router.get("/budget", async (req, res, next) => {
     try {
         const { email_id } = req.query;
 
-        const userProfile = await User.findOne({ email_id }).populate("profile");
+        const userProfile = await User.findOne({ email_id }).populate(
+            "profile",
+        );
 
         if (!userProfile) {
-            return res.status(404).json({ success: false, message: "User profile not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User profile not found" });
         }
 
         const profile = userProfile.profile;
 
         if (!profile) {
-            return res.status(404).json({ success: false, message: "Profile data not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "Profile data not found" });
         }
 
         // Ensure all required fields are present
         const { monthlyIncome, mandatoryExpenses, emi } = profile;
 
-        if (monthlyIncome === undefined || mandatoryExpenses === undefined || emi === undefined) {
-            return res.status(400).json({ success: false, message: "Profile data incomplete" });
+        if (
+            monthlyIncome === undefined ||
+            mandatoryExpenses === undefined ||
+            emi === undefined
+        ) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Profile data incomplete" });
         }
 
         // Convert values to numbers to avoid NaN issues
@@ -177,7 +198,8 @@ router.get("/budget", async (req, res, next) => {
         if (disposableIncome <= 0) {
             return res.status(200).json({
                 success: true,
-                message: "Your expenses exceed your income. Consider reducing debts or expenses.",
+                message:
+                    "Your expenses exceed your income. Consider reducing debts or expenses.",
                 disposableIncome: disposableIncome,
                 budgetSuggestion: null,
             });
@@ -185,9 +207,9 @@ router.get("/budget", async (req, res, next) => {
 
         // Suggest budget allocation
         const budgetSuggestion = {
-            savings: (disposableIncome * 0.30).toFixed(2), 
-            investments: (disposableIncome * 0.20).toFixed(2), 
-            leisure: (disposableIncome * 0.50).toFixed(2),
+            savings: (disposableIncome * 0.3).toFixed(2),
+            investments: (disposableIncome * 0.2).toFixed(2),
+            leisure: (disposableIncome * 0.5).toFixed(2),
         };
 
         return res.status(200).json({
@@ -200,8 +222,6 @@ router.get("/budget", async (req, res, next) => {
         return res.status(500).json({ success: false, error: err.message });
     }
 });
-
-
 
 router.get("/current-savings", async (req, res, next) => {
     try {
@@ -209,7 +229,9 @@ router.get("/current-savings", async (req, res, next) => {
 
         // Check if email_id is provided
         if (!email_id) {
-            return res.status(400).json({ success: false, message: "Email ID is required." });
+            return res
+                .status(400)
+                .json({ success: false, message: "Email ID is required." });
         }
 
         // Find the user and populate the profile
@@ -217,13 +239,20 @@ router.get("/current-savings", async (req, res, next) => {
 
         // Check if user exists
         if (!user) {
-            return res.status(404).json({ success: false, message: "User not found." });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found." });
         }
 
         // Check if profile exists and has monthly_income
         const monthlyIncome = user.profile.monthlyIncome;
         if (!monthlyIncome) {
-            return res.status(400).json({ success: false, message: "Monthly income not found in profile." });
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    message: "Monthly income not found in profile.",
+                });
         }
 
         // Get the current date for month filtering
@@ -250,7 +279,8 @@ router.get("/current-savings", async (req, res, next) => {
         ]);
 
         // Extract total expenses from aggregation result
-        const totalExpenses = expensesResult.length > 0 ? expensesResult[0].totalExpenses : 0;
+        const totalExpenses =
+            expensesResult.length > 0 ? expensesResult[0].totalExpenses : 0;
 
         // Calculate savings by subtracting total expenses from monthly income
         const savings = monthlyIncome - totalExpenses;
@@ -268,6 +298,5 @@ router.get("/current-savings", async (req, res, next) => {
         return res.status(500).json({ success: false, error: err.message });
     }
 });
-
 
 export default router;

@@ -10,8 +10,8 @@ export default function NotFound() {
                         Sorry, we couldn&apos;t find this page.
                     </p>
                     <p className="mt-4 mb-8 dark:text-gray-600">
-                        But don&apos;t worry, you can find plenty of other things on
-                        our homepage.
+                        But don&apos;t worry, you can find plenty of other
+                        things on our homepage.
                     </p>
                     <a
                         rel="noopener noreferrer"
