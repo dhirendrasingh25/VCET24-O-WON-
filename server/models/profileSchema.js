@@ -30,7 +30,6 @@ const profileSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-
         currentInvestments: [
             {
                 investType: {
@@ -59,6 +58,10 @@ const profileSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        savings: {
+            type: Number,
+            default: 0,
+        }
     },
     {
         timestamps: true,
