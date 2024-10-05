@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Card,
     CardContent,
@@ -17,8 +16,18 @@ import { Clock, ExternalLink } from "lucide-react";
 import { finMarket } from "@/lib/fetchers";
 import Image from "next/image";
 
+// Define the interface for the market data items
+interface MarketData {
+    headline: string;
+    category: string;
+    datetime: number;
+    image: string;
+    summary: string;
+    url: string;
+}
+
 export default function MarketNews() {
-    const [marketData, setMarketData] = useState([]);
+    const [marketData, setMarketData] = useState<MarketData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -36,7 +45,7 @@ export default function MarketNews() {
         fetchMarketData();
     }, []);
 
-    const formatDate = (timestamp:number) => {
+    const formatDate = (timestamp: number) => {
         return new Date(timestamp * 1000).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -46,9 +55,7 @@ export default function MarketNews() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-8 text-center">
-                Latest Market News
-            </h1>
+            <h1 className="text-4xl font-bold mb-8 text-center">Latest Market News</h1>
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[...Array(6)].map((_, index) => (
@@ -70,25 +77,22 @@ export default function MarketNews() {
                 </div>
             ) : marketData && marketData.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {marketData?.map((item: any, index) => (
+                    {marketData.map((item: MarketData, index) => (
                         <Card key={index} className="flex flex-col h-full ">
                             <CardHeader className="h-[30%]">
                                 <div className="flex justify-between items-start">
                                     <CardTitle className="text-lg font-semibold mb-2">
                                         {item.headline}
                                     </CardTitle>
-                                    <Badge variant="secondary">
-                                        {item.category}
-                                    </Badge>
+                                    <Badge variant="secondary">{item.category}</Badge>
                                 </div>
-                                <CardDescription className="flex items-center text-xs  text-muted-foreground">
+                                <CardDescription className="flex items-center text-xs text-muted-foreground">
                                     <Clock className="mr-1 h-4 w-4" />
                                     {formatDate(item.datetime)}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="bg-muted h-[200px] mb-4 rounded-md flex items-center justify-center">
-                                    {/* <Newspaper className="h-12 w-12 text-muted-foreground" /> */}
                                     <Image
                                         src={item.image}
                                         alt="Market News"
@@ -96,9 +100,7 @@ export default function MarketNews() {
                                         width={400}
                                     />
                                 </div>
-                                <p className="text-sm text-muted-foreground">
-                                    {item.summary}
-                                </p>
+                                <p className="text-sm text-muted-foreground">{item.summary}</p>
                             </CardContent>
                             <CardFooter className="mt-auto">
                                 <Button className="w-full" asChild>
@@ -107,8 +109,7 @@ export default function MarketNews() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Read More{" "}
-                                        <ExternalLink className="ml-2 h-4 w-4" />
+                                        Read More <ExternalLink className="ml-2 h-4 w-4" />
                                     </a>
                                 </Button>
                             </CardFooter>
@@ -116,9 +117,7 @@ export default function MarketNews() {
                     ))}
                 </div>
             ) : (
-                <p className="text-center text-muted-foreground">
-                    No market news available at the moment.
-                </p>
+                <p className="text-center text-muted-foreground">No market news available at the moment.</p>
             )}
         </div>
     );
