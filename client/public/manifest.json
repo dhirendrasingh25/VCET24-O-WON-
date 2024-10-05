@@ -351,6 +351,20 @@
         "src": "android/android-launchericon-48-48.png",
         "sizes": "48x48"
       }
+    ],
+    "screenshots": [
+      {
+        "src": "windows11/abc.png",
+        "sizes": "1280x720",
+        "type": "image/png",
+        "form_factor": "wide"
+      },
+      {
+        "src": "windows11/abc.png",
+        "sizes": "640x960",
+        "type": "image/png",
+        "form_factor": "narrow"
+      }
     ]
   }
   
