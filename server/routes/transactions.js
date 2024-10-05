@@ -117,13 +117,12 @@ router.get("/get-transactions", async (req, res) => {
   });
   
   // Helper function to check if a date is within the last 'days' days
-
   router.get("/get-transactions-weekly", async (req, res) => {
     try {
       const { email_id } = req.query;
   
       if (!email_id) {
-        return res.status(404).json({ success: false, message: "Email not found." });
+        return res.status(400).json({ success: false, message: "Email ID is required." });
       }
   
       // Find the user by email and populate the transactions
@@ -137,55 +136,48 @@ router.get("/get-transactions", async (req, res) => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   
-      // Aggregate transactions by day for the last 7 days
+      // Filter user's transactions for the last 7 days
       const weeklyTransactions = await Transaction.aggregate([
-          {
-              $match: {
-                  _id: {
-                      $in: user.transactions.map(
-                          (t) => new mongoose.Types.ObjectId(t._id)
-                      ),
-                  },
-                  date: { $gte: sevenDaysAgo }, // Match transactions from the last 7 days
-              },
+        {
+          $match: {
+            _id: { $in: user.transactions.map((t) => t._id) },
+            date: { $gte: sevenDaysAgo },
           },
-          {
-              $group: {
-                  _id: {
-                      day: { $dayOfMonth: '$date' },
-                      month: { $month: '$date' },
-                      year: { $year: '$date' },
-                  },
-                  totalAmount: { $sum: '$amount' },
-                  count: { $sum: 1 },
-              },
+        },
+        {
+          $group: {
+            _id: { day: { $dayOfWeek: "$date" } }, // Group by day of the week (1 = Sunday, 7 = Saturday)
+            totalAmount: { $sum: "$amount" },
+            count: { $sum: 1 },
           },
-          {
-              $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 },
-          },
+        },
+        {
+          $sort: { "_id.day": 1 }, // Sort by day of the week
+        },
       ]);
   
-      // Format the result for easy plotting in a bar graph
+      // Format data for frontend chart display
+      const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const formattedData = weeklyTransactions.map((item) => ({
-        day: `Year ${item._id.year}, Month ${item._id.month}, Day ${item._id.day}`,
-        totalAmount: item.totalAmount,
-        count: item.count
+        name: daysOfWeek[item._id.day - 1], // Map day number to day name
+        value: item.totalAmount,
+        count: item.count,
       }));
   
       res.status(200).json({
         success: true,
-        message: "Weekly transactions aggregated by day successfully",
-        data: formattedData
+        message: "Weekly transactions retrieved successfully",
+        data: formattedData,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).json({
         success: false,
         message: "Error retrieving weekly transactions",
-        error: error.message
+        error: error.message,
       });
     }
   });
+  
   
 
   router.get("/get-transactions-monthly", async (req, res) => {
