@@ -121,18 +121,19 @@ export default function DashboardTable({
 
     return (
         <Tabs defaultValue="week" className="lg:col-span-2">
-            <div className="flex items-center justify-between">
+            <div className="flex md:flex-row flex-col md:items-center items-start justify-between gap-2">
                 <TabsList>
                     <TabsTrigger value="week">Week</TabsTrigger>
                     <TabsTrigger value="month">Month</TabsTrigger>
                     <TabsTrigger value="year">Year</TabsTrigger>
                 </TabsList>
 
-                <section className="flex md:items-center items-end justify-end gap-4 md:flex-row flex-col">
+                <section className="flex items-start justify-between gap-2">
                     <AddTransaction session={session} />
 
                     <Button
                         variant="outline"
+                        className="h-auto py-1"                        
                         onClick={() => {
                             const input = document.createElement("input");
                             input.type = "file";
@@ -172,9 +173,9 @@ export default function DashboardTable({
                             Weekly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
-                            <Table>
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
+                            <Table className="overflow-auto">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="table-cell">
@@ -191,7 +192,7 @@ export default function DashboardTable({
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
+                                <TableBody className="overflow-auto">
                                     {weekly.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="table-cell">
@@ -231,8 +232,8 @@ export default function DashboardTable({
                             Monthly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -290,8 +291,8 @@ export default function DashboardTable({
                             Yearly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
                             <Table>
                                 <TableHeader>
                                     <TableRow>

@@ -69,7 +69,7 @@ export default function Page() {
                 <div id="about-us" className="h-full">
                     <AboutUs />
                 </div>
-                <div id="cources" className="h-full">
+                <div id="courses" className="h-full">
                     <FinanceCourses />
                 </div>
                 <div id="testimonial" className="h-full">
