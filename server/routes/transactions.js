@@ -139,22 +139,30 @@ router.get("/get-transactions", async (req, res) => {
   
       // Aggregate transactions by day for the last 7 days
       const weeklyTransactions = await Transaction.aggregate([
-        {
-          $match: {
-            _id: { $in: user.transactions.map((t) => mongoose.Types.ObjectId(t._id)) },
-            date: { $gte: sevenDaysAgo } // Match transactions from the last 7 days
-          }
-        },
-        {
-          $group: {
-            _id: { day: { $dayOfMonth: "$date" }, month: { $month: "$date" }, year: { $year: "$date" } },
-            totalAmount: { $sum: "$amount" },
-            count: { $sum: 1 }
-          }
-        },
-        {
-          $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
-        }
+          {
+              $match: {
+                  _id: {
+                      $in: user.transactions.map(
+                          (t) => new mongoose.Types.ObjectId(t._id)
+                      ),
+                  },
+                  date: { $gte: sevenDaysAgo }, // Match transactions from the last 7 days
+              },
+          },
+          {
+              $group: {
+                  _id: {
+                      day: { $dayOfMonth: '$date' },
+                      month: { $month: '$date' },
+                      year: { $year: '$date' },
+                  },
+                  totalAmount: { $sum: '$amount' },
+                  count: { $sum: 1 },
+              },
+          },
+          {
+              $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 },
+          },
       ]);
   
       // Format the result for easy plotting in a bar graph

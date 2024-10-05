@@ -25,31 +25,31 @@ interface ReportProps {
 }
 
 export default function Report({ session }: ReportProps) {
-    // const [weekData, setWeekData] = useState([]);
-    // const [monthData, setMonthData] = useState([]);
+    const [weekData, setWeekData] = useState([]);
+    const [monthData, setMonthData] = useState([]);
 
-    // useEffect(() => {
-    //     if (!session) return;
+    useEffect(() => {
+        if (!session) return;
 
-    //     async function fetchData() {
-    //         if (session.user && session.user.email) {
-    //             try {
-    //                 const response1 = await axios.get(
-    //                     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-weekly?email_id=${session.user.email}`,
-    //                 );
-    //                 const response2 = await axios.get(
-    //                     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-monthly?email_id=${session.user.email}`,
-    //                 );
-    //                 setWeekData(response1.data);
-    //                 setMonthData(response2.data);
-    //             } catch (error) {
-    //                 console.log(error);
-    //             }
-    //         }
-    //     }
+        async function fetchData() {
+            if (session.user && session.user.email) {
+                try {
+                    const response1 = await axios.get(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-weekly?email_id=${session.user.email}`,
+                    );
+                    const response2 = await axios.get(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-monthly?email_id=${session.user.email}`,
+                    );
+                    setWeekData(response1.data);
+                    setMonthData(response2.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
 
-    //     fetchData();
-    // }, [session]);
+        fetchData();
+    }, [session]);
 
     const data = [
         { name: "Monday", value: 100 },

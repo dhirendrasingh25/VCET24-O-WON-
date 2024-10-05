@@ -100,7 +100,6 @@ export default function Dashboard() {
                     monthlyExpenseResponse,
                 ] = await Promise.all(urls.map((url) => axios.get(url)));
 
-                console.log(tipsNewsResponse.data);
                 setTipsAndNews({
                     tips: tipsNewsResponse.data.investmentTips,
                     news: tipsNewsResponse.data.marketNews,
