@@ -121,7 +121,6 @@ const AchievementsPage = () => {
     }, [session]);
 
     const fetchUserData = async (email: string) => {
-        console.log(email);
         try {
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transaction-summary?email_id=${email}`,
@@ -130,7 +129,6 @@ const AchievementsPage = () => {
                 },
             );
             const data = await res.json();
-            console.log(data.data);
 
             if (data.success) {
                 setUserData({

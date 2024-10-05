@@ -174,6 +174,7 @@ export default function Dashboard() {
                             <Button className="bg-custom-blue hover:bg-blue-600 transition-all">
                                 Connect Bank Account
                             </Button>
+                            
                         </CardFooter>
                     </Card>
 

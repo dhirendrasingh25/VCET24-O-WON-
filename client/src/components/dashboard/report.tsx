@@ -45,8 +45,6 @@ export default function Report({ session }: ReportProps) {
                         ),
                     ]);
 
-                    console.log(`response1: ${response1}`);
-                    console.log(`response2: ${response2}`);
                     setWeekData(response1.data.data);
                     setMonthData(response2.data.data);
                 } catch (error) {

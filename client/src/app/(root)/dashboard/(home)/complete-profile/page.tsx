@@ -126,7 +126,6 @@ export default function Component() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(formData);
 
         try {
             const response = await axios.post(

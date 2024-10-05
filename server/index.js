@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import cookieParser from "cookie-parser";
-import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 
 import InvestmentRoute from "./routes/investments.js";
 import OcrRoute from "./routes/ocr.js";
@@ -36,18 +35,6 @@ const io = new Server(server, {
 // CORS options
 const corsOptions = {};
 
-// Plaid API configuration
-const configuration = new Configuration({
-    basePath: PlaidEnvironments.sandbox,
-    baseOptions: {
-        headers: {
-            "PLAID-CLIENT-ID": process.env.PLAID_CLIENT_ID,
-            "PLAID-SECRET": process.env.PLAID_SECRET,
-        },
-    },
-});
-const plaidClient = new PlaidApi(configuration);
-
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -66,7 +53,6 @@ app.use("/expense", expenseRoute);
 app.use("/api", transactionRoutes);
 app.use("/profile/complete", profileRoutes);
 app.use("/news", news);
-app.use("/plaid", plaidRoute);      // plaid routes
 app.use("/", messagesRoutes);
 
 // Socket.io events

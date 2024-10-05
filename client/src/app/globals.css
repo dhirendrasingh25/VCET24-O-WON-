@@ -35,7 +35,7 @@ body {
     }
 }
 
-@layer utilities {
+/* @layer utilities {
     .input-class {
         @apply text-16 placeholder:text-16 rounded-lg border border-gray-300 text-gray-900 placeholder:text-gray-500;
     }
@@ -96,15 +96,6 @@ body {
         @apply text-[36px] leading-[44px];
     }
 
-    /* Home */
-    .home {
-        @apply no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll;
-    }
-
-    .home-content {
-        @apply no-scrollbar flex w-full flex-1 flex-col gap-8 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll;
-    }
-
     .home-header {
         @apply flex flex-col justify-between gap-8;
     }
@@ -145,11 +136,6 @@ body {
         @apply custom-scrollbar mb-8 flex w-full flex-nowrap;
     }
 
-    /* Right sidebar */
-    .right-sidebar {
-        @apply no-scrollbar hidden h-screen max-h-screen flex-col border-l border-gray-200 xl:flex w-[355px] xl:overflow-y-scroll !important;
-    }
-
     .profile-banner {
         @apply h-[120px] w-full bg-gradient-mesh bg-cover bg-no-repeat;
     }
@@ -178,12 +164,10 @@ body {
         @apply flex flex-col justify-between gap-8 px-6 py-8;
     }
 
-    /* My Banks */
     .my-banks {
         @apply flex h-screen max-h-screen w-full flex-col gap-8 bg-gray-25 p-8 xl:py-12;
     }
 
-    /* My Banks */
     .transactions {
         @apply flex max-h-screen w-full flex-col gap-8 overflow-y-scroll bg-gray-25 p-8 xl:py-12;
     }
@@ -212,7 +196,6 @@ body {
         @apply text-14 lg:text-16 font-normal text-gray-600;
     }
 
-    /* Bank Card */
     .bank-card {
         @apply relative flex h-[190px] w-full max-w-[320px] justify-between rounded-[20px] border border-white bg-bank-gradient shadow-creditCard backdrop-blur-[6px];
     }
@@ -225,12 +208,10 @@ body {
         @apply flex size-full flex-1 flex-col items-end justify-between rounded-r-[20px] bg-bank-gradient bg-cover bg-center bg-no-repeat py-5 pr-5;
     }
 
-    /* Bank Info */
     .bank-info {
         @apply gap-[18px] flex p-4 transition-all border bg-blue-25 border-transparent;
     }
 
-    /* Category Badge */
     .category-badge {
         @apply flex-center truncate w-fit gap-1 rounded-2xl border-[1.5px] py-[2px] pl-1.5 pr-2;
     }
@@ -239,7 +220,6 @@ body {
         @apply gap-[18px] border-b-2 flex px-2 sm:px-4 py-2 transition-all;
     }
 
-    /* Mobile nav */
     .mobilenav-sheet {
         @apply flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto;
     }
@@ -248,7 +228,6 @@ body {
         @apply flex gap-3 items-center p-4 rounded-lg w-full max-w-60;
     }
 
-    /* PlaidLink */
     .plaidlink-primary {
         @apply text-16 rounded-lg border border-bankGradient bg-bank-gradient font-semibold text-white shadow-form;
     }
@@ -261,12 +240,10 @@ body {
         @apply flex !justify-start cursor-pointer gap-3 rounded-lg !bg-transparent flex-row;
     }
 
-    /* Auth */
     .auth-asset {
         @apply flex h-screen w-full sticky top-0 items-center justify-end bg-sky-1 max-lg:hidden;
     }
 
-    /* Auth Form */
     .auth-form {
         @apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
     }
@@ -291,11 +268,6 @@ body {
         @apply text-14 cursor-pointer font-medium text-bankGradient;
     }
 
-    /* Payment Transfer */
-    .payment-transfer {
-        @apply no-scrollbar flex flex-col overflow-y-scroll bg-gray-25 p-8 md:max-h-screen xl:py-12;
-    }
-
     .payment-transfer_form-item {
         @apply flex w-full max-w-[850px] flex-col gap-3 md:flex-row lg:gap-8;
     }
@@ -316,17 +288,13 @@ body {
         @apply text-14 w-full bg-bank-gradient font-semibold text-white shadow-form !important;
     }
 
-    /* Root Layout */
     .root-layout {
         @apply flex h-16 items-center justify-between p-5 shadow-creditCard sm:p-8 md:hidden;
     }
-
-    /* Bank Info */
     .bank-info_content {
         @apply flex flex-1 items-center justify-between gap-2 overflow-hidden;
     }
 
-    /* Footer */
     .footer {
         @apply flex cursor-pointer items-center justify-between gap-2 py-6;
     }
@@ -350,8 +318,6 @@ body {
     .footer_image {
         @apply relative size-5 max-xl:w-full max-xl:flex max-xl:justify-center max-xl:items-center;
     }
-
-    /* Sidebar */
     .sidebar {
         @apply sticky left-0 top-0 flex h-screen w-fit flex-col  justify-between border-r border-gray-200 bg-white pt-8 text-white max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
     }
@@ -367,4 +333,5 @@ body {
     .sidebar-label {
         @apply text-16 font-semibold text-black-2 max-xl:hidden;
     }
-}
+} 
+*/

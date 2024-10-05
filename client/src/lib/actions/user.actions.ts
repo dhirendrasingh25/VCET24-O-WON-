@@ -6,7 +6,7 @@ import {
     ProcessorTokenCreateRequestProcessorEnum,
     Products,
 } from "plaid";
-import { parseStringify } from "../utils";
+import { encryptId, parseStringify } from "../utils";
 import {
     CreateBankAccountProps,
     CreateLinkTokenProps,
@@ -67,7 +67,6 @@ export const exchangePublicToken = async ({
     user,
 }: ExchangePublicTokenProps) => {
     try {
-        // Exchange public token for access token and item ID
         const response = await plaidClient.itemPublicTokenExchange({
             public_token: publicToken,
         });
@@ -75,14 +74,12 @@ export const exchangePublicToken = async ({
         const accessToken = response.data.access_token;
         const itemId = response.data.item_id;
 
-        // Get account information from Plaid using the access token
         const accountsResponse = await plaidClient.accountsGet({
             access_token: accessToken,
         });
 
         const accountData = accountsResponse.data.accounts[0];
 
-        // Create a processor token for Dwolla using the access token and account ID
         const request: ProcessorTokenCreateRequest = {
             access_token: accessToken,
             account_id: accountData.account_id,
@@ -93,19 +90,27 @@ export const exchangePublicToken = async ({
             await plaidClient.processorTokenCreate(request);
         const processorToken = processorTokenResponse.data.processor_token;
 
-        
+        const existingUser = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile/complete/get-user`,
+            {
+                params: {
+                    userId: user.id,
+                },
+            },
+        );
+
+        if (!existingUser) throw Error;
+
         const fundingSourceUrl = await addFundingSource({
-            dwollaCustomerId: user.dwollaCustomerId,
+            dwollaCustomerId: existingUser.data.dwollaCustomerId,
             processorToken,
             bankName: accountData.name,
         });
 
-        // If the funding source URL is not created, throw an error
         if (!fundingSourceUrl) throw Error;
 
-        // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and shareableId ID
         await createBankAccount({
-            userId: user.$id,
+            userId: user.id,
             bankId: itemId,
             accountId: accountData.account_id,
             accessToken,
@@ -114,9 +119,8 @@ export const exchangePublicToken = async ({
         });
 
         // Revalidate the path to reflect the changes
-        revalidatePath("/");
+        // revalidatePath("/");
 
-        // Return a success message
         return parseStringify({
             publicTokenExchange: "complete",
         });
