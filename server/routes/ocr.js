@@ -5,7 +5,7 @@ import multer from "multer";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+
 import { fileURLToPath } from "url";
 import FormData from "form-data";
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Adjust this path accordingly
