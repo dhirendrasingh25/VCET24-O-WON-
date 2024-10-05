@@ -74,7 +74,7 @@ router.get("/get-transactions", async (req, res) => {
   // POST: Add a new transaction with savings field in User model
   router.post("/add-transaction", async (req, res) => {
     try {
-      const { email_id, description, amount, date, category, savings } = req.body;
+      const { email_id, description, amount, date, category } = req.body;
   
       // Find the user by email
       const user = await User.findOne({ email_id });
@@ -98,9 +98,7 @@ router.get("/get-transactions", async (req, res) => {
       user.transactions.push(newTransaction);
   
       // Update user's savings (optional, if provided in the request body)
-      if (savings !== undefined) {
-        user.savings = savings;
-      }
+   
   
       // Save the updated user
       await user.save();
