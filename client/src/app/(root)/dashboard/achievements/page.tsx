@@ -12,7 +12,7 @@ const mockUserData = {
 }
 
 const achievements = [
-  { id: 1, name: "Savings Starter", description: "Save your first ₹1,000", target: 100, type: 'savings', score: 10 },
+  { id: 1, name: "Savings Starter", description: "Save your first ₹1,000", target: 1000, type: 'savings', score: 10 },
   { id: 2, name: "Frugal Fortune", description: "Save ₹10,000 in total", target: 10000, type: 'savings', score: 25 },
   { id: 3, name: "Transaction Tamer", description: "Complete 100 transactions", target: 100, type: 'transactions', score: 20 },
   { id: 4, name: "Big Spender", description: "Make a single transaction of ₹10,000 or more", target: 10000, type: 'maxTransaction', score: 15 },
