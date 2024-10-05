@@ -6,6 +6,7 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { fileURLToPath } from "url";
 import FormData from "form-data";
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Adjust this path accordingly
 import User from "../models/userSchema.js"
@@ -48,37 +49,46 @@ function extract(data) {
 
 // Utility to get the latest file from the uploads directory
 const getLatestFile = (dir) => {
-  const files = fs.readdirSync(dir)
-    .map(file => ({
-      name: file,
-      time: fs.statSync(path.join(dir, file)).mtime.getTime()
-    }))
-    .sort((a, b) => b.time - a.time); 
-  return files.length ? files[0].name : null; 
+    const files = fs
+        .readdirSync(dir)
+        .map((file) => ({
+            name: file,
+            time: fs.statSync(path.join(dir, file)).mtime.getTime(),
+        }))
+        .sort((a, b) => b.time - a.time);
+    return files.length ? files[0].name : null;
 };
 
 // Utility to delete all files in the uploads directory
 const clearUploadsFolder = async (dir) => {
-  const files = await fs.promises.readdir(dir);
-  for (const file of files) {
-    await fs.promises.unlink(path.join(dir, file));
-  }
+    const files = await fs.promises.readdir(dir);
+    for (const file of files) {
+        await fs.promises.unlink(path.join(dir, file));
+    }
 };
 
 // Upload file route
 router.post("/", uploads.single("recipt"), async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, "uploads", req.file.originalname);
+    try {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const fileExtension = path.extname(req.file.originalname);
+        const fileName = `${path.basename(req.file.originalname, fileExtension)}-${uniqueSuffix}${fileExtension}`;
 
-    if (!fs.existsSync(path.join(__dirname, "uploads"))) {
-      fs.mkdirSync(path.join(__dirname, "uploads"));
+        const filePath = path.join(__dirname, "uploads", fileName);
+
+        if (!fs.existsSync(path.join(__dirname, "uploads"))) {
+            fs.mkdirSync(path.join(__dirname, "uploads"));
+        }
+
+        await fs.promises.writeFile(filePath, req.file.buffer);
+        res.send({
+            message: "File uploaded successfully",
+            filePath: filePath,
+            fileName: fileName,
+        });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
     }
-
-    await fs.promises.writeFile(filePath, req.file.buffer);
-    res.send({ message: "File uploaded successfully", filePath: filePath });
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
 });
 
 // Bill processing route
@@ -95,7 +105,7 @@ router.get("/bill", async (req, res) => {
       return res.status(404).send({ error: "No files found in uploads directory" });
     }
 
-    const filePath = path.join(uploadsDir, latestFile);
+        const filePath = path.join(uploadsDir, latestFile);
 
     // Prepare the form data for the OCR request
     const formData = new FormData();

@@ -19,10 +19,10 @@ import messagesRoutes from "./routes/messages.js";
 const app = express();
 export const server = new createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    credentials: true,
-  },
+    cors: {
+        origin: "*",
+        credentials: true,
+    },
 });
 
 const corsOptions = {};
@@ -48,30 +48,31 @@ app.use("/", messagesRoutes);
 import Messages from "./models/messagesSchema.js";
 
 io.on("connection", (socket) => {
-  console.log("User Connected ID : ", socket.id);
+    console.log("User Connected ID : ", socket.id);
 
-  socket.on("message", async (data) => {
-    console.log("Message Recieved : ", data);
-    try {
-      const newMessage = new Messages({
-        sender: data.sender,
-        message: data.message,
-        timestamp: data.timestamp,
-      });
-      await newMessage.save();
-      io.emit("recieve-message", data);
-    } catch (error) {
-      console.error("Error saving message:", error);
-    }
-  });
+    socket.on("message", async (data) => {
+        console.log("Message Recieved : ", data);
+        try {
+            const newMessage = new Messages({
+                sender: data.sender,
+                message: data.message,
+                avatar: data.avatar,
+                timestamp: data.timestamp,
+            });
+            await newMessage.save();
+            io.emit("recieve-message", data);
+        } catch (error) {
+            console.error("Error saving message:", error);
+        }
+    });
 
-  socket.on("disconnect", () => {
-    console.log("User Disconnected : ", socket.id);
-  });
+    socket.on("disconnect", () => {
+        console.log("User Disconnected : ", socket.id);
+    });
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+    res.send("Hello World");
 });
 
 import dotenv from "dotenv";
@@ -83,16 +84,16 @@ dotenv.config();
 const PORT = process.env.PORT || 4001;
 
 const startServer = async () => {
-  try {
-    await dbConnect();
+    try {
+        await dbConnect();
 
-    server.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error(`Error in starting the server: ${error}`);
-    process.exit(1);
-  }
+        server.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error(`Error in starting the server: ${error}`);
+        process.exit(1);
+    }
 };
 
 startServer();
