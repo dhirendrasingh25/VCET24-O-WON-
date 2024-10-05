@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
+    CardContent,
 } from "@/components/ui/card";
 // import { Progress } from "@/components/ui/progress";
 
@@ -20,8 +22,8 @@ import DashboardTable from "@/components/dashboard/table";
 import Report from "@/components/dashboard/report";
 
 type IDailyTips = {
-    tips: Tips[];
-    news: MarketNews[];
+    tips: Tips;
+    news: MarketNews;
 };
 
 export default function Dashboard() {
@@ -35,7 +37,10 @@ export default function Dashboard() {
 
     const [weeklyExpense, setWeeklyExpense] = useState<number>(0);
     const [monthlyExpense, setMonthlyExpense] = useState<number>(0);
-    const [tips, setTips] = useState<IDailyTips>({ tips: [], news: [] });
+    const [tipsAndNews, setTipsAndNews] = useState<IDailyTips>({
+        tips: { name: "", desc: "" },
+        news: { category: "", image: "", headline: "", url: "" },
+    });
     const router = useRouter();
 
     useEffect(() => {
@@ -82,7 +87,7 @@ export default function Dashboard() {
         async function callApiCalls() {
             const urls = [
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tips-news`,
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-all-transactions-summary?email_id=${session?.user?.email}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/getall-transactions-summary?email_id=${session?.user?.email}`,
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/weekly/${session?.user?.email}`,
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/monthly/${session?.user?.email}`,
             ];
@@ -96,8 +101,8 @@ export default function Dashboard() {
                 ] = await Promise.all(urls.map((url) => axios.get(url)));
 
                 console.log(tipsNewsResponse.data);
-                setTips({
-                    tips: tipsNewsResponse.data.investmentTips.plans,
+                setTipsAndNews({
+                    tips: tipsNewsResponse.data.investmentTips,
                     news: tipsNewsResponse.data.marketNews,
                 });
 
@@ -109,7 +114,10 @@ export default function Dashboard() {
                 setYearly(transactionsResponse.data.summary.yearly);
             } catch (error) {
                 console.log(error);
-                setTips({ tips: [], news: [] });
+                setTipsAndNews({
+                    tips: { name: "", desc: "" },
+                    news: { category: "", image: "", headline: "", url: "" },
+                });
                 setWeeklyExpense(0);
                 setMonthlyExpense(0);
                 setWeekly([]);
@@ -138,10 +146,7 @@ export default function Dashboard() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 ">
             <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-                    <Card
-                        className="sm:col-span-2"
-                        x-chunk="dashboard-05-chunk-0"
-                    >
+                    <Card className="sm:col-span-2">
                         <CardHeader className="pb-3">
                             <CardTitle>Connect Your Bank</CardTitle>
                             <CardDescription className="text-balance max-w-lg leading-relaxed">
@@ -156,7 +161,7 @@ export default function Dashboard() {
                         </CardFooter>
                     </Card>
 
-                    <Card x-chunk="dashboard-05-chunk-1">
+                    <Card>
                         <CardHeader className="pb-2">
                             <CardDescription>This Week</CardDescription>
                             <CardTitle className="text-4xl">
@@ -177,7 +182,7 @@ export default function Dashboard() {
                             />
                         </CardFooter> */}
                     </Card>
-                    <Card x-chunk="dashboard-05-chunk-2">
+                    <Card>
                         <CardHeader className="pb-2">
                             <CardDescription>This Month</CardDescription>
                             <CardTitle className="text-4xl">
@@ -187,9 +192,53 @@ export default function Dashboard() {
                         </CardHeader>
                     </Card>
                 </div>
-                
-                <div className="flex flex-row gap-4">
 
+                <div className="flex flex-row gap-4">
+                    <Card className="flex-1">
+                        <CardHeader>
+                            <CardTitle>Tip of the Day</CardTitle>
+                            <CardDescription>
+                                {tipsAndNews.tips.name}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="font-medium">
+                            <p>{tipsAndNews.tips.desc}</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="flex-1">
+                        <CardContent className="p-4 h-full">
+                            <div className="flex flex-col h-full">
+                                <CardTitle className="text-lg capitalize mb-2">
+                                    {tipsAndNews.news.category}
+                                </CardTitle>
+                                <div className="flex flex-1 gap-4">
+                                    <div className="w-1/3 relative">
+                                        <Image
+                                            src={tipsAndNews.news.image}
+                                            alt={tipsAndNews.news.headline}
+                                            width={100}
+                                            height={50}
+                                            className="rounded object-fill h-full w-full"
+                                        />
+                                    </div>
+                                    <div className="w-2/3 flex flex-col justify-between">
+                                        <CardDescription className="text-base">
+                                            {tipsAndNews.news.headline}
+                                        </CardDescription>
+                                        <a
+                                            href={tipsAndNews.news.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline mt-2"
+                                        >
+                                            Read More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 <div className="grid lg:grid-cols-3 gap-4">

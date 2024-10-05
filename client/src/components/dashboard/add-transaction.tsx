@@ -12,8 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast"
-
+import { useToast } from "@/hooks/use-toast";
 
 interface AddTransactionProps {
     session: Session;
@@ -32,7 +31,7 @@ export default function AddTransaction({ session }: AddTransactionProps) {
         e.preventDefault();
 
         async function PostData() {
-            if (!session ||!session.user) {
+            if (!session || !session.user) {
                 return;
             }
 
@@ -50,9 +49,10 @@ export default function AddTransaction({ session }: AddTransactionProps) {
 
                 toast({
                     title: "Transaction added successfully",
-                    description: "Your transaction has been added to the database.",
+                    description:
+                        "Your transaction has been added to the database.",
                 });
-                
+
                 setCategory("");
                 setDescription("");
                 setDate("");

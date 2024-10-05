@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import SessionWrapper from "@/components/core/session-wrapper";
 import Sidebar from "@/components/dashboard/sidebar";
 import Header from "@/components/dashboard/header";
