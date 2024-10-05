@@ -200,7 +200,11 @@ export default function ProfilePage() {
                     id="dob"
                     name="dob"
                     type="date"
-                    value={profileData.profile.dob}
+                    value={
+                        profileData?.profile?.dob
+                          ? new Date(profileData.profile.dob).toLocaleDateString("en-GB") // Format to DD-MM-YYYY
+                          : ""
+                      }
                     readOnly
                     className="bg-gray-100 cursor-not-allowed"
                   />
