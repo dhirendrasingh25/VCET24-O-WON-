@@ -171,7 +171,6 @@ router.get("/bill", async (req, res) => {
         `;
         const resu = await model.generateContent(prompt);
 
-        // const generatedText = aiResponse?.choices?.[0]?.text || "";
         console.log(resu.response.text());
         const jsonResponse = JSON.parse(resu.response.text());
 
