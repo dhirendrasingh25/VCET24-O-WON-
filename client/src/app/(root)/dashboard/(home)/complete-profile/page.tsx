@@ -26,9 +26,10 @@ type Investment = {
 };
 
 type FormData = {
-    age: number;
+    dob: string;
     occupation: string;
     ailments: number;
+    monthlyIncome: number;
     dependents: number;
     dependantDescription: string;
     goal: string;
@@ -45,9 +46,10 @@ export default function Component() {
     const router = useRouter();
 
     const [formData, setFormData] = useState<FormData>({
-        age: 18,
+        dob: "",
         occupation: "",
         ailments: 0,
+        monthlyIncome: 0,
         dependents: 0,
         dependantDescription: "",
         goal: "",
@@ -117,6 +119,11 @@ export default function Component() {
         }));
     };
 
+    const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log(formData);
@@ -171,14 +178,13 @@ export default function Component() {
                             </CardHeader>
                             <CardContent className="space-y-3 p-4">
                                 <div>
-                                    <Label htmlFor="age">Age</Label>
+                                    <Label htmlFor="dob">Date of Birth</Label>
                                     <Input
-                                        id="age"
-                                        name="age"
-                                        type="text"
-                                        value={formData.age}
-                                        onChange={handleNumberInputChange}
-                                        min={18}
+                                        id="dob"
+                                        name="dob"
+                                        type="date"
+                                        value={formData.dob}
+                                        onChange={handleDateInputChange}
                                         required
                                     />
                                 </div>
@@ -204,6 +210,20 @@ export default function Component() {
                                         name="ailments"
                                         type="text"
                                         value={formData.ailments}
+                                        onChange={handleNumberInputChange}
+                                        min={0}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="monthlyIncome">
+                                        Monthly Income (INR)
+                                    </Label>
+                                    <Input
+                                        id="monthlyIncome"
+                                        name="monthlyIncome"
+                                        type="text"
+                                        value={formData.monthlyIncome}
                                         onChange={handleNumberInputChange}
                                         min={0}
                                         required

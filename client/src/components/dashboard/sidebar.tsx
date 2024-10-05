@@ -67,7 +67,7 @@ export default function Sidebar() {
                     icon={CircleUserRound}
                     label="My Account"
                 />
-                 <SidebarLink
+                <SidebarLink
                     href="/dashboard/achievements"
                     icon={IoMdTrophy}
                     label="View Achievements"
