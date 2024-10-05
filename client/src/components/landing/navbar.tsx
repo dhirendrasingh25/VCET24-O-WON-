@@ -16,7 +16,7 @@ const Navbar = () => {
                     BachatPro
                 </div>
             </div>
-            <div className="hidden md:flex flex-row w-full justify-end hidden space-x-6  mr-10">
+            <div className="hidden md:flex flex-row w-full justify-end space-x-6  mr-10">
                 {[
                     { value: "Home", link: "#home" },
                     { value: "Market News", link: "#market" },

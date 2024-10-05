@@ -88,9 +88,9 @@ export default function Page() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (message.trim() && session?.user?.name && socket) {
+        if (message.trim() && session?.user?.email && socket) {
             const newMessage: Message = {
-                sender: session.user.name,
+                sender: session.user.email,
                 message: message.trim(),
                 timestamp: new Date(),
                 avatar:
