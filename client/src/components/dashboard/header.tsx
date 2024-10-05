@@ -31,6 +31,7 @@ import {
     MessageCircle,
     PanelLeft,
 } from "lucide-react";
+import { IoMdTrophy } from "react-icons/io";
 
 export default function Header() {
     const { data: session } = useSession();
@@ -86,6 +87,11 @@ export default function Header() {
                             icon={CircleUserRound}
                             label="My Account"
                         />
+                        <SheetNavLink
+                            href="/dashboard/achievements"
+                            icon={IoMdTrophy}
+                            label="View Achievements"
+                        />
                     </nav>
                 </SheetContent>
             </Sheet>
@@ -129,7 +135,7 @@ export default function Header() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                            <Link href="/dashboard/profile">My Account</Link>
+                            <Link href="/dashboard/my-account">My Account</Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem

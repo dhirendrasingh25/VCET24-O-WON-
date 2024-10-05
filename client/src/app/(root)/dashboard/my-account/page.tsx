@@ -221,7 +221,7 @@ export default function ProfilePage() {
 
                                 <div>
                                     <Label>Investments</Label>
-                                    <ul className="text-sm text-gray-600">
+                                    <ul className="text-sm text-gray-600 flex flex-col gap-2">
                                         {profileData.profile.currentInvestments.map(
                                             (investment, index) => (
                                                 <li
@@ -242,7 +242,7 @@ export default function ProfilePage() {
                                                     <Input
                                                         id="current-investment-value"
                                                         name="current-investment-value"
-                                                        type="number"
+                                                        type="text"
                                                         value={`${rupeeSymbol} ${investment.amount.toLocaleString()}`}
                                                         readOnly
                                                         className="bg-gray-100 cursor-not-allowed"

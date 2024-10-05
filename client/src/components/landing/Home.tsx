@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import React from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import { AuroraBackground } from "../ui/aurora-background";
 import { Modal, ModalTrigger } from "../ui/animated-modal";
-import Link from "next/link";
 
 export default function Home() {
     return (

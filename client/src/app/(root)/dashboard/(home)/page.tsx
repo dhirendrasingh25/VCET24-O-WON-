@@ -14,12 +14,13 @@ import {
     CardTitle,
     CardContent,
 } from "@/components/ui/card";
-// import { Progress } from "@/components/ui/progress";
 
 import { rupeeSymbol } from "@/lib/utils";
 import { ITransaction, MarketNews, Tips } from "@/types";
 import DashboardTable from "@/components/dashboard/table";
 import Report from "@/components/dashboard/report";
+
+import PlaceholderImage from "@/public/placeholder.png";
 
 type IDailyTips = {
     tips: Tips;
@@ -168,18 +169,6 @@ export default function Dashboard() {
                                 {weeklyExpense.toLocaleString()}
                             </CardTitle>
                         </CardHeader>
-                        {/* <CardContent>
-                            <div className="text-xs text-muted-foreground">
-                                +25% from last week
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Progress
-                                value={25}
-                                aria-label="25% increase"
-                                color="bg-custom-blue"
-                            />
-                        </CardFooter> */}
                     </Card>
                     <Card>
                         <CardHeader className="pb-2">
@@ -192,7 +181,7 @@ export default function Dashboard() {
                     </Card>
                 </div>
 
-                <div className="flex flex-row gap-4">
+                <div className="flex md:flex-row gap-4 flex-col">
                     <Card className="flex-1">
                         <CardHeader>
                             <CardTitle>Tip of the Day</CardTitle>
@@ -214,7 +203,7 @@ export default function Dashboard() {
                                 <div className="flex flex-1 gap-4">
                                     <div className="w-1/3 relative">
                                         <Image
-                                            src={tipsAndNews.news.image}
+                                            src={tipsAndNews.news.image || PlaceholderImage}
                                             alt={tipsAndNews.news.headline}
                                             width={100}
                                             height={50}

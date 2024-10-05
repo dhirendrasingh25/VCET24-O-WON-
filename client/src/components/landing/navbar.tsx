@@ -2,15 +2,13 @@
 
 import { Button } from "../ui/button";
 import { PiPiggyBankFill } from "react-icons/pi";
-// import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 const Navbar = () => {
     return (
-        <div className="px-10 border-b py-4 sticky top-0 flex  flex-row items-center  justify-between">
-            <div className="mx-2 sm:mx-4 flex flex-row justify-center items-center space-x-2  text-3xl  ">
-                {/* <Image src={bachatProLogo} alt="BachatPro Logo" className="h-full w-full" /> */}
+        <div className="md:px-10 px-2 border-b py-4 flex z-50 flex-row items-center justify-between sticky top-0">
+            <div className="mx-md:mx-4 flex flex-row justify-between items-center space-x-2 text-3xl max-md:text-2xl">
                 <div className="text-blue-500">
                     <PiPiggyBankFill />
                 </div>
