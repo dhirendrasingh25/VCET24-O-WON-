@@ -62,7 +62,7 @@ export default function Page() {
     }, [scrollToBottom]);
 
     useEffect(() => {
-        if (status === "authenticated" && session?.user?.name) {
+        if (status === "authenticated" && session?.user?.email) {
             const newSocket = io(SOCKET_URL);
             setSocket(newSocket);
 
@@ -171,12 +171,12 @@ export default function Page() {
                                     key={i}
                                     className={cn(
                                         "flex items-start mb-4",
-                                        msg.sender === session?.user?.name
+                                        msg.sender === session?.user?.email
                                             ? "justify-end"
                                             : "justify-start",
                                     )}
                                 >
-                                    {msg.sender !== session?.user?.name && (
+                                    {msg.sender !== session?.user?.email && (
                                         <Image
                                             height={40}
                                             width={40}
@@ -188,12 +188,12 @@ export default function Page() {
                                     <div
                                         className={cn(
                                             "p-3 rounded-lg max-w-[70%]",
-                                            msg.sender === session?.user?.name
+                                            msg.sender === session?.user?.email
                                                 ? "bg-green-500 text-white"
-                                                : "bg-white",
+                                                : "bg-zinc-100",
                                         )}
                                     >
-                                        {msg.sender !== session?.user?.name && (
+                                        {msg.sender !== session?.user?.email && (
                                             <p className="font-semibold text-sm mb-1">
                                                 {msg.sender}
                                             </p>
@@ -208,7 +208,7 @@ export default function Page() {
                                             })}
                                         </p>
                                     </div>
-                                    {msg.sender === session?.user?.name && (
+                                    {msg.sender === session?.user?.email && (
                                         <Image
                                             height={40}
                                             width={40}
