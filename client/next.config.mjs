@@ -1,8 +1,9 @@
+import NextPWA from "next-pwa";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
     images: {
-        // domains: ["lh3.googleusercontent.com"],
         remotePatterns: [
             {
                 protocol: "https",
@@ -24,4 +25,8 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+const withPWA = NextPWA({
+    dest: "public",
+});
+
+export default withPWA(nextConfig);
