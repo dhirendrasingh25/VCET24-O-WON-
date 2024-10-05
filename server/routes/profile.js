@@ -1,5 +1,4 @@
 import express from "express";
-// import Quiz from '../models/profileSchema.js'; // Ensure you have `.js` at the end for ES6 module imports
 import Profile from "../models/profileSchema.js";
 import User from "../models/userSchema.js";
 import Transaction from "../models/transactionSchema.js";
@@ -82,7 +81,7 @@ router.get("/get-user", async (req, res, next) => {
     }
 });
 
-router.get("/savings", async (req, res, next) => {
+router.get("/current-savings", async (req, res, next) => {
     try {
         const { email_id } = req.query;
 
@@ -140,7 +139,7 @@ router.get("/savings", async (req, res, next) => {
             user,
         });
     } catch (err) {
-        // Handle any errors
+        console.log(err);
         return res.status(500).json({ success: false, error: err.message });
     }
 });
