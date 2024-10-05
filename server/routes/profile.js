@@ -56,6 +56,31 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.post("/update-user", async (req, res, next) => {
+    try {
+        const { email_id, dwallaCustomerId } = req.body;
+
+        const user = await User.findOneAndUpdate(
+            { email_id },  
+            { $set: { dwallaCustomerId } },  
+            { new: true }  
+        );
+
+        // If user is not found
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found." });
+        }
+
+        // Return success and the updated user data
+        return res.status(200).json({ success: true, message: "User updated successfully.", user });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+
+
 router.get("/get-user", async (req, res, next) => {
     try {
         const { email_id } = req.query;
