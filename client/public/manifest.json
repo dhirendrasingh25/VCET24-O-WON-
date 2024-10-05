@@ -354,14 +354,14 @@
     ],
     "screenshots": [
       {
-        "src": "windows11/abc.png",
+        "src": "windows11/abc.jpg",
         "sizes": "1280x720",
         "type": "image/png",
         "form_factor": "wide"
       },
       {
-        "src": "windows11/abc.png",
-        "sizes": "640x960",
+        "src": "windows11/qwer.jpg",
+        "sizes": "600x900",
         "type": "image/png",
         "form_factor": "narrow"
       }
