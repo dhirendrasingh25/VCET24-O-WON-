@@ -1,3 +1,5 @@
+"use client";
+
 import { Session } from "next-auth";
 import { useState, useEffect } from "react";
 import {
@@ -25,41 +27,38 @@ interface ReportProps {
 }
 
 export default function Report({ session }: ReportProps) {
-    // const [weekData, setWeekData] = useState([]);
-    // const [monthData, setMonthData] = useState([]);
+    const [weekData, setWeekData] = useState([]);
+    const [monthData, setMonthData] = useState([]);
 
-    // useEffect(() => {
-    //     if (!session) return;
+    useEffect(() => {
+        if (!session) return;
 
-    //     async function fetchData() {
-    //         if (session.user && session.user.email) {
-    //             try {
-    //                 const response1 = await axios.get(
-    //                     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-weekly?email_id=${session.user.email}`,
-    //                 );
-    //                 const response2 = await axios.get(
-    //                     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-monthly?email_id=${session.user.email}`,
-    //                 );
-    //                 setWeekData(response1.data);
-    //                 setMonthData(response2.data);
-    //             } catch (error) {
-    //                 console.log(error);
-    //             }
-    //         }
-    //     }
+        async function fetchData() {
+            if (session.user && session.user.email) {
+                try {
+                    const [response1, response2] = await Promise.all([
+                        axios.get(
+                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-weekly?email_id=${session.user.email}`,
+                        ),
+                        axios.get(
+                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-monthly?email_id=${session.user.email}`,
+                        ),
+                    ]);
 
-    //     fetchData();
-    // }, [session]);
+                    console.log(`response1: ${response1}`);
+                    console.log(`response2: ${response2}`);
+                    setWeekData(response1.data.data);
+                    setMonthData(response2.data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
 
-    const data = [
-        { name: "Monday", value: 100 },
-        { name: "Tuesday", value: 120 },
-        { name: "Wednesday", value: 80 },
-        { name: "Thursday", value: 150 },
-        { name: "Friday", value: 90 },
-        { name: "Saturday", value: 60 },
-        { name: "Sunday", value: 200 },
-    ];
+        fetchData();
+    }, [session]);
+
+    console.log(weekData);
 
     return (
         <Tabs defaultValue="week">
@@ -78,18 +77,23 @@ export default function Report({ session }: ReportProps) {
                     </CardHeader>
                     <CardContent>
                         <ResponsiveContainer width="100%" height={250}>
-                            <LineChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="#8884d8"
-                                />
-                            </LineChart>
+                            {weekData && weekData.length > 0 ? (
+                                <LineChart data={weekData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="value"
+                                        stroke="#8884d8"
+                                        strokeWidth={3}
+                                    />
+                                </LineChart>
+                            ) : (
+                                <p>No data available for the week.</p>
+                            )}
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
@@ -105,8 +109,9 @@ export default function Report({ session }: ReportProps) {
                     </CardHeader>
                     <CardContent>
                         <ResponsiveContainer width="100%" height={260}>
-                            <LineChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" />
+                            {monthData && monthData.length > 0 ? (
+                                <LineChart data={monthData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
                                 <YAxis />
                                 <Tooltip />
@@ -115,8 +120,12 @@ export default function Report({ session }: ReportProps) {
                                     type="monotone"
                                     dataKey="value"
                                     stroke="#82ca9d"
-                                />
-                            </LineChart>
+                                    strokeWidth={3}
+                                    />
+                                </LineChart>
+                            ) : (
+                                <p>No data available for the month.</p>
+                            )}
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
