@@ -72,6 +72,7 @@ export default function Sidebar() {
                     icon={IoMdTrophy}
                     label="View Achievements"
                 />
+                
             </nav>
         </aside>
     );

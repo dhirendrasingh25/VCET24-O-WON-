@@ -143,63 +143,6 @@ router.get("/budget", async (req, res, next) => {
 
 
 
-router.get("/budget", async (req, res, next) => {
-    try {
-        const { email_id } = req.query;
-
-        const userProfile = await User.findOne({ email_id }).populate("profile");
-
-        if (!userProfile) {
-            return res.status(404).json({ success: false, message: "User profile not found" });
-        }
-
-        const profile = userProfile.profile;
-
-        if (!profile) {
-            return res.status(404).json({ success: false, message: "Profile data not found" });
-        }
-
-        // Ensure all required fields are present
-        const { monthlyIncome, mandatoryExpenses, emi } = profile;
-
-        if (monthlyIncome === undefined || mandatoryExpenses === undefined || emi === undefined) {
-            return res.status(400).json({ success: false, message: "Profile data incomplete" });
-        }
-
-        // Convert values to numbers to avoid NaN issues
-        const income = Number(monthlyIncome);
-        const expenses = Number(mandatoryExpenses);
-        const emiAmount = Number(emi);
-
-        // Calculate disposable income
-        const disposableIncome = income - (expenses + emiAmount);
-
-        if (disposableIncome <= 0) {
-            return res.status(200).json({
-                success: true,
-                message: "Your expenses exceed your income. Consider reducing debts or expenses.",
-                disposableIncome: disposableIncome,
-                budgetSuggestion: null,
-            });
-        }
-
-        // Suggest budget allocation
-        const budgetSuggestion = {
-            savings: (disposableIncome * 0.30).toFixed(2), 
-            investments: (disposableIncome * 0.20).toFixed(2), 
-            leisure: (disposableIncome * 0.50).toFixed(2),
-        };
-
-        return res.status(200).json({
-            success: true,
-            disposableIncome: disposableIncome.toFixed(2),
-            budgetSuggestion,
-        });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ success: false, error: err.message });
-    }
-});
 
 
 
