@@ -14,8 +14,10 @@ PWA helps users take control of their finances with features that allow them to:
 
 # Architecture
 
-![alt text](assets/image.png)
-![alt text](assets/image2.png)
+![Image 1](https://github.com/dhirendrasingh25/VCET24-O-WON-/blob/main/assests/image.png)
+<br><br>
+![Image 2](https://github.com/dhirendrasingh25/VCET24-O-WON-/blob/main/assests/image2.png)
+
 
 # Frontend
 
