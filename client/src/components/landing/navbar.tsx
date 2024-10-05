@@ -16,13 +16,13 @@ const Navbar = () => {
                     BachatPro
                 </div>
             </div>
-            <div className="sm:flex flex-row w-full justify-end hidden space-x-6  mr-10">
+            <div className="hidden md:flex flex-row w-full justify-end space-x-6  mr-10">
                 {[
                     { value: "Home", link: "#home" },
                     { value: "Market News", link: "#market" },
                     { value: "Take a Quiz", link: "#quiz" },
                     { value: "About Us", link: "#about" },
-                    { value: "Cources", link: "#cources" },
+                    { value: "Courses", link: "#courses" },
                     { value: "Testimonials", link: "#testimonials" },
                     
                 ].map((item, idx) => (

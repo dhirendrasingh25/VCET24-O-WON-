@@ -127,6 +127,7 @@ io.on("connection", (socket) => {
             const newMessage = new Messages({
                 sender: data.sender,
                 message: data.message,
+                avatar: data.avatar,
                 timestamp: data.timestamp,
             });
             await newMessage.save();

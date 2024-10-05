@@ -45,13 +45,13 @@ export default function DashboardTable({
     const { toast } = useToast();
     const [isUploading, setIsUploading] = useState(false);
 
-    const handleFileOCR = async (filename: string) => {
+    const handleFileOCR = async () => {
         try {
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/ocr/bill`,
                 {
                     params: {
-                        file_name: filename,
+                        email_id: session?.user?.email,
                     },
                 },
             );
@@ -93,9 +93,9 @@ export default function DashboardTable({
                     description: "Your file has been uploaded successfully",
                 });
 
-                const fileName = response.data.filePath;
+                // const fileName = response.data.filePath;
                 try {
-                    await handleFileOCR(fileName);
+                    await handleFileOCR();
                 } catch (error) {
                     throw error;
                 }
@@ -121,18 +121,19 @@ export default function DashboardTable({
 
     return (
         <Tabs defaultValue="week" className="lg:col-span-2">
-            <div className="flex items-center justify-between">
+            <div className="flex md:flex-row flex-col md:items-center items-start justify-between gap-2">
                 <TabsList>
                     <TabsTrigger value="week">Week</TabsTrigger>
                     <TabsTrigger value="month">Month</TabsTrigger>
                     <TabsTrigger value="year">Year</TabsTrigger>
                 </TabsList>
 
-                <section className="flex md:items-center items-end justify-end gap-4 md:flex-row flex-col">
+                <section className="flex items-start justify-between gap-2">
                     <AddTransaction session={session} />
 
                     <Button
                         variant="outline"
+                        className="h-auto py-1"
                         onClick={() => {
                             const input = document.createElement("input");
                             input.type = "file";
@@ -148,16 +149,18 @@ export default function DashboardTable({
                         }}
                     >
                         <div className="flex items-center gap-2">
-                            <Upload className="h-4 w-4" />
                             {isUploading ? (
-                                <section className="flex justify-center items-center h-screen">
-                                    <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                                <section className="flex justify-center items-center relative">
+                                    <div className="animate-spin h-5 w-5 border-2 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
                                     <span className="ml-4 text-lg">
                                         Loading
                                     </span>
                                 </section>
                             ) : (
-                                <span>Upload A Image</span>
+                                <>
+                                    <Upload className="h-4 w-4" />
+                                    <span>Upload A Image</span>
+                                </>
                             )}
                         </div>
                     </Button>
@@ -172,9 +175,9 @@ export default function DashboardTable({
                             Weekly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
-                            <Table>
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
+                            <Table className="overflow-auto">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="table-cell">
@@ -191,7 +194,7 @@ export default function DashboardTable({
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
+                                <TableBody className="overflow-auto">
                                     {weekly.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="table-cell">
@@ -231,8 +234,8 @@ export default function DashboardTable({
                             Monthly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -290,8 +293,8 @@ export default function DashboardTable({
                             Yearly transactions of your bank.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[250px] rounded-md border p-4">
+                    <CardContent className="overflow-auto">
+                        <ScrollArea className="h-[250px] rounded-md border md:p-4">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
