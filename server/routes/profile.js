@@ -2,6 +2,7 @@ import express from 'express';
 // import Quiz from '../models/profileSchema.js'; // Ensure you have `.js` at the end for ES6 module imports
 import Profile from '../models/profileSchema.js';
 import User from '../models/userSchema.js';
+import Transaction from '../models/transactionSchema.js';
 
 const router = express.Router();
 
@@ -68,5 +69,62 @@ router.get("/get-user", async (req, res, next) => {
         return res.status(500).json({ success: false, error: err.message });
     }
 });
+
+router.get("/savings", async (req, res, next) => {
+    try {
+      const { email_id } = req.query;
+  
+      // Check if email_id is provided
+      if (!email_id) {
+        return res.status(400).json({ success: false, message: "Email ID is required." });
+      }
+  
+      // Find the user and populate profile and transactions
+      const user = await User.findOne({ email_id }).populate('profile'); // Assuming `profile` has `monthly_income`
+      
+      // Check if user exists
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      // Check if profile exists and has monthly_income
+      const monthlyIncome = user.profile.monthly_income;
+      if (!monthlyIncome) {
+        return res.status(400).json({ success: false, message: "Monthly income not found in profile." });
+      }
+  
+      // Get the current date for month filtering
+      const currentMonth = new Date().getMonth();
+      const currentYear = new Date().getFullYear();
+      const transactions = await Transaction.find({
+        user: user._id,
+        transaction_date: {
+          $gte: new Date(currentYear, currentMonth, 1),
+          $lt: new Date(currentYear, currentMonth + 1, 1)
+        }
+      });
+  
+      // Calculate the total expenses from transactions
+      const totalExpenses = transactions.reduce((total, transaction) => {
+        return total + transaction.amount;
+      }, 0);
+  
+      // Calculate savings by subtracting total expenses from monthly income
+      const savings = monthlyIncome - totalExpenses;
+  
+      // Return the savings in the response
+      return res.status(200).json({
+        success: true,
+        savings: savings,
+        monthlyIncome: monthlyIncome,
+        totalExpenses: totalExpenses,
+        user
+      });
+  
+    } catch (err) {
+      // Handle any errors
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  });
 
 export default router;
