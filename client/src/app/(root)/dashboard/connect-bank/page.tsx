@@ -71,7 +71,7 @@ export default function PlaidIntegration() {
       setPublicToken(public_token)
       console.log("success", public_token, metadata)
     },
-    onExit: (err, metadata) => {
+    onExit: (err) => {
       if (err) {
         setError("Error connecting to your bank. Please try again.")
       }
