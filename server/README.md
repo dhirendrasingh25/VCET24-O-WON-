@@ -1,23 +1,22 @@
-
 # BACHATPRO
-
 
 # Backend
 
-- Node.js
-- Express.js
+-   Node.js
+-   Express.js
 
 # Commands
-- cd server
-- npm install
-- npm start
 
-# .env 
-  
+-   cd server
+-   npm install
+-   npm start
+
+# .env
+
 # For storing images on server
-- Multer
+
+-   Multer
 
 # Database
-- MongoDB
 
-
+-   MongoDB
