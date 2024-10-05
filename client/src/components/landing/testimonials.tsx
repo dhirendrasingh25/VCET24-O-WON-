@@ -34,7 +34,7 @@ const Testimonials = () => {
         <>
             <div>
                 <h2 className="max-w-7xl text-center pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-                    Words from our users
+                   Kind words from our users
                 </h2>
             </div>
             <div className="h-[30rem] rounded-md flex flex-col antialiased  dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">

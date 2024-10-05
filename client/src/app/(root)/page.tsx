@@ -10,6 +10,7 @@ import AboutUs from "@/components/landing/about-us";
 import { TypewriterEffect  } from "@/components/ui/typewriter-effect";
 import JoinUsButton from "@/components/landing/joinUsbutton";
 import Market from "@/components/landing/market";
+import FinanceCourses from "@/components/landing/cources";
 
 const words = [
     {
@@ -51,7 +52,9 @@ export default function Page() {
                 <div id="home" className="h-screen">
                     <Home />
                 </div>
-
+                <div id="market" className="h-full">
+                    <Market />
+                </div>
                 <div id="quiz" className="h-full">
                     <div className=" sm:m-10 m-6 border-dotted border-4 rounded-2xl bg-zinc-100">
                         <div className="flex items-center justify-center">
@@ -63,15 +66,14 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-
                 <div id="about-us" className="h-full">
                     <AboutUs />
                 </div>
+                <div id="cources" className="h-full">
+                    <FinanceCourses />
+                </div>
                 <div id="testimonial" className="h-full">
                     <Testimonial />
-                </div>
-                <div className="h-full">
-                    <Market />
                 </div>
             </main>
             <Footer />
