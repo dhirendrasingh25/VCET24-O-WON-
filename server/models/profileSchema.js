@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const profileSchema = new mongoose.Schema({
-    age: {
+    dob: {
         type: Date,
         required: true,
     },
