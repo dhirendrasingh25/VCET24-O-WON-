@@ -1,44 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@google/generative-ai": "^0.21.0",
-    "axios": "^1.7.7",
-    "chalk": "^5.3.0",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "finnhub": "^1.2.18",
-    "form-data": "^4.0.0",
-    "fs": "^0.0.1-security",
-    "helmet": "^8.0.0",
-    "mongodb": "^6.9.0",
-    "mongoose": "^8.7.0",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.7",
-    "openai": "^4.67.1",
-    "path": "^0.12.7",
-    "socket.io": "^4.8.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "vcet fork"
-  },
-  "description": ""
-=======
     "name": "server",
     "version": "1.0.0",
     "main": "index.js",
@@ -70,7 +30,8 @@
         "multer": "^1.4.5-lts.1",
         "nodemon": "^3.1.7",
         "path": "^0.12.7",
-        "socket.io": "^4.8.0"
+        "socket.io": "^4.8.0",
+        "url": "^0.11.4"
     },
     "repository": {
         "type": "git",
@@ -80,5 +41,4 @@
     "devDependencies": {
         "prettier": "^3.3.3"
     }
->>>>>>> e7956680559383445146d4dd9be69059bb95177d
 }
