@@ -67,11 +67,11 @@ export default function PlaidIntegration() {
 
   const { open, ready } = usePlaidLink({
     token: linkToken,
-    onSuccess: (public_token, metadata) => {
+    onSuccess: (public_token) => {
       setPublicToken(public_token)
-      console.log("success", public_token, metadata)
+    //   console.log("success", public_token, metadata)
     },
-    onExit: (err, metadata) => {
+    onExit: (err) => {
       if (err) {
         setError("Error connecting to your bank. Please try again.")
       }
