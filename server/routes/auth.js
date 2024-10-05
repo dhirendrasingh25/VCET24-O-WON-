@@ -76,10 +76,13 @@ router.get("/check", async (req, res) => {
                 image,
             });
             await user.save();
+
+            return res.status(200).json({success:true,existing_user:false,user:user})
         }
 
         res.status(200).json({
-            success: user ? true : false,
+            success: true,
+            existing_user: true,
             user: user,
         });
     } catch (error) {

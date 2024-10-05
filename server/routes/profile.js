@@ -207,20 +207,18 @@ router.get("/current-savings", async (req, res, next) => {
     try {
         const { email_id } = req.query;
 
-        // Check if email_id is provided
         if (!email_id) {
             return res.status(400).json({ success: false, message: "Email ID is required." });
         }
 
-        // Find the user and populate the profile
         const user = await User.findOne({ email_id }).populate("profile");
 
-        // Check if user exists
+
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found." });
         }
 
-        // Check if profile exists and has monthly_income
+
         const monthlyIncome = user.profile.monthlyIncome;
         if (!monthlyIncome) {
             return res.status(400).json({ success: false, message: "Monthly income not found in profile." });
