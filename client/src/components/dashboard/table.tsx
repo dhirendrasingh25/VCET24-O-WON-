@@ -45,13 +45,13 @@ export default function DashboardTable({
     const { toast } = useToast();
     const [isUploading, setIsUploading] = useState(false);
 
-    const handleFileOCR = async (filename: string) => {
+    const handleFileOCR = async () => {
         try {
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/ocr/bill`,
                 {
                     params: {
-                        file_name: filename,
+                        email_id: session?.user?.email,
                     },
                 },
             );
@@ -93,9 +93,9 @@ export default function DashboardTable({
                     description: "Your file has been uploaded successfully",
                 });
 
-                const fileName = response.data.filePath;
+                // const fileName = response.data.filePath;
                 try {
-                    await handleFileOCR(fileName);
+                    await handleFileOCR();
                 } catch (error) {
                     throw error;
                 }
@@ -133,7 +133,7 @@ export default function DashboardTable({
 
                     <Button
                         variant="outline"
-                        className="h-auto py-1"                        
+                        className="h-auto py-1"
                         onClick={() => {
                             const input = document.createElement("input");
                             input.type = "file";
@@ -149,16 +149,18 @@ export default function DashboardTable({
                         }}
                     >
                         <div className="flex items-center gap-2">
-                            <Upload className="h-4 w-4" />
                             {isUploading ? (
-                                <section className="flex justify-center items-center h-screen">
-                                    <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                                <section className="flex justify-center items-center relative">
+                                    <div className="animate-spin h-5 w-5 border-2 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
                                     <span className="ml-4 text-lg">
                                         Loading
                                     </span>
                                 </section>
                             ) : (
-                                <span>Upload A Image</span>
+                                <>
+                                    <Upload className="h-4 w-4" />
+                                    <span>Upload A Image</span>
+                                </>
                             )}
                         </div>
                     </Button>
