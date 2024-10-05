@@ -170,10 +170,11 @@ router.get("/get-transactions", async (req, res) => {
         data: formattedData
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         success: false,
         message: "Error retrieving weekly transactions",
-        error
+        error: error.message
       });
     }
   });
