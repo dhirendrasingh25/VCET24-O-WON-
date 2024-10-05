@@ -23,10 +23,12 @@ const Navbar = () => {
                     { value: "Home", link: "#home" },
                     { value: "Market News", link: "#market" },
                     { value: "Take a Quiz", link: "#quiz" },
-                    { value: "Testimonials", link: "#testimonials" },
                     { value: "About Us", link: "#about" },
+                    { value: "Cources", link: "#cources" },
+                    { value: "Testimonials", link: "#testimonials" },
+                    
                 ].map((item, idx) => (
-                    <div key={idx} className="font-semibold">
+                    <div key={idx} className="font-semibold hover:text-blue-500">
                         <Link href={item.link}>{item.value}</Link>
                     </div>
                 ))}
@@ -38,7 +40,7 @@ const Navbar = () => {
                             callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
                         })
                     }
-                    className="px-6 font-medium"
+                    className="px-6 font-semibold"
                 >
                     Login
                 </Button>
