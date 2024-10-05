@@ -224,7 +224,10 @@ export default function ProfilePage() {
                                     <ul className="text-sm text-gray-600">
                                         {profileData.profile.currentInvestments.map(
                                             (investment, index) => (
-                                                <li key={index} className="flex items-center gap-2">
+                                                <li
+                                                    key={index}
+                                                    className="flex items-center gap-2"
+                                                >
                                                     <Input
                                                         id="investment-type"
                                                         name="investment-type"
@@ -240,9 +243,7 @@ export default function ProfilePage() {
                                                         id="current-investment-value"
                                                         name="current-investment-value"
                                                         type="number"
-                                                        value={
-                                                            `${rupeeSymbol} ${investment.amount.toLocaleString()}`
-                                                        }
+                                                        value={`${rupeeSymbol} ${investment.amount.toLocaleString()}`}
                                                         readOnly
                                                         className="bg-gray-100 cursor-not-allowed"
                                                     />

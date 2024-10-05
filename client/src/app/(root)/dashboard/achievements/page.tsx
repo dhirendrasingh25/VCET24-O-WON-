@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Trophy, CheckCircle, XCircle, Ticket, Lock } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -16,7 +16,7 @@ const achievements = [
         id: 1,
         name: "Savings Starter",
         description: "Save your first ₹1,000",
-        target: 100,
+        target: 1000,
         type: "savings",
         score: 10,
     },
@@ -147,33 +147,47 @@ const AchievementsPage = () => {
         }
     };
 
+    const isAchievementCompleted = useCallback(
+        (achievement: (typeof achievements)[number]) => {
+            switch (achievement.type) {
+                case "savings":
+                    return userData.savingsAmount >= achievement.target;
+                case "transactions":
+                    return userData.totalTransactions >= achievement.target;
+                case "maxTransaction":
+                    return (
+                        userData.maxAmountAmountTransaction >=
+                        achievement.target
+                    );
+                case "totalAmount":
+                    return userData.totalAmount >= achievement.target;
+                default:
+                    return false;
+            }
+        },
+        [userData],
+    );
+
     useEffect(() => {
         const completed = achievements.filter((a) => isAchievementCompleted(a));
         const score = completed.reduce((sum, a) => sum + a.score, 0);
         setTotalScore(score);
         setCompletedPercentage((completed.length / achievements.length) * 100);
-    }, [userData]);
+    }, [userData, isAchievementCompleted]);
 
-    const isAchievementCompleted = (achievement: any) => {
-        switch (achievement.type) {
-            case "savings":
-                return userData.savingsAmount >= achievement.target;
-            case "transactions":
-                return userData.totalTransactions >= achievement.target;
-            case "maxTransaction":
-                return (
-                    userData.maxAmountAmountTransaction >= achievement.target
-                );
-            case "totalAmount":
-                return userData.totalAmount >= achievement.target;
-            default:
-                return false;
-        }
-    };
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isCouponUnlocked = (coupon: any) => {
         return totalScore >= coupon.minScore;
     };
+
+    if (status === "loading") {
+        return (
+            <section className="flex justify-center items-center h-screen">
+                <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
+                <span className="ml-4 text-lg">Loading</span>
+            </section>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 p-4 sm:p-6 md:p-8">

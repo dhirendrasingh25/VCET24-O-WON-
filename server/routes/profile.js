@@ -46,4 +46,27 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get("/get-user", async (req, res, next) => {
+    try {
+        const { email_id } = req.query;
+
+        if (!email_id) {
+            return res.status(400).json({ success: false, message: "Email ID is required." });
+        }
+
+        const user = await User.findOne({ email_id }).populate('profile');
+
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found." });
+        }
+
+        return res.status(200).json({ success: true, user });
+    } catch (err) {
+
+        console.error(err);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 export default router;
