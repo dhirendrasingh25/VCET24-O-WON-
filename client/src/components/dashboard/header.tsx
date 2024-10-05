@@ -29,7 +29,7 @@ import {
     BadgeIndianRupee,
     CircleDollarSign,
     MessageCircle,
-    PanelLeft
+    PanelLeft,
 } from "lucide-react";
 
 export default function Header() {
@@ -56,12 +56,36 @@ export default function Header() {
                             <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
                             <span className="sr-only">Bachat Pro</span>
                         </Link>
-                        <SheetNavLink href="/dashboard" icon={Home} label="Home" />
-                        <SheetNavLink href="/dashboard/my-banks" icon={CircleDollarSign} label="My Banks" />
-                        <SheetNavLink href="/dashboard/global-chat" icon={MessageCircle} label="Global Chat" />
-                        <SheetNavLink href="/dashboard/payment-transfer" icon={BadgeIndianRupee} label="Payment Transfer" />
-                        <SheetNavLink href="/dashboard/connect-bank" icon={Landmark} label="Connect Bank" />
-                        <SheetNavLink href="/dashboard/my-account" icon={CircleUserRound} label="My Account" />
+                        <SheetNavLink
+                            href="/dashboard"
+                            icon={Home}
+                            label="Home"
+                        />
+                        <SheetNavLink
+                            href="/dashboard/my-banks"
+                            icon={CircleDollarSign}
+                            label="My Banks"
+                        />
+                        <SheetNavLink
+                            href="/dashboard/global-chat"
+                            icon={MessageCircle}
+                            label="Global Chat"
+                        />
+                        <SheetNavLink
+                            href="/dashboard/payment-transfer"
+                            icon={BadgeIndianRupee}
+                            label="Payment Transfer"
+                        />
+                        <SheetNavLink
+                            href="/dashboard/connect-bank"
+                            icon={Landmark}
+                            label="Connect Bank"
+                        />
+                        <SheetNavLink
+                            href="/dashboard/my-account"
+                            icon={CircleUserRound}
+                            label="My Account"
+                        />
                     </nav>
                 </SheetContent>
             </Sheet>
