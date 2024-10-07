@@ -35,7 +35,7 @@ router.post("/received", async (req, res) => {
         await user.save();
 
         res.json({
-            sucess: true,
+            success: true,
             message: "Profile updated successfully",
             user,
             savedProfile,
@@ -70,7 +70,6 @@ router.get("/check", async (req, res) => {
         const { email_id, name, image } = req.query;
         let user = await User.findOne({ email_id });
         
-        console.log("user", user);  
         if (!user) {
             user = await User.create({
                 name,
@@ -78,7 +77,7 @@ router.get("/check", async (req, res) => {
                 image,
             });
             await user.save();
-            
+
             return res
                 .status(200)
                 .json({ success: true, existing_user: false, user: user });

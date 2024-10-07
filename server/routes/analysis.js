@@ -35,15 +35,15 @@ router.post("/", async (req, res) => {
             {
                 question: "Do you have a monthly budget plan?",
                 type: "multiple_choice",
-                options: ["Yes", "No", "I’m planning to start one"],
+                options: ["Yes", "No", "I'm planning to start one"],
             },
             {
                 question: "How do you manage debt, if you have any?",
                 type: "multiple_choice",
                 options: [
                     "I make regular payments and keep track",
-                    "I pay when I can but it’s hard to manage",
-                    "I don’t have any debt",
+                    "I pay when I can but it's hard to manage",
+                    "I don't have any debt",
                 ],
             },
             {

@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 const storage = multer.memoryStorage();
 const uploads = multer({ storage: storage });
 
-// Function to check if a string contains a number
+
 const containsNumber = (str) => /\d+(\.\d+)?/.test(str);
 
 // Extract function to identify total amount and other data from OCR results
@@ -146,11 +146,6 @@ router.get("/bill", async (req, res) => {
         // I want it to be os ap
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        // const prompt = `
-        //       Go through the following text and generate a category, description, and total amount as amount for the final result only:\n
-        //       ${fullTextString} give in json form like {'category':'', 'desc':'', amount:''}. it should be a valid json . no other text except for the json data no backticks nothing. Compulsory json data only. Also category can be parsed from particulars or details or product description or anything, and can be converted to simple text.
-        //     `;
 
         const prompt = `
           Go through the following text and generate a strict JSON object with the following structure:

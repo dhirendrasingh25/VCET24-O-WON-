@@ -35,4 +35,29 @@ router.post("/create-bank-accounts", async (req, res) => {
     }
 });
 
+router.post("/create_link_token", async (req, res) => {
+    const plaidRequest = {
+        user: {
+            client_user_id: req.body.userId ,
+        },
+        client_name: req.body.userName,
+        products: ["auth"],
+        language: "en",
+        redirect_uri: "https://localhost:3000",
+        country_codes: ["US"],
+    };
+
+    try {
+        const createTokenResponse =
+            await plaidClient.linkTokenCreate(plaidRequest);
+        res.json(createTokenResponse.data);
+    } catch (error) {
+        console.error("Error creating link token:", error);
+        res.status(500).json({
+            error: "Failed to create link token",
+            details: error.message,
+        });
+    }
+});
+
 export default router;
