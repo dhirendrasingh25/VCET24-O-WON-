@@ -51,14 +51,8 @@ const PlaidLink = ({ user }: PlaidLinkProps) => {
         <Button
             onClick={() => open()}
             disabled={!ready}
-            className="plaidlink-default"
+            className="bg-custom-blue hover:bg-blue-600 transition-all disabled:cursor-not-allowed"
         >
-            {/* <Image
-                src="/icons/connect-bank.svg"
-                alt="connect bank"
-                width={24}
-                height={24}
-            /> */}
             <p className="text-[16px] font-semibold text-black-2">
                 Connect bank
             </p>

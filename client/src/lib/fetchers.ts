@@ -23,8 +23,6 @@ export async function getHomeQuizResponse(data: string) {
             throw new Error(`Error: ${response.statusText}`);
         }
 
-        // Try to parse the response as JSON
-
         console.log(JSON.parse(await response.text()));
     } catch (error) {
         console.error("Error in fetching quiz response:", error);

@@ -1,10 +1,8 @@
 import axios from "axios";
 import { plaidClient } from "@/lib/plaid";
 import {
-    CountryCode,
     ProcessorTokenCreateRequest,
     ProcessorTokenCreateRequestProcessorEnum,
-    Products,
 } from "plaid";
 import { encryptId, parseStringify } from "../utils";
 import {
@@ -13,24 +11,41 @@ import {
     ExchangePublicTokenProps,
 } from "@/types";
 import { addFundingSource } from "./dwolla.action";
-export const createLinkToken = async ({ user }: CreateLinkTokenProps) => {
-    try {
-        const tokenParams = {
-            user: {
-                client_user_id: user.id,
-            },
-            client_name: user.name || "Test User",
-            products: ["auth"] as Products[],
-            language: "en",
-            country_codes: ["US"] as CountryCode[],
-        };
 
-        const response = await plaidClient.linkTokenCreate(tokenParams);
+export const createLinkToken = async ({ user }: CreateLinkTokenProps) => {
+    if (!user) return;
+
+    try {
+        // console.log("user in token", user);
+        // const tokenParams = {
+        //     user: {
+        //         client_user_id: user.id,
+        //     },
+        //     client_name: user.name || "Test User",
+        //     products: ["auth"] as Products[],
+        //     language: "en",
+        //     country_codes: ["US"] as CountryCode[],
+        // };
+
+        // const response = await plaidClient.linkTokenCreate(tokenParams);
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/banking/create_link_token`,
+            {
+                userId: user.id,
+                userName: user.name,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
 
         console.log(response);
         return parseStringify({ linkToken: response.data.link_token });
     } catch (error) {
         console.log(error);
+        throw error;
     }
 };
 

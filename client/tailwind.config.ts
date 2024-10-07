@@ -6,7 +6,6 @@ const {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
-//* This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function addVariablesForColors({
     addBase,

@@ -56,8 +56,6 @@ export default function Report({ session }: ReportProps) {
         fetchData();
     }, [session]);
 
-    console.log(weekData);
-
     return (
         <Tabs defaultValue="week">
             <TabsList>

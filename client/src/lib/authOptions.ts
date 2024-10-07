@@ -1,8 +1,11 @@
 import axios from "axios";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+
 import { createDwollaCustomer } from "./actions/dwolla.action";
 import { extractCustomerIdFromUrl } from "./utils";
+
+import userStore from "@/stores/user-store";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -28,12 +31,11 @@ export const authOptions: NextAuthOptions = {
                         },
                     },
                 );
-                console.log("response", response);
 
-                const data = await response.data;
+                const data = await response.data; // if user does not exist, creates a new user
+                userStore.setState({ user: data });
+
                 let dwollaCustomerUrl;
-
-                console.log("data", data);
 
                 if (!data.existing_user) {
                     const nameParts = user.name?.split(" ") || [];
@@ -57,8 +59,6 @@ export const authOptions: NextAuthOptions = {
                         type: "personal",
                     });
 
-                    console.log("dwollaCustomerUrl", dwollaCustomerUrl);
-
                     if (dwollaCustomerUrl) {
                         const dwollaCustomerId =
                             extractCustomerIdFromUrl(dwollaCustomerUrl);
@@ -75,8 +75,6 @@ export const authOptions: NextAuthOptions = {
                                 },
                             },
                         );
-
-                        console.log("dwollaCustomerId", dwollaCustomerId);
                     }
                 }
 
@@ -85,6 +83,18 @@ export const authOptions: NextAuthOptions = {
                 console.error(`Error processing user data: ${error}`);
                 return false;
             }
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (token?.id && session.user) {
+                session.user.id = token.id as string;
+            }
+            return session;
         },
     },
 };

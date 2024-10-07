@@ -5,7 +5,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import {
     Card,
     CardDescription,
@@ -19,8 +18,10 @@ import { rupeeSymbol } from "@/lib/utils";
 import { ITransaction, MarketNews, Tips } from "@/types";
 import DashboardTable from "@/components/dashboard/table";
 import Report from "@/components/dashboard/report";
+import PlaidLink from "@/components/core/plaid-link";
 
 import PlaceholderImage from "@/public/placeholder.png";
+import { User } from "next-auth";
 
 type IDailyTips = {
     tips: Tips;
@@ -154,7 +155,7 @@ export default function Dashboard() {
         );
     }
 
-    if (!session) {
+    if (!session || !session.user) {
         return null;
     }
 
@@ -171,10 +172,10 @@ export default function Dashboard() {
                             </CardDescription>
                         </CardHeader>
                         <CardFooter>
-                            <Button className="bg-custom-blue hover:bg-blue-600 transition-all">
+                            {/* <Button className="bg-custom-blue hover:bg-blue-600 transition-all">
                                 Connect Bank Account
-                            </Button>
-                            
+                            </Button> */}
+                            <PlaidLink user={session.user as User} />
                         </CardFooter>
                     </Card>
 
