@@ -20,16 +20,13 @@ export const authOptions: NextAuthOptions = {
                             image: user.image,
                             name: user.name,
                         },
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
                     },
                 );
 
                 return true;
             } catch (error) {
                 console.log(`Error posting user data: ${error}`);
-                return true;
+                return false;
             }
         },
     },
