@@ -193,7 +193,8 @@ export default function Page() {
                                                 : "bg-zinc-100",
                                         )}
                                     >
-                                        {msg.sender !== session?.user?.email && (
+                                        {msg.sender !==
+                                            session?.user?.email && (
                                             <p className="font-semibold text-sm mb-1">
                                                 {msg.sender}
                                             </p>

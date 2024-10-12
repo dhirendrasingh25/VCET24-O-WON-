@@ -16,9 +16,9 @@ import messagesRoutes from "./routes/messages.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import Messages from "./models/messagesSchema.js";
-import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 import dotenv from "dotenv";
 import dbConnect from "./config/database.js";
+import bankingRoute from "./routes/banking.js";
 
 dotenv.config();
 
@@ -34,26 +34,13 @@ const io = new Server(server, {
 // CORS options
 const corsOptions = {};
 
-// Plaid API configuration
-const configuration = new Configuration({
-    basePath: PlaidEnvironments.sandbox,
-    baseOptions: {
-        headers: {
-            "PLAID-CLIENT-ID": "66fecc4237a1ca001ab69530",
-            "PLAID-SECRET": "3a62eac09d03b7c2a6a596f8fa7f20",
-        },
-    },
-});
-
-const plaidClient = new PlaidApi(configuration);
-
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan("tiny"));
 
 // Route handlers
 app.use("/plan", InvestmentRoute);
@@ -66,57 +53,7 @@ app.use("/api", transactionRoutes);
 app.use("/profile/complete", profileRoutes);
 app.use("/news", news);
 app.use("/", messagesRoutes);
-
-// Plaid API routes
-app.post("/create_link_token", async (req, res) => {
-    const plaidRequest = {
-        user: {
-            client_user_id: "66fecc4237a1ca001ab69530",
-        },
-        client_name: "Your App Name",
-        products: ["auth"],
-        language: "en",
-        redirect_uri: "https://localhost:3000",
-        country_codes: ["US"],
-    };
-
-    try {
-        const createTokenResponse =
-            await plaidClient.linkTokenCreate(plaidRequest);
-        res.json(createTokenResponse.data);
-    } catch (error) {
-        console.error("Error creating link token:", error);
-        res.status(500).json({
-            error: "Failed to create link token",
-            details: error.message,
-        });
-    }
-});
-
-app.post("/auth", async (req, res) => {
-    try {
-        const access_token = req.body.access_token;
-        const plaidRequest = { access_token };
-        const plaidResponse = await plaidClient.authGet(plaidRequest);
-        res.json(plaidResponse.data);
-    } catch (e) {
-        res.status(500).send("failed");
-    }
-});
-
-app.post("/exchange_public_token", async (req, res) => {
-    const publicToken = req.body.public_token;
-    try {
-        const plaidResponse = await plaidClient.itemPublicTokenExchange({
-            public_token: publicToken,
-        });
-        const accessToken = plaidResponse.data.access_token;
-        res.json({ accessToken });
-    } catch (error) {
-        res.status(500).send("failed");
-    }
-});
-
+app.use("/banking", bankingRoute);
 // Socket.io events
 io.on("connection", (socket) => {
     console.log("User Connected ID : ", socket.id);

@@ -9,19 +9,29 @@ const finnhubClient = new finnhub.DefaultApi();
 const router = express.Router();
 
 // Define the /news endpoint
-router.get("/", (req, res) => {
-    finnhubClient.marketNews("general", {}, (error, data, response) => {
-        if (error) {
-            console.error("Error:", error);
-            return res.status(500).send({ error: "Error fetching news data" });
-        }
+router.get("/", async (req, res) => {
+    try {
+        await finnhubClient.marketNews(
+            "general",
+            {},
+            (error, data, _) => {
+                if (error) {
+                    throw error;
+                }
 
-        // Slice to get the top 20 latest market news
-        const top20News = data.slice(0, 20);
+                // Slice to get the top 20 latest market news
+                const top20News = data.slice(0, 20);
 
-        // Send the JSON response
-        res.status(200).json(top20News);
-    });
+                // Send the JSON response
+                res.status(200).json(top20News);
+            },
+        );
+    } catch (error) {
+        console.error("Error fetching news data:", error);
+        res.status(500).send({
+            error: "Error fetching news data",
+        });
+    }
 });
 
 export default router;

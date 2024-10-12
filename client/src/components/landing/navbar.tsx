@@ -24,9 +24,11 @@ const Navbar = () => {
                     { value: "About Us", link: "#about" },
                     { value: "Courses", link: "#courses" },
                     { value: "Testimonials", link: "#testimonials" },
-                    
                 ].map((item, idx) => (
-                    <div key={idx} className="font-semibold hover:text-blue-500">
+                    <div
+                        key={idx}
+                        className="font-semibold hover:text-blue-500"
+                    >
                         <Link href={item.link}>{item.value}</Link>
                     </div>
                 ))}

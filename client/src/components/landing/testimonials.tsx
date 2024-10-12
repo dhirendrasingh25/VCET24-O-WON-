@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 
 const testimonialsD = [
@@ -31,10 +31,10 @@ const testimonialsD = [
 
 const Testimonials = () => {
     return (
-        <>
+        <Fragment>
             <div>
                 <h2 className="max-w-7xl text-center pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-                   Kind words from our users
+                    Kind words from our users
                 </h2>
             </div>
             <div className="h-[30rem] rounded-md flex flex-col antialiased  dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
@@ -44,7 +44,7 @@ const Testimonials = () => {
                     speed="slow"
                 />
             </div>
-        </>
+        </Fragment>
     );
 };
 

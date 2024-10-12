@@ -7,7 +7,7 @@ import Quiz from "@/components/landing/quiz";
 import Home from "@/components/landing/home";
 import Testimonial from "@/components/landing/testimonials";
 import AboutUs from "@/components/landing/about-us";
-import { TypewriterEffect  } from "@/components/ui/typewriter-effect";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import JoinUsButton from "@/components/landing/joinUsbutton";
 import Market from "@/components/landing/market";
 import FinanceCourses from "@/components/landing/cources";
@@ -58,7 +58,10 @@ export default function Page() {
                 <div id="quiz" className="h-full">
                     <div className=" sm:m-10 m-6 border-dotted border-4 rounded-2xl bg-zinc-100">
                         <div className="flex items-center justify-center">
-                            <TypewriterEffect words={words} className="max-md:text-xl mt-3" />
+                            <TypewriterEffect
+                                words={words}
+                                className="max-md:text-xl mt-3"
+                            />
                         </div>
                         <Quiz />
                         <div className="flex justify-center items-center p-10">

@@ -68,7 +68,8 @@ router.post("/", async (req, res) => {
 router.get("/check", async (req, res) => {
     try {
         const { email_id, name, image } = req.query;
-        let user = await User.findOne({ email_id: email_id });
+        let user = await User.findOne({ email_id });
+        
         if (!user) {
             user = await User.create({
                 name,
@@ -76,10 +77,15 @@ router.get("/check", async (req, res) => {
                 image,
             });
             await user.save();
+
+            return res
+                .status(200)
+                .json({ success: true, existing_user: false, user: user });
         }
 
         res.status(200).json({
-            success: user ? true : false,
+            success: true,
+            existing_user: true,
             user: user,
         });
     } catch (error) {
@@ -88,6 +94,37 @@ router.get("/check", async (req, res) => {
             message: "Internal Server Error",
             error: error.message,
         });
+    }
+});
+
+router.post("/update-dwolla-customer-id", async (req, res, next) => {
+    try {
+        const { email_id, dwollaCustomerId, dwollaCustomerUrl } = req.body;
+
+        const user = await User.findOneAndUpdate(
+            { email_id },
+            { $set: { dwollaCustomerId, dwollaCustomerUrl } },
+            { new: true },
+        );
+
+        // If user is not found
+        if (!user) {
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found." });
+        }
+
+        // Return success and the updated user data
+        return res
+            .status(200)
+            .json({
+                success: true,
+                message: "User updated successfully.",
+                user,
+            });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, error: err.message });
     }
 });
 

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+
 import {
     Card,
     CardDescription,
@@ -20,7 +20,9 @@ import { ITransaction, MarketNews, Tips } from "@/types";
 import DashboardTable from "@/components/dashboard/table";
 import Report from "@/components/dashboard/report";
 
-import PlaceholderImage from "@/public/placeholder.png";
+import PlaceholderImage from "@/assets/placeholder.png";
+import PlaidLink from "@/components/core/plaid-link";
+import { toast } from "@/hooks/use-toast";
 
 type IDailyTips = {
     tips: Tips;
@@ -28,8 +30,12 @@ type IDailyTips = {
 };
 
 export default function Dashboard() {
-    const { data: session, status } = useSession();
-    const [isLoading, setIsLoading] = useState(true);
+    const { data: session, status } = useSession({
+        required: true,
+        onUnauthenticated() {
+            router.push("/auth/login");
+        },
+    });
 
     // transactions
     const [weekly, setWeekly] = useState<ITransaction[]>([]);
@@ -45,19 +51,16 @@ export default function Dashboard() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!session) return;
         async function checkProfile() {
+            if (!session) return;
             try {
                 const response = await axios.get(
                     `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check`,
                     {
                         params: {
-                            email_id: session?.user?.email,
-                            image: session?.user?.image,
-                            name: session?.user?.name,
-                        },
-                        headers: {
-                            "Content-Type": "application/json",
+                            email_id: session.user?.email,
+                            image: session.user?.image,
+                            name: session.user?.name,
                         },
                     },
                 );
@@ -69,18 +72,15 @@ export default function Dashboard() {
                 }
             } catch (error) {
                 console.log(`Error checking profile: ${error}`);
+                toast({
+                    title: "Error validating profile",
+                    description: "Please try again later",
+                    variant: "destructive"
+                });
             }
         }
         checkProfile();
     }, [router, session]);
-
-    useEffect(() => {
-        if (status === "unauthenticated") {
-            router.push("/");
-        } else if (status === "authenticated") {
-            setIsLoading(false);
-        }
-    }, [status, router]);
 
     useEffect(() => {
         if (!session) return;
@@ -129,7 +129,23 @@ export default function Dashboard() {
         callApiCalls();
     }, [session]);
 
-    if (isLoading) {
+    useEffect(() => {
+        window.embeddedChatbotConfig = {
+            chatbotId: process.env.NEXT_PUBLIC_CHATBOT_ID as string,
+            domain: "www.chatbase.co",
+        };
+
+        const script = document.createElement("script");
+        script.src = "https://www.chatbase.co/embed.min.js";
+        script.defer = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    if (status === "loading") {
         return (
             <section className="flex justify-center items-center h-screen">
                 <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-b-transparent border-blue-500 rounded-full"></div>
@@ -155,9 +171,7 @@ export default function Dashboard() {
                             </CardDescription>
                         </CardHeader>
                         <CardFooter>
-                            <Button className="bg-custom-blue hover:bg-blue-600 transition-all">
-                                Connect Bank Account
-                            </Button>
+                            <PlaidLink user={session.user} />
                         </CardFooter>
                     </Card>
 
@@ -203,7 +217,10 @@ export default function Dashboard() {
                                 <div className="flex flex-1 gap-4">
                                     <div className="w-1/3 relative">
                                         <Image
-                                            src={tipsAndNews.news.image || PlaceholderImage}
+                                            src={
+                                                tipsAndNews.news.image ||
+                                                PlaceholderImage
+                                            }
                                             alt={tipsAndNews.news.headline}
                                             width={100}
                                             height={50}

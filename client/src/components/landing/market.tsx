@@ -55,7 +55,9 @@ export default function MarketNews() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-8 text-center">Latest Market News</h1>
+            <h1 className="text-4xl font-bold mb-8 text-center">
+                Latest Market News
+            </h1>
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[...Array(6)].map((_, index) => (
@@ -84,7 +86,9 @@ export default function MarketNews() {
                                     <CardTitle className="text-lg font-semibold mb-2">
                                         {item.headline}
                                     </CardTitle>
-                                    <Badge variant="secondary">{item.category}</Badge>
+                                    <Badge variant="secondary">
+                                        {item.category}
+                                    </Badge>
                                 </div>
                                 <CardDescription className="flex items-center text-xs text-muted-foreground">
                                     <Clock className="mr-1 h-4 w-4" />
@@ -100,7 +104,9 @@ export default function MarketNews() {
                                         width={400}
                                     />
                                 </div>
-                                <p className="text-sm text-muted-foreground">{item.summary}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {item.summary}
+                                </p>
                             </CardContent>
                             <CardFooter className="mt-auto">
                                 <Button className="w-full" asChild>
@@ -109,7 +115,8 @@ export default function MarketNews() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Read More <ExternalLink className="ml-2 h-4 w-4" />
+                                        Read More{" "}
+                                        <ExternalLink className="ml-2 h-4 w-4" />
                                     </a>
                                 </Button>
                             </CardFooter>
@@ -117,7 +124,9 @@ export default function MarketNews() {
                     ))}
                 </div>
             ) : (
-                <p className="text-center text-muted-foreground">No market news available at the moment.</p>
+                <p className="text-center text-muted-foreground">
+                    No market news available at the moment.
+                </p>
             )}
         </div>
     );

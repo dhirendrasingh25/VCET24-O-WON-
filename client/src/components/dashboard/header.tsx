@@ -33,6 +33,8 @@ import {
 } from "lucide-react";
 import { IoMdTrophy } from "react-icons/io";
 
+import PlaceholderImage from "@/assets/placeholder.png";
+
 export default function Header() {
     const { data: session } = useSession();
 
@@ -124,7 +126,7 @@ export default function Header() {
                             <Image
                                 src={
                                     session?.user?.image ||
-                                    "/placeholder-user.jpg"
+                                    PlaceholderImage
                                 }
                                 width={36}
                                 height={36}
