@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     return (
         <html lang="en">
             <head>
-            <link rel="manifest" href="/manifest.json" />
+                <link rel="manifest" href="/manifest.json" />
             </head>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
