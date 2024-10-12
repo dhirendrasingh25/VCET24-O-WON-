@@ -1,26 +1,11 @@
 "use client";
 
+import axios from "axios";
 import { Session } from "next-auth";
 import { useState, useEffect } from "react";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-} from "recharts";
-import axios from "axios";
+import LinearChart from "./linear-chart";
+import { toast } from "@/hooks/use-toast";
 
 interface ReportProps {
     session: Session;
@@ -36,7 +21,7 @@ export default function Report({ session }: ReportProps) {
         async function fetchData() {
             if (session.user && session.user.email) {
                 try {
-                    const [response1, response2] = await Promise.all([
+                    const [r1, r2] = await Promise.all([
                         axios.get(
                             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-transactions-weekly?email_id=${session.user.email}`,
                         ),
@@ -45,20 +30,21 @@ export default function Report({ session }: ReportProps) {
                         ),
                     ]);
 
-                    console.log(`response1: ${response1}`);
-                    console.log(`response2: ${response2}`);
-                    setWeekData(response1.data.data);
-                    setMonthData(response2.data.data);
+                    setWeekData(r1.data.data);
+                    setMonthData(r2.data.data);
                 } catch (error) {
                     console.log(error);
+                    toast({
+                        title: "Error fetching graph data",
+                        description: "Please try again later",
+                        variant: "destructive",
+                    });
                 }
             }
         }
 
         fetchData();
     }, [session]);
-
-    console.log(weekData);
 
     return (
         <Tabs defaultValue="week">
@@ -68,67 +54,20 @@ export default function Report({ session }: ReportProps) {
             </TabsList>
 
             <TabsContent value="week">
-                <Card>
-                    <CardHeader className="px-7">
-                        <CardTitle>Transactions</CardTitle>
-                        <CardDescription>
-                            Recent transactions from your bank.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={250}>
-                            {weekData && weekData.length > 0 ? (
-                                <LineChart data={weekData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="value"
-                                        stroke="#8884d8"
-                                        strokeWidth={3}
-                                    />
-                                </LineChart>
-                            ) : (
-                                <p>No data available for the week.</p>
-                            )}
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+                <LinearChart
+                    data={weekData}
+                    title="Transactions"
+                    description="Weekly transactions from your bank."
+                />
             </TabsContent>
 
             <TabsContent value="month">
-                <Card>
-                    <CardHeader className="px-7">
-                        <CardTitle>Transactions</CardTitle>
-                        <CardDescription>
-                            Recent transactions from your bank.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={260}>
-                            {monthData && monthData.length > 0 ? (
-                                <LineChart data={monthData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="#82ca9d"
-                                    strokeWidth={3}
-                                    />
-                                </LineChart>
-                            ) : (
-                                <p>No data available for the month.</p>
-                            )}
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+                <LinearChart
+                    data={monthData}
+                    title="Transactions"
+                    description="Monthly transactions from your bank."
+                    tickSize={6}
+                />
             </TabsContent>
         </Tabs>
     );
